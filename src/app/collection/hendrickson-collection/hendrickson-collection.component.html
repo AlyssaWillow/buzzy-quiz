@@ -1,0 +1,25 @@
+<div>
+    <div class="section-heading">
+        <div class="heading-text">Kelly & Matt's Collection</div>
+    </div>
+    <div *ngIf="collection$ | async as collectionHendrickson">
+        <div class="game-row{{i % 2}}" *ngFor="let game of collectionHendrickson.item | collectionFilter: players : time; let i = index">
+            <div class="game-section-left">
+                <img class="game-image" src="{{game.image}}"/>
+            </div>
+            <div class="game-section-middle">
+                <div class="game-name">
+                    {{game.name.text | replaceText}} ({{game.yearpublished}})
+                </div>
+            </div>
+            <div class="game-section-right">
+                <div class="players">
+                    {{game.stats.minplayers}} - {{game.stats.maxplayers}} players
+                </div>
+                <div class="time">
+                    {{game.stats.minplaytime}} - {{game.stats.maxplaytime}} minutes
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>

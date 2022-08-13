@@ -1,0 +1,14 @@
+{
+    "/xmlapi": {
+        "target": "https://boardgamegeek.com/xmlapi",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/xmlapi2": {
+        "target": "https://boardgamegeek.com/xmlapi2",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

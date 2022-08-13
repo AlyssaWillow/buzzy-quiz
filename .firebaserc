@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "tabletop-syndicate": {
+      "hosting": {
+        "TabletopSyndicate": [
+          "tabletop-syndicate"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "tabletop-syndicate"
+  }
+}

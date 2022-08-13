@@ -1,0 +1,7 @@
+<mat-drawer-container autosize>
+  <tts-header [inputSideNav]="sideNav"></tts-header>
+      <mat-drawer #sideNav class="sidenav" mode="side">
+        <tts-navigation></tts-navigation>
+      </mat-drawer>
+  <router-outlet></router-outlet>
+</mat-drawer-container>

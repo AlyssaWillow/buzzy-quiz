@@ -1,0 +1,18 @@
+<div class="overall-header">
+    <div class="header-top">
+      <button class="hamburger" (click)="inputSideNav.toggle()">
+        <img class="hamburger-icon" src="../../assets/images/hamburger2.png">
+      </button>
+      <div class="login">
+        <h3 class="player-name" *ngIf="authenticationService.userData | async">{{ (authenticationService.userData | async)?.email }}</h3>
+        <button class="button" (click)="authenticationService.SignOut()" *ngIf="authenticationService.userData | async">Logout</button>
+        <button class="button" (click)="login()" *ngIf="!(authenticationService.userData | async)">Login</button>
+      </div>
+    </div>
+    <div class="header-image">
+        <div class="header-content">
+            <div class="header-wording">{{ pageName }}</div>
+            <div class="header-underline"></div>
+        </div>
+    </div>
+</div>

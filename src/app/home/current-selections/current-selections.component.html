@@ -1,0 +1,35 @@
+<div class="order-body">
+ <div class="order">
+    <h2 class="heading">Current Pick Order</h2>
+    <div class="row" *ngFor="let pick of selectionData; let i = index">
+      <div class="number"> {{ pick.order }} </div>
+      <div *ngIf="!edit" class="player tooltip"> {{ pick.pick }} </div>
+      <form *ngIf="edit" class="selection-input">
+        <mat-form-field class="selection-input" appearance="standard" MatFormFieldControl="">
+          <input #newSelc matInput [(ngModel)]="pick.pick" name="pick.pick" placeholder="{{pick.pick}}" value="pick.pick">
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+  <div class="order picks">
+    <h2 class="heading">Current Game Picks</h2>
+    <div *ngIf="!edit">
+      <ul class="row" *ngFor="let pick of selectionData; let i = index">
+        <li class="player"> {{ pick.player }} </li>
+      </ul>
+    </div>
+    <div *ngIf="edit">
+      <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let pick of selectionData2" cdkDrag>
+          <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+          {{pick.player}}
+        </div>
+      </div> 
+  </div>
+  </div>
+</div>
+<div *ngIf="authenticationService.userData | async">
+  <button *ngIf="!edit" (click)="enableEdit()">Edit</button>
+  <button *ngIf="edit" class="button" (click)="updatePicks()">Save</button>
+  <button *ngIf="edit" (click)="disableEdit()">Cancel</button>
+</div>

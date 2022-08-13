@@ -1,0 +1,37 @@
+<div class="convention-section" *ngFor="let conv of conventions">
+    <div class="section-header">
+        <div class="header-text">
+            {{conv.conventionName}}
+        </div>
+    </div>
+
+    <div class="section-body-top">
+        <div class="body-left">
+            <img class="convention-image" src="{{conv.conventionImage}}"/>
+        </div>
+        <div class="body-right">
+            <div class="game-name">
+                {{conv.gameName}}
+            </div>
+            <div class="saying">
+                {{conv.saying}}
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="conv.mattImage !== ''" class="section-body-bottom">
+        <div class="game-images">
+            <img class="game-image" src="{{conv.mattImage}}"/>
+        </div>
+        <div class="game-images">
+            <img class="game-image" src="{{conv.kellyImage}}"/>
+        </div>
+        <div class="game-images">
+            <img class="game-image" src="{{conv.jenImage}}"/>
+        </div>
+        <div class="game-images">
+            <img class="game-image" src="{{conv.alyssaImage}}"/>
+        </div>
+    </div>
+
+</div>

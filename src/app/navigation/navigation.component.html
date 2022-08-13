@@ -1,0 +1,12 @@
+<div class="nav-pane">
+    <div class="nav-title">
+        Tabletop Syndicate
+    </div>
+    <div class="nav-list">
+        <div class="nav" *ngFor="let navi of nav">
+            <div class="nav-link" href="#" [routerLink]="[navi.value]">{{navi.disp}}</div>
+        </div>
+    </div>
+</div>
+
+        

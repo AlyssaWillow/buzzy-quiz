@@ -1,0 +1,78 @@
+.convention-section {
+    background-color: white;
+}
+
+.section-header {
+    height: 4rem;
+    background-color: rgb(67, 10, 67);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.header-text {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
+    padding-left: 3rem;
+}
+
+.section-body-top {
+    background-color: white;
+    margin: 0 6% 0 6%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    height: 16rem;
+    width: 88%;
+}
+
+.body-left {
+    height: 14rem;
+    width: 40%;
+}
+
+.body-right {
+    padding-top: 4rem;
+    height: 14rem;
+    width: 60%;
+}
+
+.convention-image {
+    height: 14rem;
+    width: 25rem;
+}
+
+.game-name {
+    font-size: 4rem;
+    font-weight:400;
+}
+
+.saying {
+    padding-top: 3rem;
+    font-size: 2rem;
+    font-weight:400;
+}
+
+.section-body-bottom {
+    background-color: white;
+    margin: 0 6% 0 6%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    height: 16rem;
+    width: 88%;
+}
+
+.game-images {
+    height: 100%;
+    width: 25%;
+}
+
+.game-image {
+    height: 14rem;
+    width: 14rem;
+}
