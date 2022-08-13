@@ -13,7 +13,7 @@
             <div class="game-name">
                 {{conv.gameName}}
             </div>
-            <div class="saying">
+            <div *ngIf="conv.saying !== ''" class="saying">
                 {{conv.saying}}
             </div>
         </div>
