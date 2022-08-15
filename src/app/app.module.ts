@@ -29,6 +29,7 @@ import { LemanCollectionModule } from './collection/leman-collection/leman-colle
 import { BoardGameGeekService } from './services/board-game-geek.service';
 import { ConventionShirtsComponent } from './convention-shirts/convention-shirts.component';
 import { ConventionShirtsModule } from './convention-shirts/convention-shirts.module';
+import { GameStatsModule } from './game-stats/game-stats.module';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ConventionShirtsModule } from './convention-shirts/convention-shirts.mo
     HomeModule,
     CollectionModule,
     ConventionShirtsModule,
+    GameStatsModule,
     LemanCollectionModule,
     NavigationModule,
     MatSidenavModule,

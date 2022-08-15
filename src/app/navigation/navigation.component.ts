@@ -15,6 +15,10 @@ export class NavigationComponent implements OnInit {
       disp: 'Home'
     },
     {
+      value: '/game-stats',
+      disp: 'Game Stats'
+    }, 
+    {
       value: '/collection',
       disp: 'Collection'
     }, 
