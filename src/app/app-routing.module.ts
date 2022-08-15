@@ -4,6 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { CollectionComponent } from './collection/collection.component';
 import { ConventionShirtsComponent } from './convention-shirts/convention-shirts.component';
+import { GameStatsComponent } from './game-stats/game-stats.component';
 
 const routes: Routes = [
   { 
@@ -20,6 +21,14 @@ const routes: Routes = [
     component: HomeComponent,
     data: {
       title: 'Tabletop Syndicate'
+    }
+  },
+  { 
+    path: 'game-stats', 
+    pathMatch: 'full',  
+    component: GameStatsComponent,
+    data: {
+      title: 'Game Stats'
     }
   },
   { 
