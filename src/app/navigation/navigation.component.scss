@@ -1,6 +1,19 @@
-
+.nav-title {
+  color: red;
+  font-size: 1.7rem;
+  font-weight: 500;
+  padding: 1.5rem 0 1.5rem 0;
+}
 
   .nav-list {
+    padding-top: 1rem;
     display: flex;
     flex-direction: column;
   }
+
+.nav {
+  font-size: 1.2rem;
+  font-weight: 200;
+  margin: .7rem 0 .7rem 0;
+  cursor: pointer;
+}
