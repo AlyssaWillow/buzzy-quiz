@@ -1,0 +1,19 @@
+.wins-section {
+    height: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 7rem;
+}
+
+.wins-title {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.player-wins {
+    display: flex;
+    flex-direction: row;
+    font-size: 1.5rem;
+    justify-content: space-between;
+}

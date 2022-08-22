@@ -1,0 +1,10 @@
+<div class="wins-section">
+    <div class="wins-title">
+        Wins
+    </div>  
+    <div class="player-wins">
+        <div *ngFor="let winner of winners" class="player-wins">
+            {{winner.playerName}}: {{winner.winCount}}
+        </div>   
+    </div> 
+</div>
