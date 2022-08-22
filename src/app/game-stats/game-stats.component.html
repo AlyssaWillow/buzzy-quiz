@@ -1,6 +1,33 @@
-<div class="note-banner">
+<!-- <div class="note-banner">
     <div class="note-text">
         Note: This page pulls data from BGG.com, if a game image is missing, the game needs to be added to a BGG collection
     </div>
+</div> -->
+<div class="game-section" *ngFor="let game of playData">
+    <div class="game-header">
+        <div class="header-text">{{game.gameName}}</div>
+    </div>
+    <div class="game-body">
+        <div class="game-information">
+            <div class="game-image-section">
+                <div *ngIf="game.gameImage.length !== 0">
+                    <img class="game-image" src="{{game.gameImage}}"/>
+                </div>
+                <div class="game-name" *ngIf="game.gameImage === undefined || game.gameImage === ''">
+                    Game name not found
+                </div>
+            </div>        
+            <div class="game-name-section">
+                <div class="game-name">
+                    <div *ngIf="game.gameName !== undefined || game.gameName !== ''">
+                        {{game.gameName}}
+                    </div>
+                    <div *ngIf="game.gameName === undefined || game.gameName === ''">
+                        Please add 
+                        <a href="https://boardgamegeek.com/boardgame/{{game.gameId}}">this game</a> to a collection on BGG
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<p>game-stats works!</p>

@@ -11,11 +11,11 @@ export interface BoardGame {
     objecttype: string | null;
     objectid: string | null;
     subtype: string | null;
-    collid: string | null;
+    collid: string;
     name: Name;
     sortindex: string | null;
     yearpublished: string | null;
-    image: string | null;
+    image: string;
     thumbnail: string | null;
     numplays: number;
     stats: Stats;
@@ -64,6 +64,6 @@ export interface Rank {
 }
 
 interface Name {
-  text: string | null;
+  text: string;
   sortorder: number
 }
