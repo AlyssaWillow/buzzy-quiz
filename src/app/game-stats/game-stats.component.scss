@@ -13,7 +13,6 @@
 }
 
 .game-body {
-    background: linear-gradient(gray, 5%, white);
     padding-bottom: 2rem;
 }
 
@@ -41,6 +40,7 @@
 }
 
 .game-information {
+    background: linear-gradient(gray, 5%, white);
     padding-top: 2rem;
     height: 15rem;
     display: flex;

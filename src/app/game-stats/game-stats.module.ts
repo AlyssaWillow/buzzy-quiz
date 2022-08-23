@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameStatsComponent } from './game-stats.component';
 import { GsWinsSectionModule } from './gs-wins-section/gs-wins-section.module';
+import { GsPlaysSectionModule } from './gs-plays-section/gs-plays-section.module';
 
 
 
@@ -11,7 +12,8 @@ import { GsWinsSectionModule } from './gs-wins-section/gs-wins-section.module';
   ],
   imports: [
     CommonModule,
-    GsWinsSectionModule
+    GsWinsSectionModule,
+    GsPlaysSectionModule
   ],
   exports: [
     GameStatsComponent

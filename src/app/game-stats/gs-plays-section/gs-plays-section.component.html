@@ -1,0 +1,26 @@
+<div class="plays-section">
+    <div class="plays-list">
+        <span class="plays-title wins-title">Play History</span>
+    </div>
+    <div class="plays-titles">
+        <div class="title plays-date">Date</div>
+        <div class="title plays-scores">Scores</div>
+        <div class="title plays-winner">Winner</div>
+        <div class="title plays-pick">Pick</div>
+    </div>
+    <hr>
+    <div *ngFor="let play of plays; let i = index" class="plays-list row{{i % 2}}">
+        <div class="play plays-date">{{utils.getDate(play.date)}}</div>
+        <div class="play plays-scores">
+            <div *ngFor="let score of play.scores; let i = index">
+                {{score.playerName}}: {{score.score}}<span *ngIf="(i + 1) < play.scores.length">,</span>
+            </div>
+        </div>
+        <div class="play plays-winner">
+            <div *ngFor="let winner of play.winners; let i = index">
+                {{utils.getPlayerName(winner, players)}}<span *ngIf="(i + 1) < play.winners.length">,</span>
+            </div>
+        </div>
+        <div class="play plays-pick">{{utils.getPlayerName(play.pick, players)}}</div>
+    </div>
+</div>
