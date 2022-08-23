@@ -1,0 +1,57 @@
+.row1 {
+    background: #ECECEC;
+  }
+  .row0 {
+    background: #FFFFFF;
+  }
+  .play {
+    font-size: 1rem;
+    display: inline-flex;
+    padding-bottom: .25rem;
+    flex-direction: row;
+
+  }
+
+  .plays-list {
+    font-size: 1rem;
+    display: inline-flex;
+    flex-direction: row;
+  }
+.wins-title {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+  .plays-title {
+    font-size: 1.6rem;
+    width: 100%;
+    padding-bottom: .8rem;
+  }
+
+  .plays-titles {
+    display:flex;
+    flex-direction: row;
+  }
+
+  .plays-list{
+    display:flex;
+    flex-direction: row;
+  }
+
+  .plays-section {
+    background-color: white;
+    padding: 2rem 7rem;
+  }
+
+  .plays-date {
+    width: 12%;
+  }
+  .plays-scores {
+    width: 53%;
+  }
+  .plays-winner {
+    width: 20%;
+  }
+  .plays-pick {
+    width: 15%;
+  }
