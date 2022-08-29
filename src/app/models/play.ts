@@ -1,9 +1,9 @@
-import { Faction } from "./faction";
+import { DisplayFactions, Faction, FactionCollection } from "./faction";
 
 export interface Play {
     date: Timestamp;
     expansionsUsed: string[];
-    factions: playerFaction[];
+    factions: PlayFaction[];
     gameId: string;
     gameType: string;
     location: string;
@@ -11,6 +11,11 @@ export interface Play {
     scenario: Scenario;
     winners: string[];
     scores: Score[];
+}
+
+export interface PlayFaction {
+    typeId: string
+    factions: playerFaction[];
 }
 
 export interface Score {
@@ -55,7 +60,7 @@ export interface GameInstance {
     playerWins: PlayerWins[];
     scenarios: Scenario[];
     gameImage: string;
-    factions: Faction[];
+    factions: DisplayFactions[]
     expansionsUsed: Expansion[];
     gameType: string;
     location: string;

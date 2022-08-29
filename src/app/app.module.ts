@@ -30,6 +30,7 @@ import { BoardGameGeekService } from './services/board-game-geek.service';
 import { ConventionShirtsComponent } from './convention-shirts/convention-shirts.component';
 import { ConventionShirtsModule } from './convention-shirts/convention-shirts.module';
 import { GameStatsModule } from './game-stats/game-stats.module';
+import { UtilsService } from './services/utils.service';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { GameStatsModule } from './game-stats/game-stats.module';
   providers: [
     AuthenticationService,
     BoardGameGeekService,
+    UtilsService,
     AngularFireAuthModule
   ],
   bootstrap: [AppComponent]

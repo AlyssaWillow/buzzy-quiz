@@ -14,22 +14,22 @@ export class GsPlaysSectionComponent implements OnInit {
 
   @Input() plays: PlayInstance[] = [];
 
-  players$: Observable<Players[]>;
   players: Players[];
+  players$: Observable<Players[]>;
   private playerCol: AngularFirestoreCollection<Players>;
 
   
-  constructor(public utils: UtilsService,
-    private afs: AngularFirestore) {
+  constructor(private afs: AngularFirestore,
+    public utils: UtilsService) {
     this.playerCol = this.afs.collection('tabletop-syndicate').doc('player-data').collection('player-names');
     this.players$ = this.playerCol.valueChanges();
-    this.players = [];
-     }
+    this.players = []
+  }
 
   ngOnInit(): void {
-    this.players$.subscribe(players => {
+    this.players$.subscribe((players: Players[]) => {
       this.players = players;
-    });
+    })
   }
 
 }
