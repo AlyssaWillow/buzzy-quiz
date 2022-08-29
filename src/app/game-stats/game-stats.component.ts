@@ -4,10 +4,11 @@ import { AngularFirestore,
   AngularFirestoreCollection, 
   AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { DisplayPlayerSelection, Players } from '../home/player-selection';
-import { Faction } from '../models/faction';
+import { DisplayFactions, Faction, FactionCollection, FactionGame, PlayerCount } from '../models/faction';
 import { Observable } from 'rxjs';
-import { DisplayPlay, GameInstance, Play, PlayInstance, Timestamp, Wins } from '../models/play';
+import { DisplayPlay, GameInstance, Play, PlayInstance, Timestamp, playerFaction, Wins } from '../models/play';
 import { Locations } from '../models/locations';
+import { nameId } from '../models/generic';
 import { BoardGameGeekService } from '../services/board-game-geek.service';
 import { BoardGame, GameCollection } from '../models/collection';
 
@@ -55,13 +56,14 @@ export class GameStatsComponent implements OnInit {
 
   ngOnInit(): void {
     this.plays$.subscribe(plays => {
-      this.players$.subscribe(players => {
-        this.locations$.subscribe(locations => {
-          this.factions$.subscribe(factions => {
-            this.players = players;
-            this.playData = this.collectGameData(plays, players, locations, factions);
-          });
-        });
+      this.playData = this.collectGameData(plays);
+    });
+    this.players$.subscribe(players => {
+      this.players = players;
+    });
+    this.locations$.subscribe(locations => {
+      this.factions$.subscribe(factions => {
+        
       });
     });
   }
@@ -99,7 +101,7 @@ export class GameStatsComponent implements OnInit {
     return gamePlay;
   }
    
-  collectGameData = (plays: Play[], players: Players[], locations: Locations[], factions: Faction[]): GameInstance[] => {
+  collectGameData = (plays: Play[]): GameInstance[] => {
     let games: GameInstance[] = [];
     let gameList: string[] = this.getGameIdList(plays);
     let gameInstance: GameInstance;
@@ -122,9 +124,9 @@ export class GameStatsComponent implements OnInit {
           if (play.winners?.length > 0) {
             gameInstance.winners = this.createWinners(gameInstance.winners, play);
           }
-          //if (play.factions?.length > 0) {
-          //  gameInstance.factions = this.createFactions(gameInstance.factions, play);
-          //}
+          if (play.factions?.length > 0) {
+           gameInstance.factions = this.createFactions(gameInstance.factions, play);
+          }
           gameInstance.plays.push(gamePlay);
         }
       });
@@ -155,14 +157,13 @@ export class GameStatsComponent implements OnInit {
     this.lemanCollection$.subscribe(lem => {
       this.hendCollection$.subscribe(hen => {
 
-        this.bothCol = lem.item;
-        this.bothCol.concat(hen.item);
+        this.bothCol = lem?.item;
+        this.bothCol.concat(hen?.item);
       });
     });
 
     this.bothCol.forEach(game => {
       if (game.objectid === id) {
-        console.log('match')
         gameInstance.gameImage = game.image;
         gameInstance.gameName = game.name.text;
       }
@@ -181,7 +182,6 @@ export class GameStatsComponent implements OnInit {
           playerName: '',
           winCount: 0
         }
-        console.log(this.players, player);
         win.playerId = player.id;
         win.playerName = player.firstName;
         winners.push(win);
@@ -199,8 +199,128 @@ export class GameStatsComponent implements OnInit {
     return winners;
   }
 
-  createFactions = (gameInstance: GameInstance, play: Play): string[] => {
-    let winners: string[] = [];
-    return winners;
+  createFactions = (displayFactions: DisplayFactions[], play: Play): DisplayFactions[] => {
+    play.factions.forEach(playFaction => {
+      if (!this.doesTypeIdExist(displayFactions, playFaction.typeId)) {
+        let newDisplayFactions: DisplayFactions = {
+          factionTypeId: playFaction.typeId,
+          factionGame: []
+        }
+        displayFactions.push(newDisplayFactions);
+      }
+      displayFactions.forEach(displayFaction => {
+          if (displayFaction.factionTypeId === playFaction.typeId) {
+            this.addFactionGame(displayFaction, playFaction.factions);   
+          }
+      });
+    });
+
+    return displayFactions;
+  }
+
+  doesTypeIdExist = (typeList: DisplayFactions[], id: string): boolean => {
+    let found = false;
+    typeList.forEach(factionType => {
+        if (id === factionType.factionTypeId) {
+          found = true;
+        }
+    });
+    return found;
+  }
+
+  addFactionGame = (displayFactions: DisplayFactions, playFaction: playerFaction[]) => {
+    playFaction?.forEach(faction => {
+      if (!this.doesGameIdExist(displayFactions, faction.factionId.split('-')[0])) {
+        let newGameFactions: FactionGame = {
+          gameId: faction.factionId.split('-')[0],
+          factions: []
+        }
+        displayFactions.factionGame.push(newGameFactions);
+      }
+      displayFactions.factionGame.forEach(factionGame => {
+        if (factionGame.gameId === faction.factionId.split('-')[0]) {
+          let factionCol: AngularFirestoreCollection<nameId>;
+          let factions$: Observable<nameId[]>;
+          factionCol = this.afs.collection('factions').doc(factionGame.gameId).collection('factions');
+          factions$ = factionCol.valueChanges();
+          factions$.subscribe(factionNames => {
+            this.addFaction(factionGame.factions, faction, factionNames);  
+          }); 
+        }
+      });  
+    });
+  }
+
+  doesGameIdExist = (typeList: DisplayFactions, id: string): boolean => {
+    let found = false;
+    typeList.factionGame.forEach(factionGame => {
+        if (id === factionGame.gameId) {
+          found = true;
+        }
+    });
+    return found;
+  }
+
+  addAllPlayersToFaction = (): PlayerCount[] => {
+    let playerCountList: PlayerCount[] = [];
+    let playerCount: PlayerCount;
+    this.players.forEach(player => {
+      playerCount = {
+        playerId: player.id,
+        count: 0
+      }
+      playerCountList.push(playerCount);
+    });
+
+    return playerCountList;
+  }
+
+  addFaction = (factions: Faction[], newFaction: playerFaction, factionNames: nameId[]) => {
+    if (!this.doesFactionExist(factions, newFaction.factionId)) {
+      let createdFaction: Faction = {
+        factionId: newFaction.factionId,
+        name: '',
+        playerCount: this.addAllPlayersToFaction()
+      }
+      factionNames.forEach(names => {
+        if (names.id === newFaction.factionId) {
+          createdFaction.name = names.name;
+        }
+      })
+      factions.push(createdFaction);
+    }
+    factions.forEach(faction => {
+        if (faction.factionId === newFaction.factionId) {
+          this.addToFaction(faction, newFaction.playerId);   
+        }
+    });
+  }
+
+  doesFactionExist = (factions: Faction[], id: string): boolean => {
+    let found = false;
+    factions.forEach(faction => {
+        if (id === faction.factionId) {
+          found = true;
+        }
+    });
+    return found;
+  }
+
+  addToFaction = (factionList: Faction, playerId: string) => {
+    let playerFound = false;
+      playerFound = false;
+      factionList.playerCount.forEach(playerCount => {
+        if(playerCount.playerId === playerId) {
+          playerCount.count++;
+          playerFound = true;
+        }
+      });
+      if (!playerFound) {
+        let newPlayer: PlayerCount = {
+          playerId: playerId,
+          count: 1
+        }
+        factionList.playerCount.push(newPlayer);
+      }
   }
 }

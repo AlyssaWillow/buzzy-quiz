@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
 import { Players } from '../home/player-selection';
+import { BoardGame } from '../models/collection';
+import { factionTypeData } from '../models/faction';
 import { Timestamp } from '../models/play';
 
 @Injectable({
@@ -7,22 +11,61 @@ import { Timestamp } from '../models/play';
 })
 export class UtilsService {
 
-  constructor() { }
+  players$: Observable<Players[]>;
+  factionType$: Observable<factionTypeData[]>;
 
-  getPlayerName = (id: string, players: Players[]): string => {
-    for(let player of players) {
-      if (player.id === id) {
-        return player.firstName;
-      }
-    }
-    return ''
+  private playerCol: AngularFirestoreCollection<Players>;
+  private factionTypeCol: AngularFirestoreCollection<factionTypeData>;
+
+  constructor(private afs: AngularFirestore) {
+    this.playerCol = this.afs.collection('tabletop-syndicate').doc('player-data').collection('player-names');
+    this.factionTypeCol = this.afs.collection('faction-type-data');
+
+    this.players$ = this.playerCol.valueChanges();
+    this.factionType$ = this.factionTypeCol.valueChanges();
   }
 
+  getPlayerName = (id: string, players: Players[]): string => {
+      for(let player of players) {
+        if (player.id === id) {
+          return player.firstName;
+        }
+      }
+      return '';
+  }
+
+  getGameName = (id: string, gameCollection: BoardGame[]): string => {
+    for(let game of gameCollection) {
+      if (game.objectid === id) {
+        return game.name.text;
+      }
+    }
+    return '';
+}
+
+getGameImage = (id: string, gameCollection: BoardGame[]): string => {
+  for(let game of gameCollection) {
+    if (game.objectid === id) {
+      return game.image;
+    }
+  }
+  return '';
+}
+
+  getFactionTypeName = (id: string): string => {
+    this.factionType$.subscribe((factionTypes: factionTypeData[]) => {
+      for(let factionType of factionTypes) {
+        if (factionType.id === id) {
+          return factionType.name;
+        }
+      }
+      return ''
+    });
+    return '';
+  }
 
   getDate = (date: Timestamp): string => {
-    console.log(date.seconds)
     let dater: Date = new Date(parseInt(date.seconds) * 1000);
-    console.log(dater)
     let dateStr: string = '';
     if (dater.getMonth() + 1 < 10) {
       dateStr += '0' + (dater.getMonth() + 1);

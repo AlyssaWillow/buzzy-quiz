@@ -13,4 +13,5 @@ export class GsWinsSectionComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  
 }
