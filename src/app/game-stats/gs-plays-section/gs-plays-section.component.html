@@ -13,7 +13,7 @@
         <div class="play plays-date">{{utils.getDate(play.date)}}</div>
         <div class="play plays-scores">
             <div *ngFor="let score of play.scores; let i = index">
-                {{score.playerName}}: {{score.score}}<span *ngIf="(i + 1) < play.scores.length">,</span>
+                {{score.playerId}}: {{score.score}}<span *ngIf="(i + 1) < play.scores.length">,</span>
             </div>
         </div>
         <div class="play plays-winner">

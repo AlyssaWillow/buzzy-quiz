@@ -1,10 +1,15 @@
-<div class="nav-pane">
+ <div class="nav-pane">
     <div class="nav-title">
         Tabletop<br/>Syndicate
     </div>
     <div class="nav-list">
         <div class="nav" *ngFor="let navi of nav">
-            <div class="nav-link" href="#" [routerLink]="[navi.value]">{{navi.disp}}</div>
+            <div *ngIf="!navi.restricted">
+                <div class="nav-link" href="#" [routerLink]="[navi.value]">{{navi.disp}}</div>
+            </div>
+            <div *ngIf="navi.restricted">
+                <div *ngIf="authenticationService.userData | async" class="nav-link" href="#" [routerLink]="[navi.value]">{{navi.disp}}</div>
+            </div>
         </div>
     </div>
 </div>

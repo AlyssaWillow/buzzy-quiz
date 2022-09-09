@@ -1,4 +1,6 @@
+import { Time } from "@angular/common";
 import { DisplayFactions, Faction, FactionCollection } from "./faction";
+import { ScenarioDb, ScenarioPlayDb } from "./scenario";
 
 export interface Play {
     date: Timestamp;
@@ -8,18 +10,38 @@ export interface Play {
     gameType: string;
     location: string;
     pick: string;
-    scenario: Scenario;
+    scenario: Scenario | undefined;
     winners: string[];
-    scores: Score[];
+    scores: ScoreDb[];
+}
+
+export interface PlayDb {
+    id: string;
+    order: number,
+    date: Timestamp;
+    expansionsUsed: string[];
+    factions: PlayFaction[];
+    gameId: string;
+    gameType: string;
+    location: string;
+    pick: string;
+    scenario: ScenarioPlayDb | undefined;
+    winners: string[];
+    scores: ScoreDb[];
 }
 
 export interface PlayFaction {
     typeId: string
-    factions: playerFaction[];
+    factions: PlayerFaction[];
 }
 
 export interface Score {
     playerName: string;
+    score: string;
+}
+
+export interface ScoreDb {
+    playerId: string;
     score: string;
 }
 
@@ -30,7 +52,7 @@ export interface Expansion {
 
 export interface PlayInstance {
     date: Timestamp;
-    scores: Score[];
+    scores: ScoreDb[];
     winners: string[];
     pick: string;
     expansionsUsed: Expansion[];
@@ -91,7 +113,14 @@ export interface DisplayPlayerFaction {
     faction: Faction;
 }
 
-export interface playerFaction {
+export interface PlayerFaction {
+    playerId: string;
+    factionId: string;
+}
+
+export interface GamePlayerFaction {
+    factionTypeId: string;
+    gameId: string;
     playerId: string;
     factionId: string;
 }

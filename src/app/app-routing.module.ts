@@ -5,6 +5,9 @@ import { LoginComponent } from './login/login.component';
 import { CollectionComponent } from './collection/collection.component';
 import { ConventionShirtsComponent } from './convention-shirts/convention-shirts.component';
 import { GameStatsComponent } from './game-stats/game-stats.component';
+import { AddPlayComponent } from './add/add-play/add-play.component';
+import { AddFactionComponent } from './add/add-faction/add-faction.component';
+import { AddScenarioComponent } from './add/add-scenario/add-scenario.component';
 
 const routes: Routes = [
   { 
@@ -45,6 +48,30 @@ const routes: Routes = [
     component: ConventionShirtsComponent,
     data: {
       title: 'Convention Shirt History'
+    }
+  },
+  { 
+    path: 'add-play', 
+    pathMatch: 'full',  
+    component: AddPlayComponent,
+    data: {
+      title: 'Add Play'
+    }
+  },
+  { 
+    path: 'add-faction', 
+    pathMatch: 'full',  
+    component: AddFactionComponent,
+    data: {
+      title: 'Add Faction'
+    }
+  },
+  { 
+    path: 'add-scenario', 
+    pathMatch: 'full',  
+    component: AddScenarioComponent,
+    data: {
+      title: 'Add Scenario'
     }
   },
   { 
