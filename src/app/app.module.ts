@@ -31,6 +31,10 @@ import { ConventionShirtsComponent } from './convention-shirts/convention-shirts
 import { ConventionShirtsModule } from './convention-shirts/convention-shirts.module';
 import { GameStatsModule } from './game-stats/game-stats.module';
 import { UtilsService } from './services/utils.service';
+import { AddPlayModule } from './add/add-play/add-play.module';
+import { MatNativeDateModule } from '@angular/material/core';
+import { AddFactionModule } from './add/add-faction/add-faction.module';
+import { AddScenarioModule } from './add/add-scenario/add-scenario.module';
 
 @NgModule({
   declarations: [
@@ -57,11 +61,15 @@ import { UtilsService } from './services/utils.service';
     MatMenuModule,
     LoginModule,
     LemanCollectionModule,
+    AddPlayModule,
+    AddFactionModule,
+    AddScenarioModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     HotToastModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatNativeDateModule
   ],
   providers: [
     AuthenticationService,

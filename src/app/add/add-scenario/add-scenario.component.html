@@ -1,0 +1,128 @@
+<div class="page">
+    <div class="add-play-header">
+        Add / Edit Scenarios<span *ngIf="selectedGame">: {{selectedGame.name.text}}</span>
+    </div>
+    
+    <div class="select-game">
+        <div class="select-game-message">
+            Select a game to view/add/edit/delete scenarios
+        </div>
+        <div class="top-inputs">
+            <div class="select-game-dropdown">
+                <mat-form-field appearance="fill">
+                    <mat-label>Select Game</mat-label>
+                    <mat-select [(ngModel)]="selectedGame" name="getGames" (selectionChange)="getScenarios($event.value.objectid)">
+                        <mat-option *ngFor="let col of bothCol" [value]="col">
+                            {{col?.name?.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="enable-deletes" *ngIf="selectedGame">
+                <button (click)="enableDeletes()">
+                    <span *ngIf="!deletesEnabled">Enable Delete</span>
+                    <span *ngIf="deletesEnabled">Disable Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="scenarioDeleted && deletesEnabled" class="deleted-scenario-text">
+        {{scenarioDeletedName.name}} has been deleted from {{ utils.getGameName(scenarioDeletedName.id.split('-')[0], bothCol)}}
+    </div>
+    
+    <div *ngIf="selectedGame" class="show-scenarios">
+        <div class="scenario-row headers">
+            <div class="scenario-order">
+                Order
+            </div>
+            <div class="scenario-type-id">
+                Cycle Id
+            </div>
+            <div class="scenario-type-name">
+                Cycle Name
+            </div>
+            <div class="game-scenario-id">
+                Combined Id
+            </div>
+            <div class="game-scenario-id">
+                Scenario Id
+            </div>
+            <div class="scenario-name">
+                Scenario Name
+            </div>
+            <div *ngIf="deletesEnabled" class="delete">
+                Delete
+            </div>
+        </div>
+        <hr>
+        <div *ngFor="let scenario of scenarioList; let i = index">
+            <div class="scenario-row selectable row{{i % 2}}" (click)="setFactonDate(scenario.order, scenario.id.split('-')[1], scenario.cycle, scenario.name)">
+                <div class="scenario-order">
+                    {{scenario.order}}
+                </div>
+                <div class="scenario-type-id">
+                    {{scenario.cycle}}
+                </div>
+                <div class="scenario-type-name">
+                    {{utils.getCycleName(scenario.cycle, cycleList)}}
+                </div>
+                <div class="game-scenario-id">
+                    {{scenario.id}}
+                </div>
+                <div class="game-scenario-id">
+                    {{scenario.id.split('-')[1]}}
+                </div>
+                <div class="scenario-name">
+                    {{scenario.name}}
+                </div>
+                <div *ngIf="deletesEnabled" class="delete">
+                    <button (click)="deleteSelectedScenario(scenario)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="add-scenario">
+        <div class="inputs">
+            <div class="select-game-dropdown">
+                <mat-form-field appearance="fill">
+                    <mat-label>Order</mat-label>
+                    <mat-select [(ngModel)]="selectedOrder" name="getScenarioTypes">
+                        <mat-option *ngFor="let num of numbers" [value]="num">
+                            {{num}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="select-game-dropdown">
+                <mat-form-field appearance="fill">
+                    <mat-label>Cycle</mat-label>
+                    <mat-select [(ngModel)]="selectedCycle" name="getScenarioTypes">
+                        <mat-option *ngFor="let cycle of cycleList" [value]="cycle">
+                            {{cycle.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        
+            <div class="select-game-dropdown">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Scenario Id</mat-label>
+                    <input matInput placeholder="Ex: 01 or 01B" [(ngModel)]="scenarioId">
+                </mat-form-field>
+            </div>
+        
+            <div class="select-game-dropdown">
+                <mat-form-field class="input-full" appearance="fill">
+                    <mat-label>Scenario Name</mat-label>
+                    <input matInput placeholder="Ex: The Marcy Case" [(ngModel)]="scenarioName">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="submit">
+            <button (click)="submit()" 
+                [attr.disabled]="selectedGame && selectedCycle.name !== '' && selectedOrder && scenarioId && scenarioName ? null : ''">Submit</button>
+        </div>
+    </div>
+</div>

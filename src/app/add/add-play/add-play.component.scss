@@ -1,0 +1,178 @@
+.add-play {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 2rem 10%;
+}
+
+.add-play-header {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 600;
+    background-color: grey;
+}
+
+.date {
+    display: flex;
+    flex-direction: row;
+}
+
+.select-game {
+    width: 35%;
+}
+.heading {
+    font-weight:600
+}
+.hide-faction-button {
+    margin-left: 1rem;
+}
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+.selected-space {
+    padding: 1rem 0;
+}
+.select-expansions {
+    width: 55%;
+}
+
+.factions-title {
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+    align-items: center;
+    width: 97.5%;
+    background-color: gray;
+    height: 3rem;
+    padding: 0 2.5%;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.submit-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    padding-right: 5%;
+    padding-bottom: 10rem;
+}
+
+.additional-factions-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    padding-right: 5%;
+    padding-bottom: 5rem;
+}
+
+.selection-factions-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.select-factions-faction {
+    width: 50%;
+}
+
+.select-factions-pick {
+    width: 10%;
+}
+
+.select-factions-type {
+    width: 15%;
+}
+.score-input {
+    width: 50%;
+}
+.select-score-pick {
+    width: 40%;
+}
+.select-factions-game {
+    width: 15%;
+}
+
+.select-faction-dropdown {
+    width: 100%;
+}
+
+.new-faction-section {
+    padding-bottom: 5rem;
+}
+
+hr {
+    width: 100%;
+    height: 1px;
+}
+
+.play-id {
+    width: 10%;
+}
+
+.fation-type-id {
+    width: 10%;
+}
+
+.play-order {
+    width: 7%;
+}
+
+.play-winners {
+    width: 15%
+}
+
+.winners {
+    width: 30%;
+}
+
+.play-name{
+    width: 40%
+}
+.delete{
+    width:5%
+}
+
+.headers {
+    font-weight:600
+}
+
+.faction-row{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    padding: .3rem 1rem;
+}
+
+.deleted-faction-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding-left: 10rem;
+    color: red;
+}
+
+.type-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.button-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+.show-plays {
+    padding: 2rem 0;
+}
+.top-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

@@ -37,9 +37,14 @@ export interface FactionGame {
     factions: Faction[];
 }
 
-export interface factionDb {
+export interface ScenarioDb {
     order: number;
-    typeId: string;
     id: string;
     name: string;
+    cycle: string;
+}
+
+export interface ScenarioPlayDb {
+    id: string;
+    win: boolean
 }

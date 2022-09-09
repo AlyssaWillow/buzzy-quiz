@@ -6,7 +6,7 @@ import { AngularFirestore,
 import { DisplayPlayerSelection, Players } from '../home/player-selection';
 import { DisplayFactions, Faction, FactionCollection, FactionGame, PlayerCount } from '../models/faction';
 import { Observable } from 'rxjs';
-import { DisplayPlay, GameInstance, Play, PlayInstance, Timestamp, playerFaction, Wins } from '../models/play';
+import { DisplayPlay, GameInstance, Play, PlayInstance, Timestamp, PlayerFaction, Wins } from '../models/play';
 import { Locations } from '../models/locations';
 import { nameId } from '../models/generic';
 import { BoardGameGeekService } from '../services/board-game-geek.service';
@@ -81,8 +81,8 @@ export class GameStatsComponent implements OnInit {
   createNewGamePlay = () => {
     let gamePlay: PlayInstance = {
       date: {
-        seconds: '',
-        nanoseconds: ''
+        seconds: '0',
+        nanoseconds: '0'
       },
       scores: [],
       winners: [],
@@ -157,7 +157,7 @@ export class GameStatsComponent implements OnInit {
     this.lemanCollection$.subscribe(lem => {
       this.hendCollection$.subscribe(hen => {
 
-        this.bothCol = lem?.item;
+        this.bothCol.concat(lem?.item);
         this.bothCol.concat(hen?.item);
       });
     });
@@ -210,7 +210,7 @@ export class GameStatsComponent implements OnInit {
       }
       displayFactions.forEach(displayFaction => {
           if (displayFaction.factionTypeId === playFaction.typeId) {
-            this.addFactionGame(displayFaction, playFaction.factions);   
+            this.addFactionGame(displayFaction, playFaction.factions, displayFaction);   
           }
       });
     });
@@ -228,7 +228,7 @@ export class GameStatsComponent implements OnInit {
     return found;
   }
 
-  addFactionGame = (displayFactions: DisplayFactions, playFaction: playerFaction[]) => {
+  addFactionGame = (displayFactions: DisplayFactions, playFaction: PlayerFaction[], displayFaction: DisplayFactions) => {
     playFaction?.forEach(faction => {
       if (!this.doesGameIdExist(displayFactions, faction.factionId.split('-')[0])) {
         let newGameFactions: FactionGame = {
@@ -241,7 +241,7 @@ export class GameStatsComponent implements OnInit {
         if (factionGame.gameId === faction.factionId.split('-')[0]) {
           let factionCol: AngularFirestoreCollection<nameId>;
           let factions$: Observable<nameId[]>;
-          factionCol = this.afs.collection('factions').doc(factionGame.gameId).collection('factions');
+          factionCol = this.afs.collection('factions').doc(factionGame.gameId).collection(displayFaction.factionTypeId);
           factions$ = factionCol.valueChanges();
           factions$.subscribe(factionNames => {
             this.addFaction(factionGame.factions, faction, factionNames);  
@@ -275,7 +275,7 @@ export class GameStatsComponent implements OnInit {
     return playerCountList;
   }
 
-  addFaction = (factions: Faction[], newFaction: playerFaction, factionNames: nameId[]) => {
+  addFaction = (factions: Faction[], newFaction: PlayerFaction, factionNames: nameId[]) => {
     if (!this.doesFactionExist(factions, newFaction.factionId)) {
       let createdFaction: Faction = {
         factionId: newFaction.factionId,
