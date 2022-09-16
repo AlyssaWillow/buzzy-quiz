@@ -35,6 +35,8 @@ import { AddPlayModule } from './add/add-play/add-play.module';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AddFactionModule } from './add/add-faction/add-faction.module';
 import { AddScenarioModule } from './add/add-scenario/add-scenario.module';
+import { AddCycleModule } from './add/add-cycle/add-cycle.module';
+import { AddAllModule } from './add/add-all/add-all.module';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,8 @@ import { AddScenarioModule } from './add/add-scenario/add-scenario.module';
     AddPlayModule,
     AddFactionModule,
     AddScenarioModule,
+    AddCycleModule,
+    AddAllModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,

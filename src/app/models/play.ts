@@ -1,6 +1,6 @@
 import { Time } from "@angular/common";
 import { DisplayFactions, Faction, FactionCollection } from "./faction";
-import { ScenarioDb, ScenarioPlayDb } from "./scenario";
+import { ScenarioDb, ScenarioGame, ScenarioPlayDb } from "./scenario";
 
 export interface Play {
     date: Timestamp;
@@ -80,7 +80,7 @@ export interface GameInstance {
     gameName: string;
     plays: PlayInstance[];
     playerWins: PlayerWins[];
-    scenarios: Scenario[];
+    scenarios: ScenarioGame[];
     gameImage: string;
     factions: DisplayFactions[]
     expansionsUsed: Expansion[];

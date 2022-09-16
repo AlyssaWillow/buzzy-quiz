@@ -1,0 +1,31 @@
+<div class="faction-game-row">
+    <div class="game-image-section">
+        <img class="game-image" src="{{utils.getGameImage(scenarioGame.gameId, bothCol)}}"/>
+    </div>
+    <div *ngFor="let cycle of scenarioGame.cycles" class="cycle-row">
+        <div [ngClass]="{'faction-game-row2': scenarioGame.cycles.length > 1,'faction-game-row-single': scenarioGame.cycles.length === 1 }">
+            <div class="name-column">
+                <div vlass="name">
+                    {{utils.getCycleName(cycle.cycleId, cycleListForGame)}}
+                </div>
+            </div>
+            <div class="factions-column">
+                <div *ngFor="let scenario of scenarioListForGame; let i = index" class="faction-row row{{i%2}}">
+                    <div class="faction-name">{{scenario.name}}</div>
+                    <div *ngFor="let scenarioScore of cycle.scenarios" class="faction-row">
+                        <div *ngIf="scenario.id === scenarioScore.scenarioId" class="faction-row">
+                            <div class="scenario-plays">{{scenarioScore.plays}}</div>
+                            <div class="scenario-wins">{{scenarioScore.wins}}</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div *ngIf="!last" class="game-divider">
+        <div class="divider"><hr></div>
+    </div>
+    

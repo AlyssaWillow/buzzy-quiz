@@ -1,0 +1,33 @@
+
+<div class="factions-section">
+        <div class="faction-title">
+            Scenarios
+        </div>  
+        <div class="faction-titles-row">
+            <div class="factions-titles">
+                <div class="title factions-name">
+                    Scenario Name
+                </div>
+                <div class="title factions-player2">
+                    Plays
+                </div>
+                <div class="title factions-player2">
+                    Wins
+                </div>
+                <div class="end-buffer"></div>
+            </div>
+        </div>
+        <div class="game-divider">
+            <div class="divider"><hr></div>
+        </div>
+        <div class="player-factions">
+            <div *ngFor="let scenario of scenarios; let i = index">
+            <app-gs-sn-game-scenario
+                    [scenarioGame]="scenario"
+                    [bothCol]="bothCol"
+                    [last]="((i+1) === scenarios.length)">
+                </app-gs-sn-game-scenario>
+            </div>
+        </div> 
+    
+</div>

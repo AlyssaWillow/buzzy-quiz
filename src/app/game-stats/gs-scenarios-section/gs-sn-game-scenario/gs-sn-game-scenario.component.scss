@@ -1,0 +1,165 @@
+.row1 {
+  background: #ECECEC;
+}
+
+.row0 {
+  background: #FFFFFF;
+}
+
+.play {
+  font-size: 1rem;
+  display: inline-flex;
+  padding-bottom: .25rem;
+  flex-direction: row;
+}
+
+.plays-list {
+  font-size: 1rem;
+  display: inline-flex;
+  flex-direction: row;
+}
+.faction-title {
+font-size: 2rem;
+  font-weight: 600;
+  background: linear-gradient(0.25turn, gray, 5%, white);
+  width: 100%;
+  height: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.faction-title {
+  font-size: 1.6rem;
+  width: 100%;
+  margin-bottom: .8rem;
+}
+
+.factions-titles {
+  display:flex;
+  flex-direction: row;
+}
+
+.factions-list {
+  display:flex;
+  flex-direction: row;
+}
+
+.factions-section {
+  background-color: white;
+  padding: 2rem 7rem;
+}
+
+.factions-name {
+  width: 68%;
+}
+
+.factions-player {
+  width: 8%;
+}
+
+.factions-player2 {
+  min-width: 4.5rem;
+}
+
+.player-factions {
+  display: flex;
+  flex-direction: column;
+}
+
+.faction-game-row {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem 2rem 1rem 0;
+  width:100%;
+}
+
+.faction-game-row2 {
+  display: flex;
+  flex-direction: row;
+}
+
+.faction-game-row2 {
+  display: flex;
+  flex-direction: row;
+}
+
+.faction-game-row-single {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.image-column {
+  width: 25%;
+}
+
+.factions-column {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+justify-content: center;
+}
+
+.faction-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-image {
+  height: 10rem;
+  width: max-content;
+}
+
+.game-image-section {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.name-column {
+min-width: 13.3rem;
+font-weight: 400;
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding-right: 2rem;
+}
+
+.name {
+  width: 100%;
+}
+
+.faction-name {
+width: 80%;
+}
+
+.game-divider {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.divider {
+  width: 66%;
+}
+
+.has-played {
+  font-weight:500;
+}
+
+.not-played {
+  font-weight:300;
+}
+
+.cycle-row {
+  width: 100%;
+  padding: 1rem 0 1rem 0;
+}
+
+.scenario-plays {
+  width:5.5rem;
+}
+.scenario-wins {
+  width:8rem;
+}
