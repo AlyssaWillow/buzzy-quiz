@@ -102,6 +102,7 @@ export class AddFactionComponent implements OnInit {
       let factions$ = factions.valueChanges();
       factions$.subscribe(factionz => {
         this.factionList = factionz;
+        this.factionList.sort((a, b) => (a.order > b.order) ? 1 : -1)
       })
     }
   }

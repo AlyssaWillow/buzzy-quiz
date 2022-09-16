@@ -48,3 +48,19 @@ export interface ScenarioPlayDb {
     id: string;
     win: boolean
 }
+
+export interface ScenarioGame {
+    gameId: string;
+    cycles: Cycle[];
+}
+
+export interface Cycle {
+    cycleId: string;
+    scenarios: DisplayScenario[];
+}
+
+export interface DisplayScenario {
+    scenarioId: string;
+    wins: number;
+    plays: number;
+}

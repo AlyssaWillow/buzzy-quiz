@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GsFactionsSectionComponent } from './gs-factions-section.component';
+import { GsFnGameFactionModule } from './gs-fn-game-faction/gs-fn-game-faction.module';
 
 
 
@@ -9,7 +10,8 @@ import { GsFactionsSectionComponent } from './gs-factions-section.component';
     GsFactionsSectionComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    GsFnGameFactionModule
   ],
   exports: [
     GsFactionsSectionComponent

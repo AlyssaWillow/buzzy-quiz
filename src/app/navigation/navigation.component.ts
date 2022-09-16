@@ -32,6 +32,11 @@ export class NavigationComponent implements OnInit {
       restricted: false
     },
     {
+      value: '/add',
+      disp: 'Add',
+      restricted: true
+    },
+    {
       value: '/add-play',
       disp: 'Add Play',
       restricted: true
@@ -44,6 +49,11 @@ export class NavigationComponent implements OnInit {
     {
       value: '/add-scenario',
       disp: 'Add Scenario',
+      restricted: true
+    },
+    {
+      value: '/add-cycle',
+      disp: 'Add Cycle',
       restricted: true
     }
   ]

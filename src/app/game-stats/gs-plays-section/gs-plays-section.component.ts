@@ -27,6 +27,7 @@ export class GsPlaysSectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.plays.sort((a, b) => (a.date > b.date) ? 1 : -1)
     this.players$.subscribe((players: Players[]) => {
       this.players = players;
     })

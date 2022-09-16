@@ -6,11 +6,18 @@ import { AngularFirestore,
 import { DisplayPlayerSelection, Players } from '../home/player-selection';
 import { DisplayFactions, Faction, FactionCollection, FactionGame, PlayerCount } from '../models/faction';
 import { Observable } from 'rxjs';
-import { DisplayPlay, GameInstance, Play, PlayInstance, Timestamp, PlayerFaction, Wins } from '../models/play';
+import { DisplayPlay, GameInstance, Play, PlayInstance, Timestamp, PlayerFaction, Wins, Scenario, PlayDb } from '../models/play';
 import { Locations } from '../models/locations';
 import { nameId } from '../models/generic';
 import { BoardGameGeekService } from '../services/board-game-geek.service';
 import { BoardGame, GameCollection } from '../models/collection';
+import { Cycle, DisplayScenario, ScenarioDb, ScenarioGame, ScenarioPlayDb } from '../models/scenario';
+
+
+interface CollectionGroups {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-game-stats',
@@ -20,12 +27,12 @@ import { BoardGame, GameCollection } from '../models/collection';
 export class GameStatsComponent implements OnInit {
   private playerCol: AngularFirestoreCollection<Players>;
   private factionsCol: AngularFirestoreCollection<Faction>;
-  private playsCol: AngularFirestoreCollection<Play>;
+  private playsCol: AngularFirestoreCollection<PlayDb>;
   private locationCol: AngularFirestoreCollection<Locations>;
 
   players$: Observable<Players[]>;
   factions$: Observable<Faction[]>;
-  plays$: Observable<Play[]>;
+  plays$: Observable<PlayDb[]>;
   locations$: Observable<Locations[]>;
   lemanCollection$: Observable<GameCollection>;
   hendCollection$: Observable<GameCollection>;
@@ -33,6 +40,16 @@ export class GameStatsComponent implements OnInit {
   playData: GameInstance[] = [];
   bothCol: BoardGame[] = [];
   players: Players[];
+
+  display: string = 'typ-01A';
+
+  types: CollectionGroups[] = [
+    {viewValue: 'All', value: 'typ-01A'},
+    {viewValue: 'Wins', value: 'typ-02W'},
+    {viewValue: 'Play-history', value: 'typ-05P'},
+    {viewValue: 'Factions', value: 'typ-03F'},
+    {viewValue: 'Scenarios', value: 'typ-04S'},
+  ];
 
   constructor(private afs: AngularFirestore,
               private boardGameGeekService: BoardGameGeekService,
@@ -62,13 +79,20 @@ export class GameStatsComponent implements OnInit {
       this.players = players;
     });
     this.locations$.subscribe(locations => {
-      this.factions$.subscribe(factions => {
+      
+    });
+    this.factions$.subscribe(factions => {
         
+    });
+
+    this.lemanCollection$.subscribe(lem => {
+      this.hendCollection$.subscribe(hen => {
+        this.bothCol = lem?.item.concat(hen?.item);
       });
     });
   }
 
-  getGameIdList = (plays: Play[]) => {
+  getGameIdList = (plays: PlayDb[]) => {
     let gameList: string[] = [];
     plays.forEach((play) => {
       if (!gameList.includes(play.gameId)) {
@@ -101,7 +125,7 @@ export class GameStatsComponent implements OnInit {
     return gamePlay;
   }
    
-  collectGameData = (plays: Play[]): GameInstance[] => {
+  collectGameData = (plays: PlayDb[]): GameInstance[] => {
     let games: GameInstance[] = [];
     let gameList: string[] = this.getGameIdList(plays);
     let gameInstance: GameInstance;
@@ -118,9 +142,9 @@ export class GameStatsComponent implements OnInit {
           gamePlay.scores = play.scores;
           gamePlay.winners = play.winners;
           gamePlay.pick = play.pick;
-          //if (play.scenario?.scenarioId !== undefined) {
-          //  gameInstance.scenarios = this.createScenario(gameInstance.scenarios, play);
-          //}
+          if (play.scenario?.id !== undefined && play.scenario?.id !== '') {
+           gameInstance.scenarios = this.createScenarios(gameInstance.scenarios, play);
+          }
           if (play.winners?.length > 0) {
             gameInstance.winners = this.createWinners(gameInstance.winners, play);
           }
@@ -154,14 +178,6 @@ export class GameStatsComponent implements OnInit {
     };
     gameInstance.gameId = id;
 
-    this.lemanCollection$.subscribe(lem => {
-      this.hendCollection$.subscribe(hen => {
-
-        this.bothCol.concat(lem?.item);
-        this.bothCol.concat(hen?.item);
-      });
-    });
-
     this.bothCol.forEach(game => {
       if (game.objectid === id) {
         gameInstance.gameImage = game.image;
@@ -172,7 +188,7 @@ export class GameStatsComponent implements OnInit {
     return gameInstance;
   }
 
-  createWinners = (winners: Wins[], play: Play): Wins[] => {
+  createWinners = (winners: Wins[], play: PlayDb): Wins[] => {
 
     if (winners.length < 4) {
       let win: Wins;
@@ -199,7 +215,72 @@ export class GameStatsComponent implements OnInit {
     return winners;
   }
 
-  createFactions = (displayFactions: DisplayFactions[], play: Play): DisplayFactions[] => {
+  createScenarios = (displayScenarios: ScenarioGame[], play: PlayDb): ScenarioGame[] =>  {
+    if (play.scenario) {
+      if (!this.doesScenarioGameIdExist(displayScenarios, play.scenario.id.split("-")[0])) {
+        let newScenarioGame: ScenarioGame = {
+          gameId: play.scenario.id.split("-")[0],
+          cycles: []
+        }
+        displayScenarios.push(newScenarioGame);
+      }
+      displayScenarios.forEach(displayScenario => {
+          if (displayScenario.gameId === play.scenario?.id.split("-")[0]) {
+            displayScenario.cycles = this.addCycles(displayScenario, play.scenario);   
+          }
+      });
+    };
+    return displayScenarios;
+  }
+
+  addCycles = (displayScenario: ScenarioGame, playScenario: ScenarioPlayDb): Cycle[] =>  {
+    if (playScenario) {
+      let scenarioCol: AngularFirestoreCollection<ScenarioDb>;
+      let scenarios$: Observable<ScenarioDb[]>;
+
+      scenarioCol = this.afs.collection('scenarios').doc(playScenario.id.split("-")[0]).collection('scenarios');
+      scenarios$ = scenarioCol.valueChanges();
+
+      scenarios$.subscribe(scenarios => { 
+        scenarios.forEach(scenario => {
+          if (scenario.id === playScenario.id) {
+            if(!this.doesCycleIdExist(scenario.cycle, displayScenario)) {
+              let newCycle: Cycle = {
+                cycleId: scenario.cycle,
+                scenarios: []
+              }
+              displayScenario.cycles.push(newCycle)
+            }
+            displayScenario.cycles.forEach(cycle => {
+              if (cycle.cycleId === scenario.cycle) {
+                if(!this.doesScenarioIdExist(cycle.scenarios, playScenario.id)) {
+                  let newScenario: DisplayScenario = {
+                    scenarioId: playScenario.id,
+                    wins: 0,
+                    plays: 0
+                  }
+                  cycle.scenarios.push(newScenario)
+                }
+                cycle.scenarios.forEach(scenario2 => {
+                  if (scenario2.scenarioId === playScenario.id) {
+                    scenario2.plays++;
+                    if (playScenario.win) {
+                      scenario2.wins++;
+                    }
+                  }
+                })
+              }
+            })
+          }
+          
+        })
+
+      }); 
+    };
+    return displayScenario.cycles;
+  }
+
+  createFactions = (displayFactions: DisplayFactions[], play: PlayDb): DisplayFactions[] => {
     play.factions.forEach(playFaction => {
       if (!this.doesTypeIdExist(displayFactions, playFaction.typeId)) {
         let newDisplayFactions: DisplayFactions = {
@@ -218,10 +299,40 @@ export class GameStatsComponent implements OnInit {
     return displayFactions;
   }
 
+  doesScenarioIdExist = (typeList: DisplayScenario[], id: string): boolean => {
+    let found = false;
+    typeList.forEach(factionType => {
+        if (id === factionType.scenarioId) {
+          found = true;
+        }
+    });
+    return found;
+  }
+
   doesTypeIdExist = (typeList: DisplayFactions[], id: string): boolean => {
     let found = false;
     typeList.forEach(factionType => {
         if (id === factionType.factionTypeId) {
+          found = true;
+        }
+    });
+    return found;
+  }
+
+  doesCycleIdExist = (id: string, typeList: ScenarioGame): boolean => {
+    let found = false;
+    typeList.cycles.forEach(cycle => {
+        if (id === cycle.cycleId) {
+          found = true;
+        }
+    });
+    return found;
+  }
+
+  doesScenarioGameIdExist = (ScenarioGames: ScenarioGame[], id: string): boolean => {
+    let found = false;
+    ScenarioGames.forEach(ScenarioGame => {
+        if (id === ScenarioGame.gameId) {
           found = true;
         }
     });

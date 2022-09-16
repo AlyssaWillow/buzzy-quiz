@@ -8,6 +8,8 @@ import { GameStatsComponent } from './game-stats/game-stats.component';
 import { AddPlayComponent } from './add/add-play/add-play.component';
 import { AddFactionComponent } from './add/add-faction/add-faction.component';
 import { AddScenarioComponent } from './add/add-scenario/add-scenario.component';
+import { AddCycleComponent } from './add/add-cycle/add-cycle.component';
+import { AddAllComponent } from './add/add-all/add-all.component';
 
 const routes: Routes = [
   { 
@@ -51,6 +53,14 @@ const routes: Routes = [
     }
   },
   { 
+    path: 'add', 
+    pathMatch: 'full',  
+    component: AddAllComponent,
+    data: {
+      title: 'Add'
+    }
+  },
+  { 
     path: 'add-play', 
     pathMatch: 'full',  
     component: AddPlayComponent,
@@ -72,6 +82,14 @@ const routes: Routes = [
     component: AddScenarioComponent,
     data: {
       title: 'Add Scenario'
+    }
+  },
+  { 
+    path: 'add-cycle', 
+    pathMatch: 'full',  
+    component: AddCycleComponent,
+    data: {
+      title: 'Add Cycle'
     }
   },
   { 

@@ -1,11 +1,28 @@
-<!-- <div class="note-banner">
+<div class="note-banner">
     <div class="note-text">
-        Note: This page pulls data from BGG.com, if a game image is missing, the game needs to be added to a BGG collection
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Collections to Display</mat-label>
+                <mat-select [(ngModel)]="display" name="collections">
+                    <mat-option *ngFor="let col of types" [value]="col.value">
+                        {{col.viewValue}}
+                      </mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
     </div>
-</div> -->
+</div>
 <div class="game-section" *ngFor="let game of playData">
+    <div *ngIf="display ==='typ-01A' 
+        || (display === 'typ-03F' && game.factions.length > 0) 
+        || (display === 'typ-04S' && game.scenarios.length > 0)
+        || (display === 'typ-02W' && game.winners.length > 0)
+        || (display === 'typ-05P' && game.plays.length > 0)">
     <div class="game-header">
-        <div class="header-text">{{game.gameName}}</div>
+        <img class="header-image" src="{{game.gameImage}}"/>
+        <div class="header-text-section">
+            <div class="header-text">{{game.gameName}}</div>
+        </div>
     </div>
     <div class="game-body">
         <div class="game-information">
@@ -19,7 +36,7 @@
             </div>        
             <div class="game-name-section">
                 <div class="game-name">
-                    <div *ngIf="game.gameName !== undefined || game.gameName !== ''">
+                    <div *ngIf="game.gameName !== undefined && game.gameName !== ''">
                         {{game.gameName}}
                     </div>
                     <div *ngIf="game.gameName === undefined || game.gameName === ''">
@@ -29,8 +46,16 @@
                 </div>
             </div>
         </div>
-        <app-gs-wins-section [winners]="game.winners"></app-gs-wins-section>
-        <app-gs-plays-section [plays]="game.plays"></app-gs-plays-section>
-        <app-gs-factions-section [factions]="game.factions"></app-gs-factions-section>
+
+        <app-gs-wins-section *ngIf="display ==='typ-01A' || display === 'typ-02W'" [winners]="game.winners"></app-gs-wins-section>
+
+        <app-gs-plays-section *ngIf="display ==='typ-01A' || display === 'typ-05P'" [plays]="game.plays"></app-gs-plays-section>
+
+        <app-gs-factions-section *ngIf="display ==='typ-01A' || display ==='typ-03F'" [factions]="game.factions" [bothCol]="bothCol"></app-gs-factions-section>
+        
+        <div *ngIf="game.scenarios && game.scenarios.length > 0">
+            <app-gs-scenarios-section *ngIf="display ==='typ-01A' || display ==='typ-04S'" [scenarios]="game.scenarios" [bothCol]="bothCol"></app-gs-scenarios-section>
+        </div>
     </div>
+</div>
 </div>

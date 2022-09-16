@@ -258,7 +258,7 @@ export class AddPlayComponent implements OnInit {
         gameType: typeId,
         location: locationId,
         pick: pickId,
-        scenario: (this.containsScenario ? this.createScenario(this.selectedScenario.id, this.selectedScenario.win) : undefined),
+        scenario: (this.containsScenario ? this.createScenario(this.selectedScenario.id, this.selectedScenario.win) : {id: '', win: false}),
         winners: this.createWinners(this.selectedWinners),
         scores: (this.containsScores ? this.selectedPlayerScoresList : [])
       };
@@ -435,7 +435,7 @@ export class AddPlayComponent implements OnInit {
 
     this.selectedPlayerScoresList = play.scores;
 
-    if (play.scenario) {
+    if (play.scenario && play.scenario?.id !== '') {
       this.containsScenario = true;
       console.log(play.scenario)
       this.selectedScenarioGame = play.scenario.id.split("-")[0];
@@ -448,20 +448,22 @@ export class AddPlayComponent implements OnInit {
     if (play.factions?.length > 0) {
       this.containsFactions = true;
       this.selectedPlayerFactionList = [];
-    }
-    play.factions.forEach(factionType => {
-      factionType.factions.forEach(faction => {
-        let gamePlayerFaction: GamePlayerFaction = {
-          factionTypeId: factionType.typeId,
-          gameId: faction.factionId.split('-')[0],
-          playerId: faction.playerId,
-          factionId: faction.factionId
-        }
-        eye++;
-        this.getFactions(gamePlayerFaction.gameId, eye, gamePlayerFaction.factionTypeId)
-        this.selectedPlayerFactionList.push(gamePlayerFaction);
+
+      play.factions.forEach(factionType => {
+        factionType.factions.forEach(faction => {
+          let gamePlayerFaction: GamePlayerFaction = {
+            factionTypeId: factionType.typeId,
+            gameId: faction.factionId.split('-')[0],
+            playerId: faction.playerId,
+            factionId: faction.factionId
+          }
+          eye++;
+          this.getFactions(gamePlayerFaction.gameId, eye, gamePlayerFaction.factionTypeId)
+          this.selectedPlayerFactionList.push(gamePlayerFaction);
+        })
       })
-    })
+    }
+   
   }
 
   deleteSelectedPlay = (play: PlayDb): void => {

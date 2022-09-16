@@ -1,10 +1,10 @@
 .note-banner {
     height: 5rem;
-    background-color: red;
+    background-color: lightgray;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    padding-left: 5rem;
 }
 
 .note-text {
@@ -16,23 +16,37 @@
     padding-bottom: 2rem;
 }
 
-.game-section {
-    min-height: 10rem;
-}
-
 .game-header {
     height: 5rem;
-    background-color: purple;
+    background-color: black;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-left: 4rem;
+}
+
+.header-image {
+    position: absolute;
+    height: 94rem;
+    clip-path: polygon(0 47.34%, 100% 47.34%, 100% 52.616%, 0 52.616%);
+    width: 100%;
+}
+
+.header-text-section {
+    z-index: 12;
+    width: 45rem;
+    height:100%;
+    background: linear-gradient(0.25turn, black, 75%, rgba(255, 255, 255, 0));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .header-text {
+    z-index: 13;
     font-weight: 400;
     font-size: 1.2rem;
     color: white;
+    margin-left: 4rem;
 }
 
 .game-information {

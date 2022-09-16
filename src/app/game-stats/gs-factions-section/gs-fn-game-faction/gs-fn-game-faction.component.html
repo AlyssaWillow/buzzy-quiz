@@ -1,0 +1,30 @@
+<div class="faction-game-row">
+<div class="game-image-section">
+    <img class="game-image" src="{{utils.getGameImage(factionGame.gameId, bothCol)}}"/>
+</div>
+<div class="name-column">
+    <div vlass="name">
+        {{utils.getGameName(factionGame.gameId, bothCol)}}
+    </div>
+</div>
+<div class="factions-column">
+    <div *ngFor="let faction of factionListForGame; let i = index" class="faction-row row{{i%2}}">
+        <div class="faction-name">{{faction.name}}</div>
+        <div>
+            <div *ngFor="let playedFaction of factionGame.factions">
+            <div *ngIf="faction.id === playedFaction.factionId" class="factions-list">
+                <div *ngFor="let player of players" class="factions-player2">
+                    <div *ngFor="let count of playedFaction.playerCount; let i = index">
+                        <div *ngIf="player.id === count.playerId" 
+                            [ngClass]="{'has-played': count.count > 0, 'not-played': count.count === 0, 'last-score': (i+1)===playedFaction.playerCount.length}">{{count.count}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+<div *ngIf="!last" class="game-divider">
+    <div class="divider"><hr></div>
+</div>
