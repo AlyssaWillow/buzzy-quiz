@@ -501,4 +501,13 @@ export class AddPlayComponent implements OnInit {
 
     return str;
   }
+
+  removeFactionRow = (): void => {
+    this.selectedPlayerFactionList.pop()
+  }
+
+  
+  removeScoreRow = (): void => {
+    this.selectedPlayerScoresList.pop()
+  }
 }
