@@ -178,8 +178,8 @@ export class GameStatsComponent implements OnInit {
     };
     gameInstance.gameId = id;
 
-    this.bothCol.forEach(game => {
-      if (game.objectid === id) {
+    this.bothCol?.forEach(game => {
+      if (game?.objectid === id) {
         gameInstance.gameImage = game.image;
         gameInstance.gameName = game.name.text;
       }
