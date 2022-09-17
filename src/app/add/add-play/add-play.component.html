@@ -229,7 +229,9 @@
                 </mat-form-field>
             </div>
         </div>
-
+        <div class="remove-row">
+            <button class="remove-button" (click)="removeScoreRow()">Remove Last Row</button>
+        </div>
         <div class="additional-factions-button">
             <button (click)="additionalScore()">Add Another Score</button>
         </div>
@@ -348,6 +350,9 @@
             </div>
         </div>
 
+        <div class="remove-row">
+            <button class="remove-button" (click)="removeFactionRow()">Remove Last Row</button>
+        </div>
         <div class="additional-factions-button">
             <button (click)="additionalFaction()">Add Another Faction</button>
         </div>
