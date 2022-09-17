@@ -12,24 +12,13 @@ import { Timestamp } from '../models/play';
 })
 export class UtilsService {
 
-  players$: Observable<Players[]>;
-  factionType$: Observable<factionTypeData[]>;
-
-  private playerCol: AngularFirestoreCollection<Players>;
-  private factionTypeCol: AngularFirestoreCollection<factionTypeData>;
-
   constructor(private afs: AngularFirestore) {
-    this.playerCol = this.afs.collection('tabletop-syndicate').doc('player-data').collection('player-names');
-    this.factionTypeCol = this.afs.collection('faction-type-data');
-
-    this.players$ = this.playerCol.valueChanges();
-    this.factionType$ = this.factionTypeCol.valueChanges();
   }
 
   getPlayerName = (id: string, players: Players[]): string => {
     let name: string = '';
       for(let player of players) {
-        if (player.id === id) {
+        if (player?.id === id) {
           name = player.firstName;
         }
       }
@@ -38,7 +27,7 @@ export class UtilsService {
 
   getGameName = (id: string, gameCollection: BoardGame[]): string => {
     for(let game of gameCollection) {
-      if (game.objectid === id) {
+      if (game?.objectid === id) {
         return game.name.text;
       }
     }
@@ -47,7 +36,7 @@ export class UtilsService {
 
 getCycleName = (id: string, cycleList: nameId[]): string => {
   for(let cycle of cycleList) {
-    if (cycle.id === id) {
+    if (cycle?.id === id) {
       return cycle.name;
     }
   }
@@ -56,7 +45,7 @@ getCycleName = (id: string, cycleList: nameId[]): string => {
 
 getGameImage = (id: string, gameCollection: BoardGame[]): string => {
   for(let game of gameCollection) {
-    if (game.objectid === id) {
+    if (game?.objectid === id) {
       return game.image;
     }
   }
@@ -65,7 +54,7 @@ getGameImage = (id: string, gameCollection: BoardGame[]): string => {
 
   getFactionTypeName = (list: nameId[], id: string): string => {
       for(let factionType of list) {
-        if (factionType.id === id) {
+        if (factionType?.id === id) {
           return factionType.name;
         }
       }

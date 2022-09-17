@@ -79,7 +79,7 @@ export class BoardGameGeekService implements OnInit {
 
   getHendricksonGames(): any {
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", this.baseUrl1 + this.hendrickson + this.suffix1);
+    
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
           if (xhr.status === 200) {

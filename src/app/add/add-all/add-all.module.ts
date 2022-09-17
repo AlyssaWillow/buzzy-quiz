@@ -6,6 +6,7 @@ import { AddPlayModule } from '../add-play/add-play.module';
 import { AddFactionModule } from '../add-faction/add-faction.module';
 import { AddScenarioModule } from '../add-scenario/add-scenario.module';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
+import { AddFactionTypeModule } from '../add-faction-type/add-faction-type.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
     AddPlayModule,
     AddFactionModule,
     AddScenarioModule,
-    CdkAccordionModule
+    CdkAccordionModule,
+    AddFactionTypeModule
   ],
   exports: [
     AddAllComponent

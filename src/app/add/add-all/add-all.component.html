@@ -13,6 +13,20 @@
       </div>
     </cdk-accordion-item>
 
+    <cdk-accordion-item #accordionItem6="cdkAccordionItem" class="example-accordion-item" role="button" tabindex="0"
+    [attr.id]="'accordion-header-6'" [attr.aria-expanded]="accordionItem1.expanded" [attr.aria-controls]="'accordion-body-6'">
+    <div class="example-accordion-item-header" (click)="accordionItem6.toggle()"><span class="accordion-title">Add/Edit Faction Type</span>
+      <span class="example-accordion-item-description">
+        Click to {{ accordionItem1.expanded ? 'collapse' : 'expand' }}
+      </span>
+    </div>
+    <div class="example-accordion-item-body" role="region"
+      [style.display]="accordionItem6.expanded ? '' : 'none'"
+      [attr.id]="'accordion-body-6'" [attr.aria-labelledby]="'accordion-header-6'">
+      <app-add-faction-type></app-add-faction-type>
+    </div>
+  </cdk-accordion-item>
+
     <cdk-accordion-item #accordionItem1="cdkAccordionItem" class="example-accordion-item" role="button" tabindex="0"
       [attr.id]="'accordion-header-1'" [attr.aria-expanded]="accordionItem1.expanded" [attr.aria-controls]="'accordion-body-1'">
       <div class="example-accordion-item-header" (click)="accordionItem1.toggle()"><span class="accordion-title">Add/Edit Faction</span>
