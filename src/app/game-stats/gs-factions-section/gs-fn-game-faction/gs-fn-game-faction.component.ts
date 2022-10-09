@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { Players } from 'src/app/home/player-selection';
+import { Players } from 'src/app/models/player-selection';
 import { BoardGame } from 'src/app/models/collection';
-import { Faction, factionDb, FactionGame } from 'src/app/models/faction';
+import { Faction, factionDb, factionDb2, FactionGame } from 'src/app/models/faction';
 import { nameId } from 'src/app/models/generic';
 import { UtilsService } from 'src/app/services/utils.service';
+import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 
 @Component({
   selector: 'app-gs-fn-game-faction',
@@ -22,11 +23,12 @@ export class GsFnGameFactionComponent implements OnInit {
   };
   @Input('bothCol') bothCol: BoardGame[] = [];
   @Input('players') players: Players[] = [];
+  @Input('factions') factions: factionDb2[] = [];
   @Input('last') last: boolean = false;
 
   factionListForGame: factionDb[] = [];
-
   constructor(public utils: UtilsService,
+    private firebaseDataService: FirebaseDataService,
     private afs: AngularFirestore) { }
 
   ngOnInit(): void {
@@ -34,14 +36,9 @@ export class GsFnGameFactionComponent implements OnInit {
   }
 
   getFactionList = (gameId: string, factionTypeId: string): void => {
-    let factionCol: AngularFirestoreCollection<factionDb> = this.afs.collection('factions').doc(gameId).collection(factionTypeId);
-    let factions$ = factionCol.valueChanges();
-
-    factions$.subscribe(factions => {
-      this.factionListForGame = factions;
-      this.addZeros(this.factionGame, this.factionListForGame);
-      this.factionListForGame.sort((a, b) => (a.order > b.order) ? 1 : -1)
-    });
+    this.factionListForGame = this.factions.filter(ref => ref.gameId === gameId && ref.typeId === factionTypeId);
+    this.addZeros(this.factionGame, this.factionListForGame);
+    this.factionListForGame.sort((a, b) => (a.order > b.order) ? 1 : -1)
   }
 
   addZeros = (factionGame: FactionGame, factionListForGame: factionDb[]) => {

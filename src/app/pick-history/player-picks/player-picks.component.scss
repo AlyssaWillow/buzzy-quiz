@@ -1,0 +1,74 @@
+.games-played-section {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem;
+} 
+
+.games-played-header {
+    display: flex;
+    flex-direction: row;
+    height: 2rem;
+    font-weight: 500;
+    font-size: 1rem;
+    padding-left: 2rem;
+}
+
+.games-played {
+    display: flex;
+    flex-direction: row;
+    min-height: 1.4rem;
+    padding-left: 2rem;
+}
+
+.date {
+    min-width: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 45%
+}
+
+.expansions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 45%
+}
+
+.row0 {
+    background-color: white;
+}
+
+.p011row1 {
+    background-color: rgb(214, 126, 126);
+}
+
+.p012row1 {
+    background-color: rgb(100, 190, 104);
+}
+
+.p013row1 {
+    background-color: rgb(165, 161, 229);
+}
+
+.p014row1 {
+    background-color: rgb(193, 167, 202);
+}
+
+.border {
+    width: 100%;
+}
+
+.has-played {
+    font-weight:500;
+}
+
+.not-played {
+    font-weight:300;
+}

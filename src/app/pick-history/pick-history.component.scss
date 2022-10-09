@@ -1,0 +1,32 @@
+.header {
+    height: 7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    justify-content:center;
+    color:white;
+    background-color: rgb(29, 26, 206);
+}
+
+.pattern {
+    background-image: repeating-linear-gradient(11deg, rgba(0,0,0, 0.25), rgb(0, 0, 0) 1px, transparent 0px, transparent 4px);
+    background-size: 8px;
+}
+
+.p011 {
+    background-color: rgb(206, 26, 26);
+}
+.p012 {
+    background-color: rgb(13, 175, 27);
+}
+.p013 {
+    background-color: rgb(29, 26, 206);
+}
+.p014 {
+    background-color: rgb(95, 46, 185);
+}
+.rainbow {
+    
+}

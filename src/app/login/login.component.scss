@@ -1,0 +1,27 @@
+.inputs {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ width: 100%;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.input {
+    padding: .5rem;
+    margin: 0 0 1rem 0;
+}
+
+
+
+.login-section {
+    padding: 3rem 30rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}

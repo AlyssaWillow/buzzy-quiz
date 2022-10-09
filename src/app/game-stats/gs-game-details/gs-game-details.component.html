@@ -1,0 +1,40 @@
+<div class="details-section">
+    <div class="details-title">
+        <span>Game Details</span>
+    </div>  
+    <div class="game-details">
+        <div class="detail-row section-row">
+            <div>Id: {{deets.id}}</div>
+            <div>Players: {{deets.minPlayers}} - {{deets.maxPlayers}}</div>
+            <div>Time: {{deets.minTime}} - {{deets.maxTime}} minutes</div>
+            <div>Year Published: {{deets.yearPublished}}</div>
+        </div> 
+        <div class="detail-row section-row">
+            <div class="detail-row">Designers: &nbsp;&nbsp;
+                <div class="game-details" *ngIf="deets.designer?.length && deets.designer.length > 0">
+                    <div *ngFor="let designer of deets.designer">{{designer.text}}</div>
+                </div> 
+                <div class="game-details" *ngIf="!deets.designer?.length || deets.designer?.length === 0">
+                    <div>{{utils.castToTypeIdObject(deets.designer)?.text}}</div>
+                </div> 
+            </div>
+            <div class="detail-row">Artists: &nbsp;&nbsp;
+                <div class="game-details" *ngIf="deets.artist?.length && deets.artist.length > 0">
+                    <div *ngFor="let artist of deets.artist">{{artist.text}}</div>
+                </div> 
+                <div class="game-details" *ngIf="!deets.artist?.length || deets.artist?.length === 0">
+                    <div>{{utils.castToTypeIdObject(deets.artist)?.text}}</div>
+                </div> 
+            </div>
+            <div class="detail-row">Categories: &nbsp;&nbsp;
+                <div class="game-details" *ngIf="deets.boardGameCategory?.length && deets.boardGameCategory.length > 0">
+                    <div *ngFor="let boardGameCategory of deets.boardGameCategory">{{boardGameCategory.text}}</div>
+                </div> 
+                <div class="game-details" *ngIf="!deets.boardGameCategory?.length || deets.boardGameCategory?.length === 0">
+                    <div>{{utils.castToTypeIdObject(deets.boardGameCategory)?.text}}</div>
+                </div> 
+            </div>
+        </div> 
+        <div class="detail-row section-row " [innerHTML]="deets.description"></div>
+    </div> 
+</div>

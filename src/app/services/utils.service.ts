@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
-import { Players } from '../home/player-selection';
-import { BoardGame } from '../models/collection';
-import { factionTypeData } from '../models/faction';
-import { nameId } from '../models/generic';
+import { Players } from '../models/player-selection';
+import { BoardGame, textId } from '../models/collection';
+import { cycle, nameId } from '../models/generic';
 import { Timestamp } from '../models/play';
+import { CycleDb } from '../models/scenario';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-  constructor(private afs: AngularFirestore) {
+  constructor() {
   }
 
   getPlayerName = (id: string, players: Players[]): string => {
@@ -34,10 +32,10 @@ export class UtilsService {
     return '';
 }
 
-getCycleName = (id: string, cycleList: nameId[]): string => {
+getCycleName = (id: string, cycleList: CycleDb[]): string => {
   for(let cycle of cycleList) {
     if (cycle?.id === id) {
-      return cycle.name;
+      return (cycle.display ? cycle.name : '');
     }
   }
   return '';
@@ -122,5 +120,9 @@ getGameImage = (id: string, gameCollection: BoardGame[]): string => {
 
   timestampToDate = (seconds: Timestamp): Date => {
     return new Date(Number(seconds.seconds));
+  }
+
+  castToTypeIdObject = (typeList: textId[]): textId => {
+    return <textId><any> typeList;
   }
 }

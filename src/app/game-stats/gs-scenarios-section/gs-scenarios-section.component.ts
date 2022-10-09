@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Players } from 'src/app/home/player-selection';
+import { Players } from 'src/app/models/player-selection';
 import { BoardGame } from 'src/app/models/collection';
 import { Scenario } from 'src/app/models/play';
 import { ScenarioGame } from 'src/app/models/scenario';

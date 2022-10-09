@@ -1,0 +1,17 @@
+<div class="pick-history-section">
+    <!-- <div class="all-picks">
+        <div class="all-picks-header header pattern rainbow">All Pick History</div>
+    </div> -->
+    <div *ngFor="let player of players"class="plays">
+        <div class="plays-header header pattern {{player.id}}">{{ utils.getPlayerName(player.id, players) }}'s Picks</div>
+        <tts-player-picks [playerId]="player.id"></tts-player-picks>
+    </div>
+    <div class="all-picks">
+        <div class="all-picks-header header pattern">Pick by Game</div>
+        <tts-games-played></tts-games-played>
+    </div>
+    <div class="all-picks">
+        <div class="all-picks-header header pattern">Least Picked Games</div>
+        <tts-least-played></tts-least-played>
+    </div>
+</div> 

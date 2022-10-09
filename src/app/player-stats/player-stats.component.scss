@@ -1,0 +1,86 @@
+.header {
+    height: 7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    justify-content:center;
+    color:black;
+    background-color: lightgray
+}
+
+.player-stats-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stats-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.stats-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.total-games-played-section {
+    padding: 1rem 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.player-wins-section {
+    display: flex;
+    justify-content: space-between;
+    width: 20%;
+    height: 17rem;
+
+}
+.player-wins-row {
+    padding: 0 5%;
+}
+
+.player-wins {
+    height: 50%;
+    display: flex;
+    font-size: 5rem;
+    justify-content: center;
+    align-items: center;
+}
+.player-name {
+    height: 50%;
+    display: flex;
+    font-size: 5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.two-items {
+    min-height: 13rem;
+    display: flex;
+}
+
+.pie-chart {
+    min-width: 40%;
+}
+.total-wins {
+    padding: 1.5rem 0 1.5rem 0;
+    min-width: 40%;
+    min-height: 7rem;
+    display: flex;
+    font-size: 7rem;
+    justify-content: center;
+    align-items: center;
+}
+.total-games-played {
+    font-size: 2.5rem;
+    min-height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

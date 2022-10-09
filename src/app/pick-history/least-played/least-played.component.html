@@ -1,0 +1,19 @@
+<div class="games-played-section">
+    <div class="games-played-header">
+        <div class="header game">
+            game
+        </div>
+        <div class="header play-num">
+            Plays
+        </div>
+    </div>
+    <hr class="border">
+    <div *ngFor="let game of playsList; let i = index" class="games-played row{{i%2}}">
+        <div class="game">
+            {{game.gameName | replaceText}}
+        </div>
+        <div class="play-num">
+            {{game.count}}
+        </div>
+    </div>
+</div>

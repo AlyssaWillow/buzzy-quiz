@@ -1,7 +1,16 @@
-<h1 *ngIf="authenticationService.userData | async">Hello {{ (authenticationService.userData | async)?.email }}</h1>
-<div *ngIf="!(authenticationService.userData | async)">
-    <input type="text" [(ngModel)]="email" placeholder="email">
-    <input type="password" [(ngModel)]="password" placeholder="password">
-    <button (click)="signIn()">Login</button>
+
+<div class="login-section">
+    <h1 *ngIf="authenticationService.userData | async">Hello {{ (authenticationService.userData | async)?.email }}</h1>
+    <div *ngIf="!(authenticationService.userData | async)">
+        <div class="inputs">
+            Username: <input class="input" type="text" [(ngModel)]="email" placeholder="email">
+            Password: <input class="input" type="password" [(ngModel)]="password" placeholder="password">
+        </div>
+        <div class="buttons">
+            <button (click)="signIn()">Login</button>
+        </div>
+    </div>
+    <div class="buttons">
+        <button (click)="signOut()" *ngIf="authenticationService.userData | async">Logout</button>
+    </div>
 </div>
-<button (click)="signOut()" *ngIf="authenticationService.userData | async">Logout</button>

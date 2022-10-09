@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { MatFormField } from '@angular/material/form-field';
 import { Observable } from 'rxjs';
-import { Players } from 'src/app/home/player-selection';
+import { Players } from 'src/app/models/player-selection';
 import { BoardGame, GameCollection } from 'src/app/models/collection';
 import { doc, setDoc } from "firebase/firestore"; 
 import { Faction } from 'src/app/models/faction';
@@ -15,6 +15,7 @@ import { timeStamp } from 'console';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ScenarioDb, ScenarioPlayDb } from 'src/app/models/scenario';
 import { UtilsService } from 'src/app/services/utils.service';
+import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 
 @Component({
   selector: 'app-add-play',
@@ -22,20 +23,15 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./add-play.component.scss']
 })
 export class AddPlayComponent implements OnInit {
-  
+  @Input('bothCol') bothCol: BoardGame[] = [];
+
   plays$: Observable<PlayDb[]>;
-  lemCollection$: Observable<GameCollection>;
-  henCollection$: Observable<GameCollection>;
-  factionTypes$: Observable<nameId[]>;
   gameTypes$: Observable<nameId[]>;
-  players$: Observable<Players[]>;
-  locations$: Observable<nameId[]>;
 
   numbers: number[] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
   gamePlayedOrder: number = 0;
   selectedId: number = 0
   players: Players[] = [];
-  bothCol: BoardGame[] = [];
   locations: nameId[] = [];
   gameTypes: nameId[] = [];
   plays: PlayDb[] = [];
@@ -78,10 +74,7 @@ export class AddPlayComponent implements OnInit {
   addFactionShow: boolean = false;
   addScenarioShow: boolean = false;
 
-  private factionTypeCol: AngularFirestoreCollection<nameId>;
   private gameTypeCol: AngularFirestoreCollection<nameId>;
-  private locationCol: AngularFirestoreCollection<nameId>;
-  private playerCol: AngularFirestoreCollection<Players>;
   private playCol: AngularFirestoreCollection<PlayDb>;
 
   playDeleted: boolean = false;
@@ -106,23 +99,14 @@ export class AddPlayComponent implements OnInit {
   deletesEnabled: boolean = false;
   
 
-  constructor(private boardGameGeekService: BoardGameGeekService,
-    public utils: UtilsService,
+  constructor(public utils: UtilsService,
+    private firebaseDataService: FirebaseDataService,
     private afs: AngularFirestore) { 
-    this.boardGameGeekService.getCollections();
-    this.henCollection$ = this.boardGameGeekService.hendricksonCollection$;
-    this.lemCollection$ = this.boardGameGeekService.lemanCollection$;
 
-    this.factionTypeCol = afs.collection('faction-type-data');
     this.gameTypeCol = afs.collection('game-type-data');
-    this.playerCol = afs.collection('tabletop-syndicate').doc('player-data').collection('player-names');
-    this.locationCol = afs.collection('tabletop-syndicate').doc('location-data').collection('location-names');
     this.playCol = afs.collection('play-history');
     
-    this.factionTypes$ = this.factionTypeCol.valueChanges();
     this.gameTypes$ = this.gameTypeCol.valueChanges();
-    this.players$ = this.playerCol.valueChanges();
-    this.locations$ = this.locationCol.valueChanges();
     this.plays$ = this.playCol.valueChanges();
   }
 
@@ -130,24 +114,18 @@ export class AddPlayComponent implements OnInit {
     
     this.selectedPlayerFactionList.push(this.selectedPlayerFaction);
     this.selectedPlayerScoresList.push({playerId: '', score: ''});
-    this.boardGameGeekService.getCollections();
-    this.lemCollection$.subscribe(lem => {
-      this.henCollection$.subscribe(hen => {
-        this.bothCol = lem?.item.concat(hen?.item);
-        this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
-      });
-    });
 
-    this.players$.subscribe(players => {
+    this.firebaseDataService.players$.subscribe(players => {
       this.players = players;
     });
-    this.locations$.subscribe(locations => {
+    this.firebaseDataService.locations$.subscribe(locations => {
       this.locations = locations;
     });
+    
     this.gameTypes$.subscribe(gameTypes => {
       this.gameTypes = gameTypes;
     });
-    this.factionTypes$.subscribe(factionTypes => {
+    this.firebaseDataService.factionTypes$.subscribe(factionTypes => {
       this.factionTypes = factionTypes;
     });
     this.plays$.subscribe(gamePlay => {
@@ -295,13 +273,11 @@ export class AddPlayComponent implements OnInit {
       this.containsScenario = false;
       this.addFactionShow = false;
       this.addScenarioShow = false;
-        console.log("Document successfully deleted!");
+        console.info("Document successfully deleted!");
     }).catch((error) => {
         console.error("Error removing document: ", error);
     });
-    } else {
-      console.log('else', 'game', gameId, 'type', typeId, 'loc',locationId, 'pick', pickId, 'sec', seconds);
-    } 
+    }
   }
 
   createExpansions = (expansions: BoardGame[] | undefined): string[] => {
@@ -437,7 +413,6 @@ export class AddPlayComponent implements OnInit {
 
     if (play.scenario && play.scenario?.id !== '') {
       this.containsScenario = true;
-      console.log(play.scenario)
       this.selectedScenarioGame = play.scenario.id.split("-")[0];
       this.getScenarios(play.scenario.id.split("-")[0]);
       this.selectedScenario.id = play.scenario.id;
@@ -472,7 +447,7 @@ export class AddPlayComponent implements OnInit {
       pickRef.doc(play.id).delete().then(() => {
         this.playDeletedName = play;
         this.playDeleted = true;
-        console.log("Document successfully deleted!");
+        console.info("Document successfully deleted!");
     }).catch((error) => {
         console.error("Error removing document: ", error);
     });

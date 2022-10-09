@@ -12,49 +12,52 @@ export class NavigationComponent implements OnInit {
 
   nav = [
     {
+      external: false,
       value: '/home',
       disp: 'Home',
       restricted: false
     },
     {
+      external: false,
       value: '/game-stats',
       disp: 'Game Stats',
       restricted: false
     }, 
     {
+      external: false,
+      value: '/player-stats',
+      disp: 'Player Stats',
+      restricted: false
+    }, 
+    {
+      external: false,
       value: '/collection',
       disp: 'Collection',
       restricted: false
     }, 
     {
+      external: false,
+      value: '/pick-history',
+      disp: 'Pick History',
+      restricted: false
+    }, 
+    {
+      external: false,
       value: '/shirts',
       disp: 'Convention Shirt History',
-      restricted: false
+      restricted: true
     },
     {
+      external: false,
       value: '/add',
       disp: 'Add',
       restricted: true
     },
     {
-      value: '/add-play',
-      disp: 'Add Play',
-      restricted: true
-    },
-    {
-      value: '/add-faction',
-      disp: 'Add Faction',
-      restricted: true
-    },
-    {
-      value: '/add-scenario',
-      disp: 'Add Scenario',
-      restricted: true
-    },
-    {
-      value: '/add-cycle',
-      disp: 'Add Cycle',
-      restricted: true
+      external: true,
+      value: 'https://sites.google.com/view/tabletop-syndicate/home',
+      disp: 'Old Site',
+      restricted: false
     }
   ]
 

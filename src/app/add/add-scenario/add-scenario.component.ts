@@ -1,18 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { MatFormField } from '@angular/material/form-field';
-import { Observable } from 'rxjs';
-import { Players } from 'src/app/home/player-selection';
-import { BoardGame, GameCollection } from 'src/app/models/collection';
-import { doc, setDoc } from "firebase/firestore"; 
-import { nameId } from 'src/app/models/generic';
-import { Locations } from 'src/app/models/locations';
-import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
-import { FormGroup, FormControl } from '@angular/forms';
-import { timeStamp } from 'console';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { Component, Input, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { BoardGame } from 'src/app/models/collection';
+import { cycle } from 'src/app/models/generic';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ScenarioDb } from 'src/app/models/scenario';
+import { CycleDb, ScenarioDb, ScenarioDb2 } from 'src/app/models/scenario';
+import { ListGuide } from 'src/app/models/list-guide';
+import { FirebaseDataService } from 'src/app/services/firebase-data.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-scenario',
@@ -21,26 +16,30 @@ import { ScenarioDb } from 'src/app/models/scenario';
 })
 export class AddScenarioComponent implements OnInit {
   
-  lemCollection$: Observable<GameCollection>;
-  henCollection$: Observable<GameCollection>;
+  
+  @Input('bothCol') bothCol: BoardGame[] = [];
 
   numbers: number[] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
-  bothCol: BoardGame[] = [];
-  cycleList: nameId[] = [];
+  cycleList: cycle[] = [];
 
   scenarioId: string = '';
-  selectedCycle: nameId = {
+  newScenarios: ScenarioDb2[] = [];
+  newCycles: CycleDb[] = [];
+  seletedNewScenarioList: ScenarioDb2[] = [];
+  selectedCycle: cycle = {
     id: '',
-    name: ''
+    name: '',
+    display: false
   }
   scenarioName: string = '';
   deletesEnabled: boolean = false;
   selectedOrder: number = 0;
   selectedGame: BoardGame | undefined = undefined;
   selectedExpansions: BoardGame[] | undefined = undefined;
-  cycle: nameId = {
+  cycle: cycle = {
     id: '',
-    name: ''
+    name: '',
+    display: false
   };
   scenarioList: ScenarioDb[] = [];
   scenarioDeleted: boolean = false;
@@ -52,37 +51,35 @@ export class AddScenarioComponent implements OnInit {
   };
   
 
-  constructor(private boardGameGeekService: BoardGameGeekService,
-    public utils: UtilsService,
-    private afs: AngularFirestore) { 
-    this.boardGameGeekService.getCollections();
-    this.henCollection$ = this.boardGameGeekService.hendricksonCollection$;
-    this.lemCollection$ = this.boardGameGeekService.lemanCollection$;
+  constructor(public utils: UtilsService,
+    public authenticationService: AuthenticationService,
+    private firebaseDataService: FirebaseDataService,
+    private router: Router,
+    private afs: AngularFirestore) {
   }
 
   ngOnInit(): void {
-    this.boardGameGeekService.getCollections();
-    this.lemCollection$.subscribe(lem => {
-      this.henCollection$.subscribe(hen => {
-        this.bothCol = lem?.item.concat(hen?.item);
-        this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
-      });
+    this.authenticationService.userData.subscribe(user => {
+      if (!user) {
+        this.router.navigate(['/home']);
+      }
+    })
+    this.firebaseDataService.scenarios$.subscribe(scenarioz => {
+      this.newScenarios = scenarioz;
+    });
+
+    this.firebaseDataService.cycles$.subscribe(cyclez => {
+      this.newCycles = cyclez;
     });
   }
 
   getScenarios = (gameId: string): void => {
     if (gameId !== '') {
-      let scenario: AngularFirestoreCollection<ScenarioDb> = this.afs.collection('scenarios').doc(gameId).collection('scenarios');
-      let scenarios$ = scenario.valueChanges();
-      scenarios$.subscribe(scenarioz => {
-        this.scenarioList = scenarioz;
-      })
+      this.cycleList = this.newCycles.filter(ref => ref.gameId === gameId);
+      this.newCycles.sort((a, b) => (a.order > b.order) ? 1 : -1)
 
-      let cycle: AngularFirestoreCollection<nameId> = this.afs.collection('scenarios').doc(gameId).collection('cycle-names');
-      let cycles$ = cycle.valueChanges();
-      cycles$.subscribe(cyclez => {
-        this.cycleList = cyclez;
-      })
+      this.seletedNewScenarioList = this.newScenarios.filter(ref => ref.gameId === gameId);
+      this.seletedNewScenarioList.sort((a, b) => (a.order > b.order) ? 1 : -1)
     }
   }
 
@@ -100,23 +97,32 @@ export class AddScenarioComponent implements OnInit {
   submit = async () => {
     if (this.selectedGame && this.scenarioId && this.scenarioName && this.selectedCycle) {
       let concatId = this.selectedGame.objectid + '-' + this.scenarioId
-      const newScenario: ScenarioDb = {
+
+      const newScenario2: ScenarioDb2 = {
         id: concatId,
         name: this.scenarioName,
+        gameId: (this.selectedGame  && this.selectedGame.objectid ? this.selectedGame?.objectid : ''),
         order: (this.selectedOrder ? this.selectedOrder : 0),
         cycle: (this.selectedCycle ? this.selectedCycle.id : '')
       }
 
       if (this.selectedGame?.objectid) {
-        const pickRef = this.afs.collection('scenarios').doc(this.selectedGame.objectid).collection('scenarios');
-        await pickRef.doc(concatId).set(newScenario)
+        const newPickRef = this.afs.collection('scenarios');
+        await newPickRef.doc(this.selectedGame.objectid + '-' + this.selectedCycle.id.split('-')[1] +'-'+ this.scenarioId)
+        .set(newScenario2).then(then => {
+          this.updateGuideList(newScenario2);
+          }
+        )
+        this.seletedNewScenarioList = this.newScenarios.filter(ref => ref.gameId === this.selectedGame?.objectid);
+        this.seletedNewScenarioList.sort((a, b) => (a.order > b.order) ? 1 : -1)
 
         this.scenarioId = '';
         this.scenarioName = '';
         this.selectedOrder = 0;
         this.selectedCycle = {
           id: '',
-          name: ''
+          name: '',
+          display: false
         }
       }
 
@@ -129,15 +135,49 @@ export class AddScenarioComponent implements OnInit {
   }
 
   deleteSelectedScenario = (scenario: ScenarioDb) => {
-    if (scenario && this.deletesEnabled) {
-      const pickRef = this.afs.collection('scenarios').doc(scenario.id.split('-')[0]).collection('scenarios');
-      pickRef.doc(scenario.id).delete().then(() => {
+    if (scenario && this.deletesEnabled && this.selectedGame) {
+      const pickRef = this.afs.collection('scenarios');
+      pickRef.doc(this.selectedGame.objectid + '-' + this.selectedCycle.id.split('-')[1] +'-'+ this.scenarioId).delete().then(() => {
         this.scenarioDeletedName = scenario;
         this.scenarioDeleted = true;
-        console.log("Document successfully deleted!");
+        console.info("Document successfully deleted!");
     }).catch((error) => {
         console.error("Error removing document: ", error);
     });
     }
+  }
+
+  updateGuideList = (newScenario: ScenarioDb) => {
+    let found: boolean = false;
+    let needsToBeUpdated: boolean = true;
+    let updateListGuide: ListGuide;
+    this.firebaseDataService.listGuides$.subscribe(async listGuide => {
+      listGuide.forEach(guide => {
+        if (guide.id === newScenario.id.split('-')[0]) {
+          updateListGuide = guide;
+          found = true;
+            if (guide.scenarios) {
+              needsToBeUpdated = false;
+            }
+        }
+      })
+      if (needsToBeUpdated) {
+        const pickRef = this.afs.collection('list-guides');
+        if (found) {
+          updateListGuide.scenarios = [];
+          await pickRef.doc(newScenario.id.split('-')[0]).set(updateListGuide)
+        } else {
+          let newListGuide: ListGuide = {
+            id: newScenario.id.split('-')[0],
+            factions: [],
+            scenarios: [
+              newScenario.cycle
+            ],
+          }
+          await pickRef.doc(newScenario.id.split('-')[0]).set(newListGuide)
+        }
+      }
+    });
+
   }
 }

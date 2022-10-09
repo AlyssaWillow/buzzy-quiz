@@ -21,6 +21,9 @@
     <div class="show-factionTypes">
         <div class="factionType-row headers">
             <div class="factionType-type-id">
+                Order
+            </div>
+            <div class="factionType-type-id">
                 Faction Type Id
             </div>
             <div class="game-factionType-id">
@@ -39,6 +42,9 @@
         <hr>
         <div *ngFor="let factionType of factionTypeList; let i = index">
             <div class="factionType-row selectable row{{i % 2}}">
+                <div class="game-factionType-id">
+                    {{factionType.order}}
+                </div>
                 <div class="game-factionType-id">
                     {{factionType.id.split('-')[1]}}
                 </div>

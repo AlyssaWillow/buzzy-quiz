@@ -43,3 +43,11 @@ export interface factionDb {
     id: string;
     name: string;
 }
+
+export interface factionDb2 {
+    order: number;
+    typeId: string;
+    gameId: string;
+    id: string;
+    name: string;
+}
