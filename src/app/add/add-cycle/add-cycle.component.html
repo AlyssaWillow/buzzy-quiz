@@ -42,7 +42,10 @@
             <div class="cycle-name">
                 Cycle Name
             </div>
-            <div *ngIf="deletesEnabled" class="delete">
+            <div class="game-cycle-id">
+                Display
+            </div>
+            <div class="delete">
                 Edit
             </div>
             <div *ngIf="deletesEnabled" class="delete">
@@ -50,7 +53,7 @@
             </div>
         </div>
         <hr>
-        <div *ngFor="let cycle of cycleList; let i = index">
+        <div *ngFor="let cycle of newCycleList; let i = index">
             <div class="cycle-row selectable row{{i % 2}}">
                 
                 <div class="game-cycle-id">
@@ -62,7 +65,10 @@
                 <div class="cycle-name">
                     {{cycle.name}}
                 </div>
-                <div *ngIf="deletesEnabled" class="delete">
+                <div class="game-cycle-id">
+                    {{cycle.display}}
+                </div>
+                <div class="delete">
                     <button (click)="editSelectedCycle(cycle)">Edit</button>
                 </div>
                 <div *ngIf="deletesEnabled" class="delete">
@@ -73,18 +79,42 @@
     </div>
     <div class="add-cycle">
         <div class="inputs">
-        
+            <div class="select-game-dropdown">
+                <mat-form-field appearance="fill">
+                    <mat-label>Order</mat-label>
+                    <mat-select [(ngModel)]="cycleOrder" name="cycleOrder">
+                        <mat-option *ngFor="let num of numbers" [value]="num">
+                            {{num}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
             <div class="cycle-input">
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>Cycle Id</mat-label>
                     <input matInput placeholder="Ex: 01 or 01B" [(ngModel)]="cycleId">
                 </mat-form-field>
             </div>
+
+            </div>
+            <div class="inputs">
         
             <div class="cycle-input">
                 <mat-form-field class="input-full" appearance="fill">
                     <mat-label>Cycle Name</mat-label>
                     <input matInput placeholder="Ex: The Marcy Case" [(ngModel)]="cycleName">
+                </mat-form-field>
+            </div>
+
+            <div class="select-display-dropdown">
+                <mat-form-field appearance="fill">
+                    <mat-label>Display</mat-label>
+                    <mat-select [(ngModel)]="cycleDisplay" name="getFactionTypes">
+                        <mat-option *ngFor="let bool of [true, false]" [value]="bool">
+                            {{bool}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
         </div>

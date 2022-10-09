@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import { PlayerSelection, DisplayPlayerSelection, Players, Selection } from '../player-selection';
+import { PlayerSelection, DisplayPlayerSelection, Players, Selection } from '../../models/player-selection';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AngularFirestore, 
   AngularFirestoreCollection, 
   AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
+import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 
 @Component({
   selector: 'tts-current-selections',
@@ -13,9 +14,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./current-selections.component.scss']
 })
 export class CurrentSelectionsComponent {
-  private playerCol: AngularFirestoreCollection<Players>;
   private selectionCol: AngularFirestoreCollection<Selection>;
-  players$: Observable<Players[]>;
   selection$: Observable<Selection[]>;
   selectionData: DisplayPlayerSelection[] = [];
   selectionData2: DisplayPlayerSelection[] = [];
@@ -25,12 +24,11 @@ export class CurrentSelectionsComponent {
   p014: string = '';
   edit = false;
   constructor(private afs: AngularFirestore,
+    private firebaseDataService: FirebaseDataService,
               public authenticationService: AuthenticationService) {
-   this.playerCol = afs.collection('tabletop-syndicate').doc('player-data').collection('player-names');
     this.selectionCol = afs.collection('tabletop-syndicate').doc('selection-data').collection('current-picks');
-    this.players$ = this.playerCol.valueChanges();
     this.selection$ = this.selectionCol.valueChanges();
-    this.players$.subscribe(players => {
+    this.firebaseDataService.players$.subscribe(players => {
       this.selection$.subscribe(select => {
       this.selectionData = this.createSelectionData(select, players);
       this.selectionData2 = this.createSelectionData(select, players);

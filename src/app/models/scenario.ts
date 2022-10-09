@@ -44,6 +44,14 @@ export interface ScenarioDb {
     cycle: string;
 }
 
+export interface ScenarioDb2 {
+    order: number;
+    id: string;
+    gameId: string;
+    name: string;
+    cycle: string;
+}
+
 export interface ScenarioPlayDb {
     id: string;
     win: boolean
@@ -52,6 +60,14 @@ export interface ScenarioPlayDb {
 export interface ScenarioGame {
     gameId: string;
     cycles: Cycle[];
+}
+
+export interface CycleDb {
+    id: string;
+    name: string;
+    order: number;
+    display: boolean;
+    gameId: string;
 }
 
 export interface Cycle {

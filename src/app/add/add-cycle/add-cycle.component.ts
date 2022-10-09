@@ -1,16 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { MatFormField } from '@angular/material/form-field';
-import { Observable } from 'rxjs';
-import { Players } from 'src/app/home/player-selection';
-import { BoardGame, GameCollection } from 'src/app/models/collection';
-import { doc, setDoc } from "firebase/firestore"; 
-import { nameId } from 'src/app/models/generic';
-import { Locations } from 'src/app/models/locations';
-import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
-import { FormGroup, FormControl } from '@angular/forms';
-import { timeStamp } from 'console';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { BoardGame } from 'src/app/models/collection';
+import { CycleDb } from 'src/app/models/scenario';
+import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -20,80 +12,89 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class AddCycleComponent implements OnInit {
 
+  @Input('bothCol') bothCol: BoardGame[] = [];
  
-  lemCollection$: Observable<GameCollection>;
-  henCollection$: Observable<GameCollection>;
-
-  bothCol: BoardGame[] = [];
-  cycleList: nameId[] = [];
-
+  cycleList: CycleDb[] = [];
+  numbers: number[] = [...Array(100).keys()]
   cycleId: string = '';
-  selectedCycle: nameId = {
+  selectedCycle: CycleDb = {
     id: '',
-    name: ''
+    name: '',
+    display: false,
+    order: 0,
+    gameId: ''
   }
   cycleName: string = '';
+  cycleDisplay: boolean = false;
   deletesEnabled: boolean = false;
+  newCycles: CycleDb[] = [];
+  newCycleList: CycleDb[] = [];
+  cycleOrder: number = 0;
   selectedGame: BoardGame | undefined = undefined;
-  cycle: nameId = {
+  cycle: CycleDb = {
     id: '',
-    name: ''
+    name: '',
+    display: false,
+    order: 0,
+    gameId: ''
   };
   cycleDeleted: boolean = false;
-  cycleDeletedName: nameId = {
+  cycleDeletedName: CycleDb = {
     id: '',
-    name: ''
+    name: '',
+    display: false,
+    order: 0,
+    gameId: ''
   };
   
 
-  constructor(private boardGameGeekService: BoardGameGeekService,
-    public utils: UtilsService,
-    private afs: AngularFirestore) { 
-    this.henCollection$ = this.boardGameGeekService.hendricksonCollection$;
-    this.lemCollection$ = this.boardGameGeekService.lemanCollection$;
+  constructor(public utils: UtilsService,
+    private afs: AngularFirestore,
+    private firebaseDataService: FirebaseDataService) {
   }
 
   ngOnInit(): void {
-    this.boardGameGeekService.getCollections();
-    this.lemCollection$.subscribe(lem => {
-      this.bothCol = this.bothCol.concat(lem?.item);
-      this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
-    });
-    this.henCollection$.subscribe(hen => {
-      this.bothCol = this.bothCol.concat(hen?.item);
-      this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
+    this.firebaseDataService.cycles$.subscribe(cyclez => {
+      this.newCycles = cyclez;
     });
   }
 
   getCycles = (gameId: string): void => {
     if (gameId !== '') {
-      let cycle: AngularFirestoreCollection<nameId> = this.afs.collection('scenarios').doc(gameId).collection('cycle-names');
-      let cycles$ = cycle.valueChanges();
-      cycles$.subscribe(cyclez => {
-        this.cycleList = cyclez;
-      })
+      this.newCycleList = this.newCycles.filter(ref => ref.gameId === gameId);
+      this.newCycleList.sort((a, b) => (a.order > b.order) ? 1 : -1)
     }
   }
 
-  editSelectedCycle = (cycle: nameId) => {
-    this.cycleId = cycle.id;
+  editSelectedCycle = (cycle: CycleDb) => {
+    this.cycleId = cycle.id.split('-')[1];
     this.cycleName = cycle.name;
+    this.cycleOrder = cycle.order;
+    this.cycleDisplay = cycle.display;
   }
 
   submit = async () => {
     if (this.selectedGame && this.cycleId && this.cycleName) {
       let concatId = this.selectedGame.objectid + '-' + this.cycleId
-      const newCycle: nameId = {
+      const newCycle2: CycleDb = {
         id: concatId,
-        name: this.cycleName
+        name: this.cycleName,
+        display: this.cycleDisplay,
+        order: this.cycleOrder,
+        gameId: (this.selectedGame?.objectid ? this.selectedGame?.objectid: '')
       }
 
       if (this.selectedGame?.objectid) {
-        const pickRef = this.afs.collection('scenarios').doc(this.selectedGame.objectid).collection('cycle-names');
-        await pickRef.doc(concatId).set(newCycle)
+        const newPickRef = this.afs.collection('cycles');
+        await newPickRef.doc(this.selectedGame.objectid + '-' + this.cycleId).set(newCycle2);
+
+        this.newCycleList = this.newCycles.filter(ref => ref.gameId === this.selectedGame?.objectid);
+      this.newCycleList.sort((a, b) => (a.order > b.order) ? 1 : -1)
 
         this.cycleId = '';
         this.cycleName = '';
+        this.cycleOrder = 0;
+        this.cycleDisplay = false;
       }
 
     }
@@ -104,13 +105,13 @@ export class AddCycleComponent implements OnInit {
     this.cycleDeleted = false;
   }
 
-  deleteSelectedCycle = (cycle: nameId) => {
+  deleteSelectedCycle = (cycle: CycleDb) => {
     if (cycle && this.deletesEnabled) {
-      const pickRef = this.afs.collection('scenarios').doc(cycle.id.split('-')[0]).collection('cycle-names');
-      pickRef.doc(cycle.id).delete().then(() => {
+      const pickRef = this.afs.collection('cycles');
+      pickRef.doc(cycle.gameId + '-' + this.cycleId).delete().then(() => {
         this.cycleDeletedName = cycle;
         this.cycleDeleted = true;
-        console.log("Document successfully deleted!");
+        console.info("Document successfully deleted!");
     }).catch((error) => {
         console.error("Error removing document: ", error);
     });

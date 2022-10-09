@@ -14,6 +14,7 @@
 </div>
 <div class="game-section" *ngFor="let game of playData">
     <div *ngIf="display ==='typ-01A' 
+        || (display === 'typ-06D' ) 
         || (display === 'typ-03F' && game.factions.length > 0) 
         || (display === 'typ-04S' && game.scenarios.length > 0)
         || (display === 'typ-02W' && game.winners.length > 0)
@@ -21,7 +22,7 @@
     <div class="game-header">
         <img class="header-image" src="{{game.gameImage}}"/>
         <div class="header-text-section">
-            <div class="header-text">{{game.gameName}}</div>
+            <div class="header-text" [innerHTML]="game.gameName"></div>
         </div>
     </div>
     <div class="game-body">
@@ -36,8 +37,7 @@
             </div>        
             <div class="game-name-section">
                 <div class="game-name">
-                    <div *ngIf="game.gameName !== undefined && game.gameName !== ''">
-                        {{game.gameName}}
+                    <div *ngIf="game.gameName !== undefined && game.gameName !== ''" [innerHTML]="game.gameName">
                     </div>
                     <div *ngIf="game.gameName === undefined || game.gameName === ''">
                         Please add 
@@ -47,11 +47,14 @@
             </div>
         </div>
 
+        <app-gs-game-details *ngIf="display ==='typ-01A' || display === 'typ-06D'" [deets]="game.gameDetails"></app-gs-game-details >
+
         <app-gs-wins-section *ngIf="display ==='typ-01A' || display === 'typ-02W'" [winners]="game.winners"></app-gs-wins-section>
 
         <app-gs-plays-section *ngIf="display ==='typ-01A' || display === 'typ-05P'" [plays]="game.plays"></app-gs-plays-section>
 
-        <app-gs-factions-section *ngIf="display ==='typ-01A' || display ==='typ-03F'" [factions]="game.factions" [bothCol]="bothCol"></app-gs-factions-section>
+        <app-gs-factions-section *ngIf="display ==='typ-01A' || display ==='typ-03F'" 
+            [factions]="game.factions" [bothCol]="bothCol" [allFactions]="newFactions"></app-gs-factions-section>
         
         <div *ngIf="game.scenarios && game.scenarios.length > 0">
             <app-gs-scenarios-section *ngIf="display ==='typ-01A' || display ==='typ-04S'" [scenarios]="game.scenarios" [bothCol]="bothCol"></app-gs-scenarios-section>

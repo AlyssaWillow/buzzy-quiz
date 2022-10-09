@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { MatFormField } from '@angular/material/form-field';
 import { Observable } from 'rxjs';
-import { Players } from 'src/app/home/player-selection';
+import { Players } from 'src/app/models/player-selection';
 import { BoardGame, GameCollection } from 'src/app/models/collection';
 import { doc, setDoc } from "firebase/firestore"; 
-import { Faction, factionDb } from 'src/app/models/faction';
+import { Faction, factionDb, factionDb2 } from 'src/app/models/faction';
 import { nameId } from 'src/app/models/generic';
 import { Locations } from 'src/app/models/locations';
 import { GamePlayerFaction, Play, PlayerFaction } from 'src/app/models/play';
@@ -14,6 +14,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { timeStamp } from 'console';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { UtilsService } from 'src/app/services/utils.service';
+import { FirebaseDataService } from 'src/app/services/firebase-data.service';
+import { ListGuide } from 'src/app/models/list-guide';
 
 @Component({
   selector: 'app-add-faction',
@@ -22,12 +24,10 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class AddFactionComponent implements OnInit {
   
-  lemCollection$: Observable<GameCollection>;
-  henCollection$: Observable<GameCollection>;
-  factionTypes$: Observable<nameId[]>;
+  @Input('bothCol') bothCol: BoardGame[] = [];
 
-  numbers: number[] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
-  bothCol: BoardGame[] = [];
+  numbers: number[] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,
+  41,42,43,44,45,46,47,48,49,50]
   selectedFactionType: nameId[] = [];
   gameTypes: nameId[] = [];
   factionTypes: nameId[] = [];
@@ -42,6 +42,8 @@ export class AddFactionComponent implements OnInit {
     name: ''
   };
   factionList: factionDb[] = [];
+  newFactions: factionDb2[] = [];
+  seletedNewFactionList: factionDb2[] = [];
   factionDeleted: boolean = false;
   factionDeletedName: factionDb = {
     order: 0,
@@ -50,32 +52,19 @@ export class AddFactionComponent implements OnInit {
     name: ''
   };
 
-  private factionTypeCol: AngularFirestoreCollection<nameId>;
-  
-
-  constructor(private boardGameGeekService: BoardGameGeekService,
-    public utils: UtilsService,
-    private afs: AngularFirestore) { 
-    this.boardGameGeekService.getCollections();
-    this.henCollection$ = this.boardGameGeekService.hendricksonCollection$;
-    this.lemCollection$ = this.boardGameGeekService.lemanCollection$;
-
-    this.factionTypeCol = afs.collection('faction-type-data');
-
-    this.factionTypes$ = this.factionTypeCol.valueChanges();
+  constructor(public utils: UtilsService,
+              private afs: AngularFirestore,
+              private firebaseDataService: FirebaseDataService) {
   }
 
   ngOnInit(): void {
-    
     // this.selectedPlayerFactionList.push(this.selectedPlayerFaction);
-    this.boardGameGeekService.getCollections();
-    this.lemCollection$.subscribe(lem => {
-      this.henCollection$.subscribe(hen => {
-        this.bothCol = lem?.item.concat(hen?.item);
-        this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
-      });
+
+    this.firebaseDataService.factions$.subscribe(factionz => {
+      this.newFactions = factionz;
     });
-    this.factionTypes$.subscribe(factionTypes => {
+
+    this.firebaseDataService.factionTypes$.subscribe(factionTypes => {
       this.factionTypes = factionTypes;
     });
   }
@@ -97,13 +86,8 @@ export class AddFactionComponent implements OnInit {
     }
 
     if (gId !== '' && ftId !== '') {
-      let factions: AngularFirestoreCollection<factionDb>;
-      factions = this.afs.collection('factions').doc(gId).collection(ftId);
-      let factions$ = factions.valueChanges();
-      factions$.subscribe(factionz => {
-        this.factionList = factionz;
-        this.factionList.sort((a, b) => (a.order > b.order) ? 1 : -1)
-      })
+      this.seletedNewFactionList = this.newFactions.filter(ref => ref.gameId === gId && ref.typeId === ftId);
+      this.seletedNewFactionList.sort((a, b) => (a.order > b.order) ? 1 : -1)
     }
   }
 
@@ -116,23 +100,62 @@ export class AddFactionComponent implements OnInit {
   submit = async () => {
     if (this.selectedGame && this.factionId && this.factionName) {
       let concatId = this.selectedGame.objectid + '-' + this.factionId
-      const newFaction: factionDb = {
-        id: concatId,
-        name: this.factionName,
-        order: (this.selectedOrder ? this.selectedOrder : 0),
-        typeId: this.selectedGameType.id
-      }
 
       if (this.selectedGame?.objectid) {
-        const pickRef = this.afs.collection('factions').doc(this.selectedGame.objectid).collection(this.selectedGameType.id);
-        await pickRef.doc(concatId).set(newFaction)
-
+        const newNewFaction: factionDb2 = {
+          id: concatId,
+          name: this.factionName,
+          gameId: this.selectedGame.objectid,
+          order: (this.selectedOrder ? this.selectedOrder : 0),
+          typeId: this.selectedGameType.id
+        }
+        const newPickRef = this.afs.collection('factions');
+        await newPickRef.doc(this.selectedGame.objectid + '-' + this.selectedGameType.id.split('-')[1] + '-' + this.factionId)
+        .set(newNewFaction);
+        
+      this.seletedNewFactionList = this.newFactions.filter(ref => ref.gameId === this.selectedGame?.objectid && ref.typeId === this.selectedGameType.id);
         this.factionId = '';
         this.factionName = '';
         this.selectedOrder = 0;
       }
 
     }
+  }
+
+  updateGuideList = (newFaction: factionDb) => {
+    let found: boolean = false;
+    let needsToBeUpdated: boolean = true;
+    let updateListGuide: ListGuide;
+    this.firebaseDataService.listGuides$.subscribe(async listGuide => {
+      listGuide.forEach(guide => {
+        if (guide.id === newFaction.id.split('-')[0]) {
+          updateListGuide = guide;
+          found = true;
+          guide.factions.forEach(faction => {
+            if (faction === newFaction.typeId) {
+              needsToBeUpdated = false;
+            }
+          })
+        }
+      })
+      if (needsToBeUpdated) {
+        const pickRef = this.afs.collection('list-guides');
+        if (found) {
+          updateListGuide.factions.push(newFaction.typeId)
+          await pickRef.doc(newFaction.id.split('-')[0]).set(updateListGuide)
+        } else {
+          let newListGuide: ListGuide = {
+            id: newFaction.id.split('-')[0],
+            factions: [
+              newFaction.typeId
+            ],
+            scenarios: []
+          }
+          await pickRef.doc(newFaction.id.split('-')[0]).set(newListGuide)
+        }
+      }
+    });
+
   }
 
   enableDeletes = () => {
@@ -146,7 +169,7 @@ export class AddFactionComponent implements OnInit {
       pickRef.doc(faction.id).delete().then(() => {
         this.factionDeletedName = faction;
         this.factionDeleted = true;
-        console.log("Document successfully deleted!");
+        console.info("Document successfully deleted!");
     }).catch((error) => {
         console.error("Error removing document: ", error);
     });

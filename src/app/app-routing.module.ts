@@ -10,6 +10,8 @@ import { AddFactionComponent } from './add/add-faction/add-faction.component';
 import { AddScenarioComponent } from './add/add-scenario/add-scenario.component';
 import { AddCycleComponent } from './add/add-cycle/add-cycle.component';
 import { AddAllComponent } from './add/add-all/add-all.component';
+import { PickHistoryComponent } from './pick-history/pick-history.component';
+import { PlayerStatsComponent } from './player-stats/player-stats.component';
 
 const routes: Routes = [
   { 
@@ -42,6 +44,22 @@ const routes: Routes = [
     component: CollectionComponent,
     data: {
       title: 'Collection'
+    }
+  },
+  { 
+    path: 'pick-history', 
+    pathMatch: 'full',  
+    component: PickHistoryComponent,
+    data: {
+      title: 'Play History'
+    }
+  },
+  { 
+    path: 'player-stats', 
+    pathMatch: 'full',  
+    component: PlayerStatsComponent,
+    data: {
+      title: 'Player Stats'
     }
   },
   { 

@@ -1,0 +1,26 @@
+<div class="games-played-section">
+    <div class="games-played-header">
+        <div class="header date">
+            Date
+        </div>
+        <div class="header game">
+            game
+        </div>
+        <div class="header expansion">
+            expansions
+        </div>
+    </div>
+    <hr class="border">
+    <div *ngFor="let game of playData; let i = index" class="games-played {{playerId}}row{{i%2}}">
+        <div class="date">
+            {{utils.getDate(game.date)}}
+        </div>
+        <div class="game">
+            {{getName(game.gameId) | replaceText}}
+        </div>
+        <div class="expansions">
+            <div *ngFor="let exp of game.expansionsUsed">
+                {{getName(exp) | replaceText}}
+        </div>
+    </div>
+</div>

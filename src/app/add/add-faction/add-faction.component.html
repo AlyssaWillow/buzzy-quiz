@@ -40,7 +40,7 @@
     <div *ngIf="factionDeleted && deletesEnabled" class="deleted-faction-text">
         {{factionDeletedName.name}} has been deleted from {{utils.getFactionTypeName(factionTypes, factionDeletedName.typeId)}}
     </div>
-    
+
     <div *ngIf="selectedGame && selectedGameType.id !== ''" class="show-factions">
         <div class="faction-row headers">
             <div class="fation-order">
@@ -66,7 +66,7 @@
             </div>
         </div>
         <hr>
-        <div *ngFor="let faction of factionList; let i = index">
+        <div *ngFor="let faction of seletedNewFactionList; let i = index">
             <div class="faction-row selectable row{{i % 2}}" (click)="setFactonDate(faction.order, faction.id.split('-')[1], faction.name)">
                 <div class="fation-order">
                     {{faction.order}}
@@ -81,7 +81,7 @@
                     {{faction.id}}
                 </div>
                 <div class="game-faction-id">
-                    {{faction.id.split('-')[1]}}
+                    {{faction.id.split('-')[2]}}
                 </div>
                 <div class="faction-name">
                     {{faction.name}}
@@ -92,6 +92,7 @@
             </div>
         </div>
     </div>
+
     <div class="add-faction">
         <div class="inputs">
             <div class="select-game-dropdown">

@@ -28,7 +28,7 @@
   </div>
   </div>
 </div>
-<div *ngIf="authenticationService.userData | async">
+<div class="edit-buttons" *ngIf="authenticationService.userData | async">
   <button *ngIf="!edit" (click)="enableEdit()">Edit</button>
   <button *ngIf="edit" class="button" (click)="updatePicks()">Save</button>
   <button *ngIf="edit" (click)="disableEdit()">Cancel</button>

@@ -9,7 +9,8 @@
       <div class="example-accordion-item-body" role="region"
         [style.display]="accordionItem0.expanded ? '' : 'none'"
         [attr.id]="'accordion-body-0'" [attr.aria-labelledby]="'accordion-header-0'">
-        <app-add-play></app-add-play>
+
+        <app-add-play *ngIf="bothCol.length > 0" [bothCol]="bothCol"></app-add-play>
       </div>
     </cdk-accordion-item>
 
@@ -37,7 +38,7 @@
       <div class="example-accordion-item-body" role="region"
         [style.display]="accordionItem1.expanded ? '' : 'none'"
         [attr.id]="'accordion-body-1'" [attr.aria-labelledby]="'accordion-header-1'">
-        <app-add-faction></app-add-faction>
+        <app-add-faction *ngIf="bothCol.length > 0" [bothCol]="bothCol"></app-add-faction>
       </div>
     </cdk-accordion-item>
 
@@ -51,7 +52,7 @@
       <div class="example-accordion-item-body" role="region"
         [style.display]="accordionItem2.expanded ? '' : 'none'"
         [attr.id]="'accordion-body-2'" [attr.aria-labelledby]="'accordion-header-2'">
-        <app-add-scenario></app-add-scenario>
+        <app-add-scenario *ngIf="bothCol.length > 0" [bothCol]="bothCol"></app-add-scenario>
       </div>
     </cdk-accordion-item>
 
@@ -65,7 +66,7 @@
       <div class="example-accordion-item-body" role="region"
         [style.display]="accordionItem3.expanded ? '' : 'none'"
         [attr.id]="'accordion-body-3'" [attr.aria-labelledby]="'accordion-header-3'">
-        <app-add-cycle></app-add-cycle>
+        <app-add-cycle *ngIf="bothCol.length > 0" [bothCol]="bothCol"></app-add-cycle>
       </div>
     </cdk-accordion-item>
   </cdk-accordion>

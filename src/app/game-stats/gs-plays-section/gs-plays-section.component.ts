@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
-import { Players } from 'src/app/home/player-selection';
+import { Players } from 'src/app/models/player-selection';
 import { PlayInstance } from 'src/app/models/play';
+import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -15,20 +16,15 @@ export class GsPlaysSectionComponent implements OnInit {
   @Input() plays: PlayInstance[] = [];
 
   players: Players[];
-  players$: Observable<Players[]>;
-  private playerCol: AngularFirestoreCollection<Players>;
-
   
-  constructor(private afs: AngularFirestore,
+  constructor(private firebaseDataService: FirebaseDataService,
     public utils: UtilsService) {
-    this.playerCol = this.afs.collection('tabletop-syndicate').doc('player-data').collection('player-names');
-    this.players$ = this.playerCol.valueChanges();
     this.players = []
   }
 
   ngOnInit(): void {
     this.plays.sort((a, b) => (a.date > b.date) ? 1 : -1)
-    this.players$.subscribe((players: Players[]) => {
+    this.firebaseDataService.players$.subscribe((players: Players[]) => {
       this.players = players;
     })
   }

@@ -1,6 +1,6 @@
 {
-    "/xmlapi": {
-        "target": "https://boardgamegeek.com/xmlapi",
+    "/xmlapi/*": {
+        "target": "https://boardgamegeek.com/",
         "secure": false,
         "changeOrigin": true,
         "logLevel": "debug"

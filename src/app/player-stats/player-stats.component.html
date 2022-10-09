@@ -1,0 +1,37 @@
+<div class="player-stats-section">
+    <div class="two-items">
+        <div class="pie-chart">
+
+        </div>
+
+        <div class="total-games-played-section">
+            <div class="total-games-played">
+            Total Games Played
+        </div>
+        <div class="player-wins total-wins">
+            {{totalGames}}
+        </div>
+        </div>
+    </div>
+    <div class="stats-column">
+        <div class="header">Wins By Player</div>
+        <div class="stats-row player-wins-row">
+            <div *ngFor="let player of players" class="stats-column player-wins-section">
+                <div class="player-name">
+                    {{player.firstName}}
+                </div>
+                <div class="player-wins">
+                    {{playerWinCount.get(player.id)}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="stats-column">
+        <div class="header">Wins By Week</div>
+        <div class="coming-soon">Coming Soon</div>
+    </div>
+    <div class="stats-column">
+        <div class="header">Wins Over Time</div>
+        <div class="coming-soon">Coming Soon</div>
+    </div>
+</div>

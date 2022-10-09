@@ -1,5 +1,7 @@
 import { Time } from "@angular/common";
+import { textId } from "./collection";
 import { DisplayFactions, Faction, FactionCollection } from "./faction";
+import { nameId } from "./generic";
 import { ScenarioDb, ScenarioGame, ScenarioPlayDb } from "./scenario";
 
 export interface Play {
@@ -78,6 +80,7 @@ export interface Scenario {
 export interface GameInstance {
     gameId: string;
     gameName: string;
+    gameDetails: GameDetails;
     plays: PlayInstance[];
     playerWins: PlayerWins[];
     scenarios: ScenarioGame[];
@@ -88,6 +91,19 @@ export interface GameInstance {
     location: string;
     pick: string;
     winners: Wins[];
+}
+
+export interface GameDetails {
+    id: string;
+    description: string;
+    yearPublished: number;
+    minPlayers: number;
+    maxPlayers: number;
+    minTime: number;
+    maxTime: number;
+    boardGameCategory: textId[];
+    artist: textId[];
+    designer: textId[];
 }
 
 export interface Wins {

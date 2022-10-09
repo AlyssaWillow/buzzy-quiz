@@ -27,7 +27,6 @@ import { CollectionModule } from './collection/collection.module';
 import { CommonModule } from '@angular/common';
 import { LemanCollectionModule } from './collection/leman-collection/leman-collection.module';
 import { BoardGameGeekService } from './services/board-game-geek.service';
-import { ConventionShirtsComponent } from './convention-shirts/convention-shirts.component';
 import { ConventionShirtsModule } from './convention-shirts/convention-shirts.module';
 import { GameStatsModule } from './game-stats/game-stats.module';
 import { UtilsService } from './services/utils.service';
@@ -37,6 +36,11 @@ import { AddFactionModule } from './add/add-faction/add-faction.module';
 import { AddScenarioModule } from './add/add-scenario/add-scenario.module';
 import { AddCycleModule } from './add/add-cycle/add-cycle.module';
 import { AddAllModule } from './add/add-all/add-all.module';
+import { PickHistoryModule } from './pick-history/pick-history.module';
+import { PlayerPicksModule } from './pick-history/player-picks/player-picks.module';
+import { LeastPlayedModule } from './pick-history/least-played/least-played.module';
+import { SharedModuleModule } from './pipes/shared-module/shared-module.module';
+import { PlayerStatsModule } from './player-stats/player-stats.module';
 
 @NgModule({
   declarations: [
@@ -63,11 +67,16 @@ import { AddAllModule } from './add/add-all/add-all.module';
     MatMenuModule,
     LoginModule,
     LemanCollectionModule,
+    PickHistoryModule,
+    PlayerPicksModule,
+    LeastPlayedModule,
     AddPlayModule,
     AddFactionModule,
+    PlayerStatsModule,
     AddScenarioModule,
     AddCycleModule,
     AddAllModule,
+    SharedModuleModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,

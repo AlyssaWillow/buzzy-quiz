@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-convention-shirts',
@@ -49,9 +51,15 @@ export class ConventionShirtsComponent implements OnInit {
       alyssaImage: '../assets/images/scytheWhite.png',
     }
   ]
-  constructor() { }
+  constructor(private authenticationService: AuthenticationService,
+    private router: Router) { }
 
   ngOnInit(): void {
+    this.authenticationService.userData.subscribe(user => {
+      if (!user) {
+        this.router.navigate(['/home']);
+      }
+    })
   }
 
 }

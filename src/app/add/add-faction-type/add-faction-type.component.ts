@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { MatFormField } from '@angular/material/form-field';
 import { Observable } from 'rxjs';
-import { Players } from 'src/app/home/player-selection';
+import { Players } from 'src/app/models/player-selection';
 import { BoardGame, GameCollection } from 'src/app/models/collection';
 import { doc, setDoc } from "firebase/firestore"; 
 import { nameId } from 'src/app/models/generic';
@@ -13,6 +13,7 @@ import { timeStamp } from 'console';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { UtilsService } from 'src/app/services/utils.service';
 import { factionTypeData } from 'src/app/models/faction';
+import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 
 
 @Component({
@@ -37,9 +38,9 @@ export class AddFactionTypeComponent implements OnInit {
   };
   
 
-  constructor(private boardGameGeekService: BoardGameGeekService,
-    public utils: UtilsService,
-    private afs: AngularFirestore) { 
+  constructor(public utils: UtilsService,
+    private afs: AngularFirestore,
+    private firebaseDataService: FirebaseDataService) { 
   }
 
   ngOnInit(): void {
@@ -49,13 +50,13 @@ export class AddFactionTypeComponent implements OnInit {
   getCycles = (): void => {
       let factionTypes: AngularFirestoreCollection<factionTypeData> = this.afs.collection('faction-type-data');
       let factionTypes$ = factionTypes.valueChanges();
-      factionTypes$.subscribe(factionTypez => {
+      this.firebaseDataService.factionTypes$.subscribe(factionTypez => {
         this.factionTypeList = factionTypez;
       })
   }
 
   editSelectedCycle = (factionType: factionTypeData) => {
-    this.factionType.id = factionType.id;
+    this.factionType.id = factionType.id.split('-')[1];
     this.factionType.name = factionType.name;
     this.factionType.order = factionType.order
   }
@@ -64,6 +65,7 @@ export class AddFactionTypeComponent implements OnInit {
     if (this.factionType.id !== '' && this.factionType.name !== '' && this.factionType.order !== 0) {
       const pickRef = this.afs.collection('faction-type-data');
       let concatId = 'fac-' + this.factionType.id;
+      this.factionType.id = concatId;
       await pickRef.doc(concatId).set(this.factionType)
 
       this.factionType.id = '';
@@ -83,7 +85,7 @@ export class AddFactionTypeComponent implements OnInit {
       pickRef.doc(factionType.id).delete().then(() => {
         this.factionTypeDeletedName = factionType;
         this.factionTypeDeleted = true;
-        console.log("Document successfully deleted!");
+        console.info("Document successfully deleted!");
     }).catch((error) => {
         console.error("Error removing document: ", error);
     });

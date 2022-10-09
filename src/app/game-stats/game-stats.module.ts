@@ -8,6 +8,7 @@ import { GsScenariosSectionModule } from './gs-scenarios-section/gs-scenarios-se
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { GsGameDetailsModule } from './gs-game-details/gs-game-details.module';
 
 
 
@@ -24,7 +25,8 @@ import { FormsModule } from '@angular/forms';
     GsWinsSectionModule,
     GsPlaysSectionModule,
     GsFactionsSectionModule,
-    GsScenariosSectionModule
+    GsScenariosSectionModule,
+    GsGameDetailsModule
   ],
   exports: [
     GameStatsComponent

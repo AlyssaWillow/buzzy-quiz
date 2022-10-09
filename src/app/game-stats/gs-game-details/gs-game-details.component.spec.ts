@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GsSnGameScenarioComponent } from './gs-sn-game-scenario.component';
+import { GsGameDetailsComponent } from './gs-game-details.component';
 
-describe('GsSnGameScenarioComponent', () => {
-  let component: GsSnGameScenarioComponent;
-  let fixture: ComponentFixture<GsSnGameScenarioComponent>;
+describe('GsGameDetailsComponent', () => {
+  let component: GsGameDetailsComponent;
+  let fixture: ComponentFixture<GsGameDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GsSnGameScenarioComponent ]
+      declarations: [ GsGameDetailsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GsSnGameScenarioComponent);
+    fixture = TestBed.createComponent(GsGameDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

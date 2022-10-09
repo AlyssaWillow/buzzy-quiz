@@ -124,3 +124,10 @@
     min-height: 2.2rem;
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
+
+  .edit-buttons {
+    padding: 1.5rem 12rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+  }

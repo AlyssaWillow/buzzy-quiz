@@ -56,7 +56,7 @@
             </div>
         </div>
         <hr>
-        <div *ngFor="let scenario of scenarioList; let i = index">
+        <div *ngFor="let scenario of seletedNewScenarioList; let i = index">
             <div class="scenario-row selectable row{{i % 2}}" (click)="setFactonDate(scenario.order, scenario.id.split('-')[1], scenario.cycle, scenario.name)">
                 <div class="scenario-order">
                     {{scenario.order}}
@@ -65,7 +65,7 @@
                     {{scenario.cycle}}
                 </div>
                 <div class="scenario-type-name">
-                    {{utils.getCycleName(scenario.cycle, cycleList)}}
+                    {{utils.getCycleName(scenario.cycle, newCycles)}}
                 </div>
                 <div class="game-scenario-id">
                     {{scenario.id}}
@@ -112,7 +112,9 @@
                     <input matInput placeholder="Ex: 01 or 01B" [(ngModel)]="scenarioId">
                 </mat-form-field>
             </div>
+        </div>
         
+        <div class="inputs">
             <div class="select-game-dropdown">
                 <mat-form-field class="input-full" appearance="fill">
                     <mat-label>Scenario Name</mat-label>

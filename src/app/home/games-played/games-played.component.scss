@@ -1,0 +1,51 @@
+.games-played-section {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem;
+} 
+
+.games-played-header {
+    display: flex;
+    flex-direction: row;
+    height: 2rem;
+    font-weight: 500;
+    font-size: 1rem;
+    padding-left: 2rem;
+}
+
+.games-played {
+    display: flex;
+    flex-direction: row;
+    height: 1.2rem;
+    padding-left: 2rem;
+}
+
+.pick {
+    min-width: 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.game {
+    min-width: 50%
+}
+
+.row0 {
+    background-color: white;
+}
+
+.row1 {
+    background-color: lightgray;
+}
+
+.border {
+    width: 100%;
+}
+
+.has-played {
+    font-weight:500;
+}
+
+.not-played {
+    font-weight:300;
+}
