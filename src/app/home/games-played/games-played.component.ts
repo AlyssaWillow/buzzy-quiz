@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AllBoardGames } from 'src/app/models/collection';
 import { PlayDb } from 'src/app/models/play';
 import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
