@@ -21,6 +21,7 @@ const options = {
 export class BoardGameGeekService implements OnInit {
   baseUrl1: string = 'https://boardgamegeek.com/xmlapi/collection/';
   baseUrl2: string = 'https://boardgamegeek.com/xmlapi2/collection?username=';
+  baseUrl3: string = 'https://boardgamegeek.com/xmlapi/boardgame/'
   leman: string = 'Bluexeclipse';
   hendrickson: string = 'sammysandwich';
   suffix1: string = '?own=1';
@@ -78,8 +79,8 @@ export class BoardGameGeekService implements OnInit {
       if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             const parser = new XMLParser(options);
-            this._lemanCollection.next(parser.parse(xhr.response).items);
-            return parser.parse(xhr.response);
+              this._lemanCollection.next(parser.parse(xhr.response).items);
+              return parser.parse(xhr.response);
           } else {
               console.error('error', xhr.response);
               return undefined;
@@ -117,15 +118,15 @@ export class BoardGameGeekService implements OnInit {
       if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             const parser = new XMLParser(options);
-            this._listOfCollection.next(parser.parse(xhr.response).boardgames);
-            return parser.parse(xhr.response);
+              this._listOfCollection.next(parser.parse(xhr.response).boardgames);
+              return parser.parse(xhr.response);
           } else {
               console.error('error', xhr.response);
               return undefined;
           }
       }
     }
-    let url = "http://localhost:4200/xmlapi/boardgame/" + strList.join(",")
+    let url = this.baseUrl3 + strList.join(",")
     xhr.open("GET", url, true);
     xhr.send();
   }
