@@ -5,6 +5,14 @@
     "ignore": [
       "**/.*"
     ],
+    "redirects": [ 
+      {
+        "source": "/boardgame/:*",
+        "destination": "https://boardgamegeek.com/xmlapi/boardgame/:",
+        "type": 301
+      }
+      
+    ],
     "headers": [
       {
         "source": "*.[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].+(css|js)",
@@ -12,7 +20,11 @@
           {
             "key": "Cache-Control",
             "value": "public,max-age=31536000,immutable"
-          }
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          } 
         ]
       },
       {

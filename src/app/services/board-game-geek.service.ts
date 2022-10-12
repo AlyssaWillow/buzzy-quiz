@@ -20,8 +20,8 @@ const options = {
 })
 export class BoardGameGeekService implements OnInit {
   baseUrl1: string = 'https://boardgamegeek.com/xmlapi/collection/';
-  baseUrl2: string = 'https://boardgamegeek.com/xmlapi2/collection?username=';
-  baseUrl3: string = 'https://boardgamegeek.com/xmlapi/boardgame/'
+  baseUrl2: string = 'https://boardgamegeek.com/xmlapi2/thing?id=';
+  //baseUrl3: string = 'https://boardgamegeek.com/xmlapi/boardgame/';
   leman: string = 'Bluexeclipse';
   hendrickson: string = 'sammysandwich';
   suffix1: string = '?own=1';
@@ -44,7 +44,7 @@ export class BoardGameGeekService implements OnInit {
 
   listOfCollection: AllBoardGames = {
     termsofuse: null,
-    boardgame: []
+    item: []
   };
 
   listOfExpansion: AllBoardGame[] = [];
@@ -98,7 +98,6 @@ export class BoardGameGeekService implements OnInit {
       if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             const parser = new XMLParser(options);
-            
             this._hendricksonCollection.next(parser.parse(xhr.response).items);
             return parser.parse(xhr.response);
           } else {
@@ -118,7 +117,7 @@ export class BoardGameGeekService implements OnInit {
       if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             const parser = new XMLParser(options);
-              this._listOfCollection.next(parser.parse(xhr.response).boardgames);
+              this._listOfCollection.next(parser.parse(xhr.response).items);
               return parser.parse(xhr.response);
           } else {
               console.error('error', xhr.response);
@@ -126,45 +125,47 @@ export class BoardGameGeekService implements OnInit {
           }
       }
     }
-    let url = this.baseUrl3 + strList.join(",")
+    let url = this.baseUrl2 + strList.join(",")
     xhr.open("GET", url, true);
     xhr.send();
   }
 
-  getlistOfExpansions(strList: string[]): any {
-    if (strList && strList.length > 0) {
+//   getlistOfExpansions(strList: string[]): any {
+//     if (strList && strList.length > 0) {
       
-      let boardGameList: AllBoardGame[] = [];
+//       let boardGameList: AllBoardGame[] = [];
       
-      let xhr = new XMLHttpRequest();
-      let interval = 500;
-      let limit: number = 500;
-      let offset: number = 0;
-      do {
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                const parser = new XMLParser(options);
-                boardGameList = [...boardGameList, ...parser.parse(xhr.response).boardgames.boardgame];
-                if (limit >= strList.length) {
-                  this._listOfExpansions.next(boardGameList);
-                }
-                return parser.parse(xhr.response);
-              } else {
-                  console.error('error', xhr.response);
-                  return undefined;
-              }
-          }
-        }
-        let url = "http://localhost:4200/xmlapi/boardgame/" + strList.slice(offset, limit).join(",")
+//       let xhr = new XMLHttpRequest();
+//       let interval = 500;
+//       let limit: number = 500;
+//       let offset: number = 0;
+//       do {
+//         xhr.onreadystatechange = () => {
+//           if (xhr.readyState === 4) {
+//               if (xhr.status === 200) {
+//                 const parser = new XMLParser(options);
+                
+//             console.log('nooooooooooooooooooo');
+//                 boardGameList = [...boardGameList, ...parser.parse(xhr.response).boardgames.boardgame];
+//                 if (limit >= strList.length) {
+//                   this._listOfExpansions.next(boardGameList);
+//                 }
+//                 return parser.parse(xhr.response);
+//               } else {
+//                   console.error('error', xhr.response);
+//                   return undefined;
+//               }
+//           }
+//         }
+//         let url = "http://localhost:4200/xmlapi/boardgame/" + strList.slice(offset, limit).join(",")
       
-      xhr.open("GET", url, true);
-      xhr.send();
-        offset += interval;
-        limit += interval;
-      } while(limit < (strList.length + interval))
+//       xhr.open("GET", url, true);
+//       xhr.send();
+//         offset += interval;
+//         limit += interval;
+//       } while(limit < (strList.length + interval))
     
-  }
-}
+//   }
+// }
   
 }

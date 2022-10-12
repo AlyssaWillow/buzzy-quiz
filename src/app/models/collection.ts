@@ -65,9 +65,22 @@ export interface Rank {
     bayesaverage: number;
 }
 
+export interface Link {
+  type: string | null;
+  id: number;
+  value: string;
+  inbound: boolean;
+}
+
 interface Name {
   text: string;
   sortorder: number
+}
+
+interface Name2 {
+  type: string;
+  sortindex: number;
+  value: string;
 }
 
 export interface textId {
@@ -77,38 +90,29 @@ export interface textId {
 
 export interface AllBoardGames {
     termsofuse: string | null;
-    boardgame: AllBoardGame[];
+    item: AllBoardGame[];
 }
 
 export interface AllBoardGame {
-  age: number;
-  boardgameaccessor: textId[];
-  boardgameartist: textId[];
-  boardgamecategory: textId[];
-  boardgamedesigner: textId[];
-  boardgameexpansion: textId[];
-  boardgamefamily: textId | textId[];
-  boardgamehonor: textId[];
-  boardgameimplementation: Inbound;
-  boardgamemechanic: textId[];
-  boardgamepodcastepisode: textId[];
-  boardgamepublisher: textId[];
-  boardgamesubdomain: textId;
-  boardgameversion: textId[]
-  commerceweblink: textId;
-  description: string; 
+  id: string;
   image: string;
-  maxplayers: number; 
-  maxplaytime: number;
-  minplayers: number;
-  minplaytime: number
-  name: Name[];
-  objectid: string;
+  description: string; 
+  link: Link[];
+  maxplayers: Value; 
+  maxplaytime: Value;
+  minage: Value;
+  minplayers: Value;
+  minplaytime: Value;
+  name: Name2[];
   playingtime: number;
   poll: Poll[];
   thumbnail: string;
-  videogamebg: textId;
-  yearpublished: number;
+  type: string;
+  yearpublished: Value;
+}
+
+interface Value {
+  value: number;
 }
 
 interface BoardGameExpansion {
