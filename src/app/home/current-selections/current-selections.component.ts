@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import { PlayerSelection, DisplayPlayerSelection, Players, Selection } from '../../models/player-selection';
+import { DisplayPlayerSelection, Players, Selection } from '../../models/player-selection';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AngularFirestore, 
-  AngularFirestoreCollection, 
-  AngularFirestoreDocument } from '@angular/fire/compat/firestore';
+  AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 
