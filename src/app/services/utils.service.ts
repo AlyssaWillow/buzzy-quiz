@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Players } from '../models/player-selection';
-import { BoardGame, textId } from '../models/collection';
+import { BoardGame, Link, textId } from '../models/collection';
 import { cycle, nameId } from '../models/generic';
 import { Timestamp } from '../models/play';
 import { CycleDb } from '../models/scenario';
@@ -124,5 +124,9 @@ getGameImage = (id: string, gameCollection: BoardGame[]): string => {
 
   castToTypeIdObject = (typeList: textId[]): textId => {
     return <textId><any> typeList;
+  }
+
+  castToTypeIdObjectLink = (typeList: Link[]): Link => {
+    return <Link><any> typeList;
   }
 }

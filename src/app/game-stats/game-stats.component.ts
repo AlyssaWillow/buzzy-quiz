@@ -24,7 +24,7 @@ interface BaseToGame {
 }
 
 interface BaseToExpansion {
-  expansionId: string;
+  expansionId: number;
   expansion: AllBoardGame;
 }
 
@@ -143,17 +143,23 @@ export class GameStatsComponent implements OnInit {
 
     let expansionIds: string[] = [];
     this.allCollection$.subscribe(allCollection => {
-      this.allCol = allCollection.boardgame;
+      this.allCol = allCollection.item;
       this.allCol?.forEach(game => {
-        if (!this.collectionOverrides?.bases.includes(game.objectid)) {
-          if (this.collectionOverrides?.expansions.includes(game.objectid)) {
-            expansionIds.push(game.objectid)
+        if (!this.collectionOverrides?.bases.includes(game.id)) {
+          if (this.collectionOverrides?.expansions.includes(game.id)) {
+            expansionIds.push(game.id)
           } else {
-            if (game && game.boardgamecategory?.length > 0) {
-              game?.boardgamecategory?.forEach(category => {
-                if (category.objectid === '1042') {
-                  expansionIds.push(game.objectid)
+
+            if (game && game.link.filter(ref => ref.type === 'boardgamecategory').length > 0) {
+              game?.link.filter(ref =>  ref.type === 'boardgamecategory').forEach(category => {
+                if (category.id === 1042) {
+                  expansionIds.push(game.id)
                 } 
+              })
+              game?.link.filter(ref => ref.type === 'boardgameexpansion').forEach(category => {
+                if (!category.inbound) {
+                  expansionIds.push(""+category.id)
+                }
               })
             }
           }
@@ -163,50 +169,33 @@ export class GameStatsComponent implements OnInit {
       let baseGame: BaseToGame;
       let newExpansion: BaseToExpansion;
       this.allCol?.forEach(game => {
-       if ((this.collectionOverrides.bases.includes(game.objectid) || !expansionIds.includes(game.objectid)) 
-       && !this.collectionOverrides.expansions.includes(game.objectid)) {
+       if ((this.collectionOverrides.bases.includes(game.id) || !expansionIds.includes(game.id)) 
+       && !this.collectionOverrides.expansions.includes(game.id)) {
         baseGame = {
-          baseId: game.objectid,
+          baseId: game.id,
           base: game,
           expansions: []
         }
-        if (game.boardgameexpansion?.length > 0 ) {
-          game.boardgameexpansion?.forEach(expansion => {
+        if (game.link.filter(ref => ref.type == 'boardgameexpansion').length > 0 ) {
+          game.link.filter(ref =>  ref.type == 'boardgameexpansion').forEach(expansion => {
             newExpansion = {
-              expansionId: expansion.objectid,
+              expansionId: expansion.id,
               expansion: {
-                age: 0,
-              boardgameaccessor: [],
-              boardgameartist: [],
-              boardgamecategory: [],
-              boardgamedesigner: [],
-              boardgameexpansion: [],
-              boardgamefamily: [],
-              boardgamehonor: [],
-              boardgameimplementation: { objectid: '',
-              text: '', inbound: ''},
-              boardgamemechanic: [],
-              boardgamepodcastepisode: [],
-              boardgamepublisher: [],
-              boardgamesubdomain: { objectid: '',
-              text: ''},
-              boardgameversion: [],
-              commerceweblink: { objectid: '',
-              text: ''},
-              description: '',
-              image: '',
-              maxplayers: 0, 
-              maxplaytime: 0,
-              minplayers: 0,
-              minplaytime: 0,
-              name: [],
-              objectid: '',
-              playingtime: 0,
-              poll: [],
-              thumbnail: '',
-              videogamebg: { objectid: '',
-              text: ''},
-              yearpublished: 0
+                id: "",
+                image: "",
+                description: "",
+                link: [],
+                maxplayers: {value: 0},
+                maxplaytime: {value: 0},
+                minage: {value: 0},
+                minplayers: {value: 0},
+                minplaytime: {value: 0},
+                name: [],
+                playingtime: 0,
+                poll: [],
+                thumbnail: "",
+                type: "",
+                yearpublished: {value: 0}
               }
             }
             baseGame.expansions.push(newExpansion)
@@ -217,10 +206,10 @@ export class GameStatsComponent implements OnInit {
       })
 
       this.allCol?.forEach(game => {
-        if (expansionIds.includes(game.objectid)) {
+        if (expansionIds.includes(game.id)) {
          this.nonExpansion.forEach(base => {
           base.expansions.forEach(expansion => {
-            if (expansion.expansionId === game.objectid) {
+            if (("" + expansion.expansionId) === game.id) {
               expansion.expansion = game;
             }
           })
@@ -319,16 +308,16 @@ export class GameStatsComponent implements OnInit {
 
   getGameDetails = (game: BaseToGame): GameDetails => {
     let deets: GameDetails = {
-      id: game.base.objectid,
+      id: game.base.id,
       description: game.base.description,
-      yearPublished: game.base.yearpublished,
-      minPlayers: game.base.minplayers,
-      maxPlayers: game.base.maxplayers,
-      minTime: game.base.minplaytime,
-      maxTime: game.base.maxplaytime,
-      boardGameCategory: game.base.boardgamecategory,
-      artist: game.base.boardgameartist,
-      designer: game.base.boardgamedesigner
+      yearPublished: game.base.yearpublished.value,
+      minPlayers: game.base.minplayers.value,
+      maxPlayers: game.base.maxplayers.value,
+      minTime: game.base.minplaytime.value,
+      maxTime: game.base.maxplaytime.value,
+      boardGameCategory: game.base.link.filter(ref =>  ref.type === 'boardgamecategory'),
+      artist: game.base.link.filter(ref =>  ref.type === 'boardgameartist'),
+      designer: game.base.link.filter(ref => ref.type === 'boardgamedesigner'),
     }
     return deets;
   }
@@ -508,7 +497,7 @@ export class GameStatsComponent implements OnInit {
 
     ids.push(game.baseId);
     game.expansions.forEach(expansion=> {
-      ids.push(expansion.expansionId);
+      ids.push("" + expansion.expansionId);
     });
 
     
@@ -547,7 +536,7 @@ export class GameStatsComponent implements OnInit {
 
     ids.push(game.baseId);
     game.expansions.forEach(expansion=> {
-      ids.push(expansion.expansionId);
+      ids.push("" + expansion.expansionId);
     });
 
     factions = this.newFactions.filter(ref => ids.includes(ref.gameId))

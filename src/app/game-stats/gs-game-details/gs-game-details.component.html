@@ -12,26 +12,26 @@
         <div class="detail-row section-row">
             <div class="detail-row">Designers: &nbsp;&nbsp;
                 <div class="game-details" *ngIf="deets.designer?.length && deets.designer.length > 0">
-                    <div *ngFor="let designer of deets.designer">{{designer.text}}</div>
+                    <div *ngFor="let designer of deets.designer">{{designer.value}}</div>
                 </div> 
                 <div class="game-details" *ngIf="!deets.designer?.length || deets.designer?.length === 0">
-                    <div>{{utils.castToTypeIdObject(deets.designer)?.text}}</div>
+                    <div>{{utils.castToTypeIdObjectLink(deets.designer).value}}</div>
                 </div> 
             </div>
             <div class="detail-row">Artists: &nbsp;&nbsp;
                 <div class="game-details" *ngIf="deets.artist?.length && deets.artist.length > 0">
-                    <div *ngFor="let artist of deets.artist">{{artist.text}}</div>
+                    <div *ngFor="let artist of deets.artist">{{artist.value}}</div>
                 </div> 
                 <div class="game-details" *ngIf="!deets.artist?.length || deets.artist?.length === 0">
-                    <div>{{utils.castToTypeIdObject(deets.artist)?.text}}</div>
+                    <div>{{utils.castToTypeIdObjectLink(deets.artist).value}}</div>
                 </div> 
             </div>
             <div class="detail-row">Categories: &nbsp;&nbsp;
                 <div class="game-details" *ngIf="deets.boardGameCategory?.length && deets.boardGameCategory.length > 0">
-                    <div *ngFor="let boardGameCategory of deets.boardGameCategory">{{boardGameCategory.text}}</div>
+                    <div *ngFor="let boardGameCategory of deets.boardGameCategory">{{boardGameCategory.value}}</div>
                 </div> 
                 <div class="game-details" *ngIf="!deets.boardGameCategory?.length || deets.boardGameCategory?.length === 0">
-                    <div>{{utils.castToTypeIdObject(deets.boardGameCategory)?.text}}</div>
+                    <div>{{utils.castToTypeIdObjectLink(deets.boardGameCategory).value}}</div>
                 </div> 
             </div>
         </div> 
