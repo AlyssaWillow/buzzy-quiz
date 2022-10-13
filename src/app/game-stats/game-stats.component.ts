@@ -53,11 +53,11 @@ export class GameStatsComponent implements OnInit {
   listGuides: ListGuide[] = [];
   newScenarios: ScenarioDb2[] = [];
   newCycles: CycleDb[] = [];
+  selectedGames: string[] = [];
 
-  display: string = 'typ-01A';
+  display: string[] = [];
 
   types: CollectionGroups[] = [
-    {viewValue: 'All', value: 'typ-01A'},
     {viewValue: 'Details', value: 'typ-06D'},
     {viewValue: 'Wins', value: 'typ-02W'},
     {viewValue: 'Play-history', value: 'typ-05P'},
