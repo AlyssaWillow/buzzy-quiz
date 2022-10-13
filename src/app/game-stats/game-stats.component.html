@@ -2,23 +2,34 @@
     <div class="note-text">
         <div class="select-factions-game">
             <mat-form-field appearance="fill">
-                <mat-label>Collections to Display</mat-label>
-                <mat-select [(ngModel)]="display" name="collections">
+                <mat-label>Sections to Display</mat-label>
+                <mat-select [(ngModel)]="display" multiple name="collections">
                     <mat-option *ngFor="let col of types" [value]="col.value">
                         {{col.viewValue}}
                       </mat-option>
                 </mat-select>
                 </mat-form-field>
         </div>
+
+        <div class="select-expansions">
+            <mat-form-field class="select-faction-dropdown" appearance="fill">
+                <mat-label>Select Games</mat-label>
+                <mat-select [(ngModel)]="selectedGames" multiple name="bothCol">
+                    <mat-option *ngFor="let col of bothCol" [value]="col.objectid">
+                        {{col?.name?.text}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
 </div>
 <div class="game-section" *ngFor="let game of playData">
-    <div *ngIf="display ==='typ-01A' 
-        || (display === 'typ-06D' ) 
-        || (display === 'typ-03F' && game.factions.length > 0) 
-        || (display === 'typ-04S' && game.scenarios.length > 0)
-        || (display === 'typ-02W' && game.winners.length > 0)
-        || (display === 'typ-05P' && game.plays.length > 0)">
+    <div *ngIf="(selectedGames.length === 0 || selectedGames.includes(game.gameId)) && (display.length === 0
+        || (display.includes('typ-06D') ) 
+        || (display.includes('typ-03F') && game.factions.length > 0) 
+        || (display.includes('typ-04S') && game.scenarios.length > 0)
+        || (display.includes('typ-02W') && game.winners.length > 0)
+        || (display.includes('typ-05P') && game.plays.length > 0))">
     <div class="game-header">
         <img class="header-image" src="{{game.gameImage}}"/>
         <div class="header-text-section">
@@ -47,17 +58,17 @@
             </div>
         </div>
 
-        <app-gs-game-details *ngIf="display ==='typ-01A' || display === 'typ-06D'" [deets]="game.gameDetails"></app-gs-game-details >
+        <app-gs-game-details *ngIf="display.length === 0 || display.includes('typ-06D')" [deets]="game.gameDetails"></app-gs-game-details >
 
-        <app-gs-wins-section *ngIf="display ==='typ-01A' || display === 'typ-02W'" [winners]="game.winners"></app-gs-wins-section>
+        <app-gs-wins-section *ngIf="display.length === 0 || display.includes('typ-02W')" [winners]="game.winners"></app-gs-wins-section>
 
-        <app-gs-plays-section *ngIf="display ==='typ-01A' || display === 'typ-05P'" [plays]="game.plays"></app-gs-plays-section>
+        <app-gs-plays-section *ngIf="display.length === 0 || display.includes('typ-05P')" [plays]="game.plays"></app-gs-plays-section>
 
-        <app-gs-factions-section *ngIf="display ==='typ-01A' || display ==='typ-03F'" 
+        <app-gs-factions-section *ngIf="display.length === 0 || display.includes('typ-03F')" 
             [factions]="game.factions" [bothCol]="bothCol" [allFactions]="newFactions"></app-gs-factions-section>
         
         <div *ngIf="game.scenarios && game.scenarios.length > 0">
-            <app-gs-scenarios-section *ngIf="display ==='typ-01A' || display ==='typ-04S'" [scenarios]="game.scenarios" [bothCol]="bothCol"></app-gs-scenarios-section>
+            <app-gs-scenarios-section *ngIf="display.length === 0 || display.includes('typ-04S')" [scenarios]="game.scenarios" [bothCol]="bothCol"></app-gs-scenarios-section>
         </div>
     </div>
 </div>
