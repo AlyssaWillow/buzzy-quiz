@@ -66,7 +66,7 @@ export interface Rank {
 }
 
 export interface Link {
-  type: string | null;
+  type: string;
   id: number;
   value: string;
   inbound: boolean;

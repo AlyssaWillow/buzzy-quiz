@@ -1,0 +1,20 @@
+<div class="expansion-game-section">
+    <div class="game-image-section">
+        <img class="game-image" src="{{game.image}}"/>
+    </div>
+    <div class="info-section">
+        <div *ngFor="let name of utils.castLinkObjectToList(game.name)">
+            <div *ngIf="name.type === 'primary'" class="name-text" [innerHTML]="name.value"></div>
+        </div>
+        <div>Id: {{game.id}}</div>
+        <div *ngIf="game.minplayers.value !== game.maxplayers.value">Players: {{game.minplayers.value}} - {{game.maxplayers.value}}</div>
+        <div *ngIf="game.minplayers.value === game.maxplayers.value">Players: {{game.minplayers.value}}</div>
+        <div *ngIf="game.minplaytime.value !== game.maxplaytime.value">Time: {{game.minplaytime.value}} - {{game.maxplaytime.value}} minutes</div>
+        <div *ngIf="game.minplaytime.value === game.maxplaytime.value">Time: {{game.minplaytime.value}} minutes</div>
+        <div>Year Published: {{game.yearpublished.value}}</div>
+    </div>
+    <div class="description-section">
+        <div class="descript" [innerHTML]="game.description"></div>
+    </div>
+</div>
+<hr *ngIf="!last" />

@@ -13,7 +13,7 @@
                 </div>
                 <div class="factions-column">
                     <div *ngFor="let scenario of getScenarioList(cycle.cycleId); let i = index" class="faction-row row{{i%2}}">
-                        <div class="faction-name">{{scenario.name}}</div>
+                        <div class="faction-name" [innerHTML]="scenario.name"></div>
                         <div *ngFor="let scenarioScore of cycle.scenarios" class="faction-row">
                             <div *ngIf="scenario.id === scenarioScore.scenarioId" class="faction-row">
                                 <div class="scenario-plays">{{scenarioScore.plays}}</div>

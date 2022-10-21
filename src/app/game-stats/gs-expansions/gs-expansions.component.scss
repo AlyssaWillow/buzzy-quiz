@@ -1,0 +1,49 @@
+.expansion-section {
+    background-color: white;
+    padding: 1rem 7rem;
+
+  }
+
+  .expansion-title {
+    font-size: 2rem;
+      font-weight: 600;
+      background: linear-gradient(0.25turn, gray, 5%, white);
+      width: 100%;
+      height: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left:2rem;
+  }
+
+  
+  .expansion-sub-title {
+    font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(0.25turn, lightgray, 5%, white);
+      width: 100%;
+      height: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left:2rem;
+      cursor: pointer;
+  }
+
+  .owned-expansion-section {
+    padding: 1rem .5rem 0 .5rem;
+    transition: height 1s;
+  }
+
+  .unowned-expansion-section {
+    padding: 1rem .5rem 0 .5rem;
+  }
+
+  .games-list {
+    padding: 1rem 0;
+  }
+
+  .expansion-game-row {
+    display: flex;
+    flex-direction: column;
+  }

@@ -11,12 +11,45 @@
                 </mat-form-field>
         </div>
 
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Categories</mat-label>
+                <mat-select [(ngModel)]="displayCategory" multiple name="collections">
+                    <mat-option *ngFor="let col of mechanics" [value]="col.id">
+                        {{col.value}}
+                      </mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
+
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Designers</mat-label>
+                <mat-select [(ngModel)]="displayDesigners" multiple name="collections">
+                    <mat-option *ngFor="let col of designers" [value]="col.id">
+                        {{col.value}}
+                      </mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
+
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Artists</mat-label>
+                <mat-select [(ngModel)]="displayArtists" multiple name="collections">
+                    <mat-option *ngFor="let col of artists" [value]="col.id">
+                        {{col.value}}
+                      </mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
+
         <div class="select-expansions">
             <mat-form-field class="select-faction-dropdown" appearance="fill">
                 <mat-label>Select Games</mat-label>
                 <mat-select [(ngModel)]="selectedGames" multiple name="bothCol">
                     <mat-option *ngFor="let col of bothCol" [value]="col.objectid">
-                        {{col?.name?.text}}
+                        {{col?.name?.text | replaceText}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -24,8 +57,13 @@
     </div>
 </div>
 <div class="game-section" *ngFor="let game of playData">
-    <div *ngIf="(selectedGames.length === 0 || selectedGames.includes(game.gameId)) && (display.length === 0
+    <div *ngIf="checkMechanics(game.gameDetails.boardGameCategory)
+        && checkArtists(game.gameDetails.artist)
+        && checkDesigners(game.gameDetails.designer)
+        && (selectedGames.length === 0 || selectedGames.includes(game.gameId)) 
+        && (display.length === 0
         || (display.includes('typ-06D') ) 
+        || (display.includes('typ-07E') && (game.expansions.owned.length > 0 || game.expansions.unowned.length > 0)) 
         || (display.includes('typ-03F') && game.factions.length > 0) 
         || (display.includes('typ-04S') && game.scenarios.length > 0)
         || (display.includes('typ-02W') && game.winners.length > 0)
@@ -59,6 +97,12 @@
         </div>
 
         <app-gs-game-details *ngIf="display.length === 0 || display.includes('typ-06D')" [deets]="game.gameDetails"></app-gs-game-details >
+
+        <div *ngIf="game.expansions && ((game.expansions.owned && game.expansions.owned.length > 0) ||
+            (game.expansions.unowned && game.expansions.unowned.length > 0))">
+            <tts-gs-expansions *ngIf="display.length === 0 || display.includes('typ-07E')"  
+                [expansions]="game.expansions" [bothCol]="bothCol"></tts-gs-expansions>
+        </div>
 
         <app-gs-wins-section *ngIf="display.length === 0 || display.includes('typ-02W')" [winners]="game.winners"></app-gs-wins-section>
 

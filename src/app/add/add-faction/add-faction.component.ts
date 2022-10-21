@@ -114,6 +114,7 @@ export class AddFactionComponent implements OnInit {
         .set(newNewFaction);
         
       this.seletedNewFactionList = this.newFactions.filter(ref => ref.gameId === this.selectedGame?.objectid && ref.typeId === this.selectedGameType.id);
+      this.seletedNewFactionList.sort((a, b) => (a.order > b.order) ? 1 : -1)
         this.factionId = '';
         this.factionName = '';
         this.selectedOrder = 0;
