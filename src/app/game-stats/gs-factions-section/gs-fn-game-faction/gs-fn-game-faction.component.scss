@@ -97,8 +97,9 @@
   }
 
 .game-image {
-    height: 10rem;
+    max-height: 10rem;
     width: fit-content;
+    max-width: 15rem;
 }
 
 .game-image-section {

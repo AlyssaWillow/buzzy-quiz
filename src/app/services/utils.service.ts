@@ -129,4 +129,14 @@ getGameImage = (id: string, gameCollection: BoardGame[]): string => {
   castToTypeIdObjectLink = (typeList: Link[]): Link => {
     return <Link><any> typeList;
   }
+
+  castLinkObjectToList = (typeList: any): Link[] => {
+    if (typeList.length !== undefined && typeList.length > 0) {
+      return typeList;
+    } else {
+      let list: Link[] = [];
+      list.push(typeList);
+      return list;
+    }
+  }
 }

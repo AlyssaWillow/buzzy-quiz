@@ -3,10 +3,10 @@ import { AuthenticationService } from '../services/authentication.service';
 import { Players } from '../models/player-selection';
 import { DisplayFactions, Faction, factionDb2, FactionGame, factionTypeData, PlayerCount } from '../models/faction';
 import { Observable } from 'rxjs';
-import { GameInstance, PlayInstance, PlayerFaction, Wins, PlayDb, GameDetails } from '../models/play';
+import { GameInstance, PlayInstance, PlayerFaction, Wins, PlayDb, GameDetails, ownedAndUnownedExpansions } from '../models/play';
 import { Overrides } from '../models/generic';
 import { BoardGameGeekService } from '../services/board-game-geek.service';
-import { AllBoardGame, AllBoardGames, BoardGame, GameCollection } from '../models/collection';
+import { AllBoardGame, AllBoardGames, BoardGame, GameCollection, Link } from '../models/collection';
 import { Cycle, CycleDb, DisplayScenario, ScenarioDb, ScenarioDb2, ScenarioGame, ScenarioPlayDb } from '../models/scenario';
 import { FirebaseDataService } from '../services/firebase-data.service';
 import { ListGuide } from '../models/list-guide';
@@ -54,11 +54,21 @@ export class GameStatsComponent implements OnInit {
   newScenarios: ScenarioDb2[] = [];
   newCycles: CycleDb[] = [];
   selectedGames: string[] = [];
+  mechanics: Link[] = [];
+  artists: Link[] = [];
+  designers: Link[] = [];
+  mechanicIds: number[] = [];
+  artistIds: number[] = [];
+  designerIds: number[] = [];
+  displayCategory: number[] = [];
+  displayArtists: number[] = [];
+  displayDesigners: number[] = [];
 
   display: string[] = [];
 
   types: CollectionGroups[] = [
     {viewValue: 'Details', value: 'typ-06D'},
+    {viewValue: 'Expansions', value: 'typ-07E'},
     {viewValue: 'Wins', value: 'typ-02W'},
     {viewValue: 'Play-history', value: 'typ-05P'},
     {viewValue: 'Factions', value: 'typ-03F'},
@@ -162,13 +172,16 @@ export class GameStatsComponent implements OnInit {
                 }
               })
             }
-          }
+          } 
         }
       })
       
       let baseGame: BaseToGame;
       let newExpansion: BaseToExpansion;
       this.allCol?.forEach(game => {
+        this.collectMechanics(game);
+        this.collectArtists(game);
+        this.collectDesigner(game);
        if ((this.collectionOverrides.bases.includes(game.id) || !expansionIds.includes(game.id)) 
        && !this.collectionOverrides.expansions.includes(game.id)) {
         baseGame = {
@@ -279,6 +292,7 @@ export class GameStatsComponent implements OnInit {
           gameInstance.winners = this.createEmptyWinners();
           gameInstance.factions = this.createEmptyFactions(game);
           gameInstance.scenarios = this.createEmptyScenarios(game, this.listGuides);
+          gameInstance.expansions = this.getDisplayExpansions(game)
           plays.forEach((play) => {
             gamePlay = this.createNewGamePlay();
             if (game.baseId === play.gameId) {
@@ -331,7 +345,10 @@ export class GameStatsComponent implements OnInit {
       scenarios: [],
       gameImage: '',
       factions: [],
-      expansionsUsed: [],
+      expansions: {
+        owned:[],
+        unowned:[]
+      },
       gameType: '',
       location: '',
       pick: '',
@@ -541,13 +558,18 @@ export class GameStatsComponent implements OnInit {
 
     factions = this.newFactions.filter(ref => ids.includes(ref.gameId))
 
+    
+    let typeGameMap = new Map();
+
     factions.forEach(faction => {
+      if(!typeGameMap.has(faction.typeId)) {
+        typeGameMap.set(faction.typeId, new Set().add(faction.gameId))
+      } else {
+        typeGameMap.get(faction.typeId).add(faction.gameId)
+      }
       if (!typeIds.includes(faction.typeId)) {
         typeIds.push(faction.typeId)
       }
-    })
-
-    factions.forEach(faction => {
       if (!gameIds.includes(faction.gameId)) {
         gameIds.push(faction.gameId)
       }
@@ -562,10 +584,15 @@ export class GameStatsComponent implements OnInit {
 
     gameIds.forEach(gameId => {
       displayFactions.forEach(displayFaction => {
+        if (typeGameMap.get(displayFaction.factionTypeId).has(gameId)) {
+
+        
           if (!combIds.includes(displayFaction.factionTypeId + '-' + gameId)) {
             combIds.push(displayFaction.factionTypeId + '-' + gameId)
             this.addNewFactionGame(displayFaction, gameId);   
           }   
+          
+        }
       });
     });
     
@@ -760,5 +787,81 @@ export class GameStatsComponent implements OnInit {
         }
         factionList.playerCount.push(newPlayer);
       }
+  }
+
+
+  collectMechanics(game: AllBoardGame) {
+    game.link.filter(ref => ref.type === 'boardgamecategory').forEach(cat => {
+      if (!this.mechanicIds.includes(cat.id)) {
+        this.mechanicIds.push(cat.id)
+        this.mechanics.push(cat);
+        this.mechanics.sort((a, b) => (a.value > b.value) ? 1 : -1)
+      }
+    })
+  }
+
+  collectArtists(game: AllBoardGame) {
+    game.link.filter(ref => ref.type === 'boardgameartist').forEach(cat => {
+      if (!this.artistIds.includes(cat.id)) {
+        this.artistIds.push(cat.id)
+        this.artists.push(cat);
+        this.artists.sort((a, b) => (a.value > b.value) ? 1 : -1)
+      }
+    })
+  }
+
+  collectDesigner(game: AllBoardGame) {
+    game.link.filter(ref => ref.type === 'boardgamedesigner').forEach(cat => {
+      if (!this.designerIds.includes(cat.id)) {
+        this.designerIds.push(cat.id)
+        this.designers.push(cat);
+        this.designers.sort((a, b) => (a.value > b.value) ? 1 : -1)
+      }
+    })
+  }
+
+  checkMechanics = (links: Link[]): boolean => {
+    if (this.displayCategory.length === 0) {
+      return true;
+    }
+    let test: boolean =  links.filter(ref => ref.type === 'boardgamecategory').some(ref => this.displayCategory.includes(ref.id))
+    return test;
+  }
+
+  checkDesigners = (links: Link[]): boolean => {
+    if (this.displayDesigners.length === 0) {
+      return true;
+    }
+    let test: boolean =  links.filter(ref => ref.type === 'boardgamedesigner').some(ref => this.displayDesigners.includes(ref.id))
+    return test;
+  }
+
+  checkArtists = (links: Link[]): boolean => {
+    if (this.displayArtists.length === 0) {
+      return true;
+    }
+    let test: boolean =  links.filter(ref => ref.type === 'boardgameartist').some(ref => this.displayArtists.includes(ref.id))
+    return test;
+  }
+
+  getDisplayExpansions = (game: BaseToGame): ownedAndUnownedExpansions => {
+    let expList: ownedAndUnownedExpansions = {
+      owned: [],
+      unowned: []
+    };
+    let ownedIds:number[] = []
+
+    game.expansions.forEach(exp => {
+      if (exp.expansion.id.length > 0) {
+        ownedIds.push(exp.expansionId)
+          expList.owned.push(exp.expansion);
+      }
+    })
+
+    expList.unowned = game.base.link.filter(ref => ref.type === 'boardgameexpansion' && 
+      !ref.inbound && 
+      !ownedIds.includes(ref.id));
+
+    return expList;
   }
 }

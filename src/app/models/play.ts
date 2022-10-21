@@ -1,5 +1,5 @@
 import { Time } from "@angular/common";
-import { Link, textId } from "./collection";
+import { AllBoardGame, Link, textId } from "./collection";
 import { DisplayFactions, Faction, FactionCollection } from "./faction";
 import { nameId } from "./generic";
 import { ScenarioDb, ScenarioGame, ScenarioPlayDb } from "./scenario";
@@ -86,11 +86,16 @@ export interface GameInstance {
     scenarios: ScenarioGame[];
     gameImage: string;
     factions: DisplayFactions[]
-    expansionsUsed: Expansion[];
+    expansions: ownedAndUnownedExpansions;
     gameType: string;
     location: string;
     pick: string;
     winners: Wins[];
+}
+
+export interface ownedAndUnownedExpansions {
+    owned: AllBoardGame[];
+    unowned: Link[];
 }
 
 export interface GameDetails {

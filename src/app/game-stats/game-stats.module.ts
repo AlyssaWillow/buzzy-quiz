@@ -8,7 +8,10 @@ import { GsScenariosSectionModule } from './gs-scenarios-section/gs-scenarios-se
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GsGameDetailsModule } from './gs-game-details/gs-game-details.module';
+import { SharedModuleModule } from '../pipes/shared-module/shared-module.module';
+import { GsExpansionsModule } from './gs-expansions/gs-expansions.module';
 
 
 
@@ -20,13 +23,15 @@ import { GsGameDetailsModule } from './gs-game-details/gs-game-details.module';
     CommonModule,
     MatSelectModule,
     MatInputModule,
-    
+    MatAutocompleteModule,
+    SharedModuleModule,
     FormsModule,
     GsWinsSectionModule,
     GsPlaysSectionModule,
     GsFactionsSectionModule,
     GsScenariosSectionModule,
-    GsGameDetailsModule
+    GsGameDetailsModule,
+    GsExpansionsModule
   ],
   exports: [
     GameStatsComponent

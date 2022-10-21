@@ -5,14 +5,17 @@
     <div class="game-details">
         <div class="detail-row section-row">
             <div>Id: {{deets.id}}</div>
-            <div>Players: {{deets.minPlayers}} - {{deets.maxPlayers}}</div>
-            <div>Time: {{deets.minTime}} - {{deets.maxTime}} minutes</div>
+            <div *ngIf="deets.minPlayers !== deets.maxPlayers">Players: {{deets.minPlayers}} - {{deets.maxPlayers}}</div>
+            <div *ngIf="deets.minPlayers === deets.maxPlayers">Players: {{deets.minPlayers}}</div>
+            <div *ngIf="deets.minTime !== deets.maxTime">Time: {{deets.minTime}} - {{deets.maxTime}} minutes</div>
+            <div *ngIf="deets.minTime === deets.maxTime">Time: {{deets.minTime}} minutes</div>
             <div>Year Published: {{deets.yearPublished}}</div>
         </div> 
         <div class="detail-row section-row">
             <div class="detail-row">Designers: &nbsp;&nbsp;
                 <div class="game-details" *ngIf="deets.designer?.length && deets.designer.length > 0">
-                    <div *ngFor="let designer of deets.designer">{{designer.value}}</div>
+                    <div *ngFor="let designer of deets.designer| slice:0:4; let i=index">{{designer.value}}</div>
+                    <div *ngIf="deets.designer.length > 4">...</div>
                 </div> 
                 <div class="game-details" *ngIf="!deets.designer?.length || deets.designer?.length === 0">
                     <div>{{utils.castToTypeIdObjectLink(deets.designer).value}}</div>
@@ -20,7 +23,8 @@
             </div>
             <div class="detail-row">Artists: &nbsp;&nbsp;
                 <div class="game-details" *ngIf="deets.artist?.length && deets.artist.length > 0">
-                    <div *ngFor="let artist of deets.artist">{{artist.value}}</div>
+                    <div *ngFor="let artist of deets.artist| slice:0:4; let i=index">{{artist.value}}</div>
+                    <div *ngIf="deets.artist.length > 4">...</div>
                 </div> 
                 <div class="game-details" *ngIf="!deets.artist?.length || deets.artist?.length === 0">
                     <div>{{utils.castToTypeIdObjectLink(deets.artist).value}}</div>
