@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
     this.firebaseData.fetchFactionData();
     this.firebaseData.fetchScenarioData();
     this.firebaseData.fetchCycleData();
+    this.firebaseData.fetchVideoData();
     this.boardGameGeekService.getCollections();
   }
 }

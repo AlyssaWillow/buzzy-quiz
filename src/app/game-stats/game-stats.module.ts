@@ -12,6 +12,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GsGameDetailsModule } from './gs-game-details/gs-game-details.module';
 import { SharedModuleModule } from '../pipes/shared-module/shared-module.module';
 import { GsExpansionsModule } from './gs-expansions/gs-expansions.module';
+import { GsVideosModule } from './gs-videos/gs-videos.module';
 
 
 
@@ -28,6 +29,7 @@ import { GsExpansionsModule } from './gs-expansions/gs-expansions.module';
     FormsModule,
     GsWinsSectionModule,
     GsPlaysSectionModule,
+    GsVideosModule,
     GsFactionsSectionModule,
     GsScenariosSectionModule,
     GsGameDetailsModule,

@@ -69,4 +69,17 @@
         <app-add-cycle *ngIf="bothCol.length > 0" [bothCol]="bothCol"></app-add-cycle>
       </div>
     </cdk-accordion-item>
+    <cdk-accordion-item #accordionItem7="cdkAccordionItem" class="example-accordion-item" role="button" tabindex="0"
+      [attr.id]="'accordion-header-7'" [attr.aria-expanded]="accordionItem7.expanded" [attr.aria-controls]="'accordion-body-7'">
+      <div class="example-accordion-item-header" (click)="accordionItem7.toggle()"><span class="accordion-title">Add/Edit Videos</span>
+        <span class="example-accordion-item-description">
+          Click to {{ accordionItem7.expanded ? 'collapse' : 'expand' }}
+        </span>
+      </div>
+      <div class="example-accordion-item-body" role="region"
+        [style.display]="accordionItem7.expanded ? '' : 'none'"
+        [attr.id]="'accordion-body-7'" [attr.aria-labelledby]="'accordion-header-7'">
+        <app-add-video *ngIf="bothCol.length > 0" [bothCol]="bothCol"></app-add-video>
+      </div>
+    </cdk-accordion-item>
   </cdk-accordion>
