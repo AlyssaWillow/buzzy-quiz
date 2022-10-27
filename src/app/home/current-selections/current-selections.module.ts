@@ -5,6 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CurrentSelectionsComponent } from './current-selections.component';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SharedModuleModule } from 'src/app/pipes/shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatInputModule,
     MatSelectModule,
     DragDropModule,
-    FormsModule
+    FormsModule,
+    SharedModuleModule
   ],
   exports: [
     CurrentSelectionsComponent

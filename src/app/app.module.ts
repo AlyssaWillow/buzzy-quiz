@@ -41,6 +41,7 @@ import { PlayerPicksModule } from './pick-history/player-picks/player-picks.modu
 import { LeastPlayedModule } from './pick-history/least-played/least-played.module';
 import { SharedModuleModule } from './pipes/shared-module/shared-module.module';
 import { PlayerStatsModule } from './player-stats/player-stats.module';
+import { BotService } from './services/bot.service';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { PlayerStatsModule } from './player-stats/player-stats.module';
   providers: [
     AuthenticationService,
     BoardGameGeekService,
+    BotService,
     UtilsService,
     AngularFireAuthModule
   ],

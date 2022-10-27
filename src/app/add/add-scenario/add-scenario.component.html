@@ -73,7 +73,8 @@
                 <div class="game-scenario-id">
                     {{scenario.id.split('-')[1]}}
                 </div>
-                <div class="scenario-name" [innerHTML]="scenario.name">
+                <div class="scenario-name">
+                    {{scenario.name}}
                 </div>
                 <div *ngIf="deletesEnabled" class="delete">
                     <button (click)="deleteSelectedScenario(scenario)">Delete</button>

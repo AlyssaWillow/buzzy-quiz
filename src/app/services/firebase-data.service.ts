@@ -8,6 +8,7 @@ import { ListGuide } from '../models/list-guide';
 import { Locations } from '../models/locations';
 import { PlayDb } from '../models/play';
 import { CycleDb, ScenarioDb2 } from '../models/scenario';
+import { videoDb } from '../models/video';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,7 @@ export class FirebaseDataService {
   private factionsCol: AngularFirestoreCollection<factionDb2>;
   private scenarioCol: AngularFirestoreCollection<ScenarioDb2>;
   private cycleCol: AngularFirestoreCollection<CycleDb>;
+  private videoCol: AngularFirestoreCollection<videoDb>;
 
   public players$: Observable<Players[]>;
   public factionTypes$: Observable<factionTypeData[]>;
@@ -33,6 +35,7 @@ export class FirebaseDataService {
   public factions$: Observable<factionDb2[]>;
   public scenarios$: Observable<ScenarioDb2[]>;
   public cycles$: Observable<CycleDb[]>;
+  public videos$: Observable<videoDb[]>;
   
   oRide: Overrides = {bases: [],expansions: []}
 
@@ -49,6 +52,7 @@ export class FirebaseDataService {
     this.factionsCol = afs.collection('factions');
     this.scenarioCol = afs.collection('scenarios');
     this.cycleCol = afs.collection('cycles');
+    this.videoCol = afs.collection('videos');
 
     this.factionTypes$ = this.factionTypeCol.valueChanges();
     this.players$ = this.playerCol.valueChanges();
@@ -59,6 +63,7 @@ export class FirebaseDataService {
     this.factions$ = this.factionsCol.valueChanges();
     this.scenarios$ = this.scenarioCol.valueChanges();
     this.cycles$ = this.cycleCol.valueChanges();
+    this.videos$ = this.videoCol.valueChanges();
   }
 
   fetchFactionTypeData = () => { 
@@ -98,6 +103,10 @@ export class FirebaseDataService {
   fetchCycleData = () => { 
     this.cycleCol = this.afs.collection('cycles');
     this.cycles$ = this.cycleCol.valueChanges();
+  } 
+  fetchVideoData = () => { 
+    this.videoCol = this.afs.collection('videos');
+    this.videos$ = this.videoCol.valueChanges();
   }
 
   fetchExpansionOverrideData = () => { 

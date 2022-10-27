@@ -7,6 +7,7 @@ import { AddFactionModule } from '../add-faction/add-faction.module';
 import { AddScenarioModule } from '../add-scenario/add-scenario.module';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import { AddFactionTypeModule } from '../add-faction-type/add-faction-type.module';
+import { AddVideoModule } from '../add-video/add-video.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { AddFactionTypeModule } from '../add-faction-type/add-faction-type.modul
     AddCycleModule,
     AddPlayModule,
     AddFactionModule,
+    AddVideoModule,
     AddScenarioModule,
     CdkAccordionModule,
     AddFactionTypeModule

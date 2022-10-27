@@ -114,6 +114,8 @@
         <div *ngIf="game.scenarios && game.scenarios.length > 0">
             <app-gs-scenarios-section *ngIf="display.length === 0 || display.includes('typ-04S')" [scenarios]="game.scenarios" [bothCol]="bothCol"></app-gs-scenarios-section>
         </div>
+        <app-gs-videos *ngIf="display.length === 0 || display.includes('typ-08V')" [game]="game"></app-gs-videos>
+        
     </div>
 </div>
 </div>

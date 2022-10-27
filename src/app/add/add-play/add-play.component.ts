@@ -256,9 +256,9 @@ export class AddPlayComponent implements OnInit {
       this.containsScenario = false;
       this.addFactionShow = false;
       this.addScenarioShow = false;
-        console.info("Document successfully deleted!");
+        console.info("Document successfully added!");
     }).catch((error) => {
-        console.error("Error removing document: ", error);
+        console.error("Error adding document: ", error);
     });
     }
   }

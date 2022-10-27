@@ -5,7 +5,7 @@ export interface PlayerSelection {
 
 export interface Selection {
     player: string;
-    pick: string,
+    pick: string[],
     order: number;
 }
 
@@ -18,6 +18,6 @@ export interface Players {
 export interface DisplayPlayerSelection {
     player: string;
     playerId: string;
-    pick: string,
+    pick: string[],
     order: number;
 }

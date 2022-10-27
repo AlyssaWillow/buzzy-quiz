@@ -1,18 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { DisplayPlayerSelection, Players, Selection } from '../../models/player-selection';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AngularFirestore, 
   AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
+import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
+import { BoardGame } from 'src/app/models/collection';
+import { UtilsService } from 'src/app/services/utils.service';
+import { BotService } from 'src/app/services/bot.service';
 
 @Component({
   selector: 'tts-current-selections',
   templateUrl: './current-selections.component.html',
   styleUrls: ['./current-selections.component.scss']
 })
-export class CurrentSelectionsComponent {
+export class CurrentSelectionsComponent implements OnInit {
   private selectionCol: AngularFirestoreCollection<Selection>;
   selection$: Observable<Selection[]>;
   selectionData: DisplayPlayerSelection[] = [];
@@ -21,18 +25,60 @@ export class CurrentSelectionsComponent {
   p012: string = '';
   p013: string = '';
   p014: string = '';
-  edit = false;
+  edit: boolean = false;
+  reset: boolean = false;
+  bothCol: BoardGame[] = [];
+  players: Players[] = [];
+
   constructor(private afs: AngularFirestore,
-    private firebaseDataService: FirebaseDataService,
-              public authenticationService: AuthenticationService) {
+      private firebaseDataService: FirebaseDataService,
+      private boardGameGeekService: BoardGameGeekService,
+      public utils: UtilsService,
+      private bot: BotService,
+      public authenticationService: AuthenticationService) {
     this.selectionCol = afs.collection('tabletop-syndicate').doc('selection-data').collection('current-picks');
     this.selection$ = this.selectionCol.valueChanges();
     this.firebaseDataService.players$.subscribe(players => {
+      this.players = players;
       this.selection$.subscribe(select => {
       this.selectionData = this.createSelectionData(select, players);
       this.selectionData2 = this.createSelectionData(select, players);
     });
     });
+  }
+  ngOnInit(): void {
+    combineLatest(
+      this.boardGameGeekService.lemanCollection$,
+      this.boardGameGeekService.hendricksonCollection$
+    ).subscribe(
+      ([lem, hen]) => {
+        lem?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            game.owner = 'own-lem';
+            this.bothCol?.push(game);
+          } else {
+            this.bothCol?.filter(e => { 
+              if(e.objectid === game.objectid) {
+                game.owner = 'own-bot'
+              }
+            })
+          }
+        }); 
+        hen?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            game.owner = 'own-hen';
+            this.bothCol.push(game);
+          } else {
+            this.bothCol?.filter(e => { 
+              if(e.objectid === game.objectid) {
+                game.owner = 'own-bot'
+              }
+            })
+          }
+        });
+        
+        this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
+      });
   }
 
   createSelectionData = (selections: Selection[], players: Players[]): DisplayPlayerSelection[]  => {
@@ -63,19 +109,24 @@ export class CurrentSelectionsComponent {
     return dispList;
   }
 
-  updatePicks = async (): Promise<void> => {
-    this.selectionData.forEach(async pick => {
-        this.selectionData2.forEach(async pick2 => {
-          if (pick.playerId === pick2.playerId && pick.pick !== pick2.pick) {
-            const pickRef = this.afs.collection('tabletop-syndicate')
-                                    .doc('selection-data')
-                                    .collection('current-picks')
-                                    .doc(pick.playerId);
-            await pickRef.update({ "pick": pick.pick });
-          }
-        });
-    });
+  updatePicks = async (index: number): Promise<void> => {
+    if (this.selectionData[index].playerId === this.selectionData2[index].playerId 
+      && this.selectionData[index].pick !== this.selectionData2[index].pick) {
+      const pickRef = this.afs.collection('tabletop-syndicate')
+                              .doc('selection-data')
+                              .collection('current-picks')
+                              .doc(this.selectionData[index].playerId);
+      await pickRef.update({ "pick": this.selectionData[index].pick }).then(
+        this.bot.makeBotTalkGameUpdate(this.selectionData[index].playerId, 
+          this.selectionData[index].pick, this.bothCol, this.players)
+      )
+    }
+        
+    this.disableEdit();
+  }
+  
 
+  resetOrder = async (): Promise<void> => {
     this.selectionData2.forEach(async (order2, index) => {
       const pickRef = this.afs.collection('tabletop-syndicate')
                               .doc('selection-data')
@@ -83,6 +134,8 @@ export class CurrentSelectionsComponent {
                               .doc(order2.playerId);
       await pickRef.update({ "order": (index+1) });
     }); 
+
+    this.bot.makeBotTalkOrderUpdate(this.selectionData2, this.players);
     
     this.disableEdit();
   }
@@ -93,6 +146,10 @@ export class CurrentSelectionsComponent {
   }
   disableEdit = () => {
     this.edit = false;
+    this.reset = false;
+  }
+  enableResetOrder = () => {
+    this.reset = true;
   }
 
   drop(event: CdkDragDrop<string[]>) {
