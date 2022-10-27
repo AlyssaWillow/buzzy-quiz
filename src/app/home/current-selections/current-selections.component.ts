@@ -25,7 +25,8 @@ export class CurrentSelectionsComponent implements OnInit {
   p012: string = '';
   p013: string = '';
   p014: string = '';
-  edit = false;
+  edit: boolean = false;
+  reset: boolean = false;
   bothCol: BoardGame[] = [];
   players: Players[] = [];
 
@@ -108,21 +109,24 @@ export class CurrentSelectionsComponent implements OnInit {
     return dispList;
   }
 
-  updatePicks = async (): Promise<void> => {
-    this.selectionData.forEach(async pick => {
-        this.selectionData2.forEach(async pick2 => {
-          if (pick.playerId === pick2.playerId && pick.pick !== pick2.pick) {
-            const pickRef = this.afs.collection('tabletop-syndicate')
-                                    .doc('selection-data')
-                                    .collection('current-picks')
-                                    .doc(pick.playerId);
-            await pickRef.update({ "pick": pick.pick }).then(
-              this.bot.makeBotTalkGameUpdate(pick.playerId, pick.pick, this.bothCol, this.players)
-            )
-          }
-        });
-    });
+  updatePicks = async (index: number): Promise<void> => {
+    if (this.selectionData[index].playerId === this.selectionData2[index].playerId 
+      && this.selectionData[index].pick !== this.selectionData2[index].pick) {
+      const pickRef = this.afs.collection('tabletop-syndicate')
+                              .doc('selection-data')
+                              .collection('current-picks')
+                              .doc(this.selectionData[index].playerId);
+      await pickRef.update({ "pick": this.selectionData[index].pick }).then(
+        this.bot.makeBotTalkGameUpdate(this.selectionData[index].playerId, 
+          this.selectionData[index].pick, this.bothCol, this.players)
+      )
+    }
+        
+    this.disableEdit();
+  }
+  
 
+  resetOrder = async (): Promise<void> => {
     this.selectionData2.forEach(async (order2, index) => {
       const pickRef = this.afs.collection('tabletop-syndicate')
                               .doc('selection-data')
@@ -130,6 +134,8 @@ export class CurrentSelectionsComponent implements OnInit {
                               .doc(order2.playerId);
       await pickRef.update({ "order": (index+1) });
     }); 
+
+    this.bot.makeBotTalkOrderUpdate(this.selectionData2, this.players);
     
     this.disableEdit();
   }
@@ -140,6 +146,10 @@ export class CurrentSelectionsComponent implements OnInit {
   }
   disableEdit = () => {
     this.edit = false;
+    this.reset = false;
+  }
+  enableResetOrder = () => {
+    this.reset = true;
   }
 
   drop(event: CdkDragDrop<string[]>) {

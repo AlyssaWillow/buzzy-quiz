@@ -1,16 +1,39 @@
-<div class="order-body">
- <div class="order">
+<div *ngIf="!edit && !reset" class="order-body">
+  <div class="row order-headings">
     <h2 class="heading">Current Pick Order</h2>
-    <div class="row" *ngFor="let pick of selectionData; let i = index">
-      <div class="number"> {{ pick.order }} </div>
-      <div *ngIf="!edit" class="player tooltip"> 
+    <h2 class="heading">Current Game Picks</h2>
+  </div>
+  <div class="col" *ngFor="let pick of selectionData; let i = index">
+    <div class="row">
+      <div class="row left">
+        <div class="number"> {{ pick.order }} </div>
+        <div class="player"> {{ pick.player }} </div>
+      </div>
+      
+      <div class="player tooltip"> 
         <div *ngFor="let aPick of pick.pick">
           {{ utils.getGameName(aPick, bothCol) }}
         </div>
       </div>
-      <form *ngIf="edit" class="selection-input">
+    </div>
+    <hr style="min-width: 100%; color:lightgray" *ngIf="selectionData.length > i+1">
+  </div>
+  <div class="edit-buttons" *ngIf="authenticationService.userData | async">
+    <button class="edit-button" *ngIf="!edit" (click)="enableEdit()">Edit Picks</button>
+    <button class="edit-button" *ngIf="!edit" (click)="enableResetOrder()">Reset Order</button>
+  </div>
+</div>
+<div *ngIf="edit" class="order-body col middle">
+  <h2 class="edit-heading">Edit Picks</h2>
+  <div *ngFor="let pick of selectionData; let i = index">
+    <div class="row">
+      <div class="players">
+        <div class="number"> {{ pick.order }} </div>
+        <div class="player"> {{ pick.player }} </div>
+      </div>
+      <form class="selection-input">
         <mat-form-field class="select-faction-dropdown" appearance="fill">
-                <mat-label>Select Games</mat-label>
+                <mat-label>Select Game</mat-label>
                 <mat-select [(ngModel)]="pick.pick" multiple name="bothCol">
                     <mat-option *ngFor="let col of bothCol" [value]="col.objectid">
                         {{col?.name?.text | replaceText}}
@@ -18,15 +41,42 @@
                 </mat-select>
             </mat-form-field>
       </form>
+    <button *ngIf="edit" class="button" (click)="updatePicks(i)">Save</button>
     </div>
   </div>
+  <div class="edit-buttons" *ngIf="authenticationService.userData | async">
+    <button  class="edit-button" *ngIf="edit" (click)="disableEdit()">Cancel</button>
+  </div>
+</div>
+<div *ngIf="reset" class="order-body">
   <div class="order picks">
-    <h2 class="heading">Current Game Picks</h2>
-    <div *ngIf="!edit">
-      <ul class="row" *ngFor="let pick of selectionData; let i = index">
-        <li class="player"> {{ pick.player }} </li>
-      </ul>
+    <h2 class="edit-heading">Reset Pick Order</h2>
+    <div class="reorder-section">Drag and drop names to the new order</div>
+      <div class="reorder-section">
+        <div class="row">
+          <div class="number-labels">
+            <div class="label-number">1</div>
+            <div class="label-number">2</div>
+            <div class="label-number">3</div>
+            <div class="label-number">4</div>
+          </div>
+        <div cdkDropList class="reorder-list" (cdkDropListDropped)="drop($event)">
+          <div class="example-box" *ngFor="let pick of selectionData2" cdkDrag>
+            <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+            {{pick.player}}
+          </div>
+        </div> 
+      </div>
     </div>
+      
+  </div>
+  <div class="edit-buttons" *ngIf="authenticationService.userData | async">
+    <button class="edit-button" *ngIf="reset" (click)="resetOrder()">Save</button>
+    <button class="edit-button" *ngIf="reset" (click)="disableEdit()">Cancel</button>
+  </div>
+</div>
+  <!-- <div class="order picks">
+    <h2 class="heading">Current Game Picks</h2>
     <div *ngIf="edit">
       <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
         <div class="example-box" *ngFor="let pick of selectionData2" cdkDrag>
@@ -36,9 +86,19 @@
       </div> 
   </div>
   </div>
+  <form *ngIf="edit" class="selection-input">
+      <mat-form-field class="select-faction-dropdown" appearance="fill">
+              <mat-label>Select Games</mat-label>
+              <mat-select [(ngModel)]="pick.pick" multiple name="bothCol">
+                  <mat-option *ngFor="let col of bothCol" [value]="col.objectid">
+                      {{col?.name?.text | replaceText}}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+    </form>
 </div>
 <div class="edit-buttons" *ngIf="authenticationService.userData | async">
   <button *ngIf="!edit" (click)="enableEdit()">Edit</button>
   <button *ngIf="edit" class="button" (click)="updatePicks()">Save</button>
   <button *ngIf="edit" (click)="disableEdit()">Cancel</button>
-</div>
+</div> -->

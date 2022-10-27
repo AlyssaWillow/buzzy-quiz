@@ -1,14 +1,24 @@
   .order-body {
     padding: .35rem 15%;
-    padding-bottom: .35rem;
     min-height: 1.5rem;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     min-width: 70%;
     font-size: 1.1rem;
     font-family: Arial, Helvetica, sans-serif;
   }
+
+  .middle {
+    justify-content: space-between;
+    align-items: center;
+  }
+
   
+  
+  .left {
+    min-width: 37%;
+  }
+
   .order {
     padding: 1rem .35rem;
     min-height: 1.5rem;
@@ -22,6 +32,26 @@
   .selection-input {
     font-size: 1.1rem;
     width: 85%;
+  }
+
+  .select-faction-dropdown {
+    width: 45rem;
+  }
+  
+  .edit-button {
+    margin-right: 1rem;
+  }
+
+  .players {
+    display: flex;
+    flex-direction: row;
+    width: 5rem;
+    justify-content: flex-start;
+    padding-right: 3rem;
+  }
+
+  .number {
+    padding-right: .5rem;
   }
   
   .row {
@@ -44,6 +74,21 @@
   }
 
   .heading {
+    width: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2rem;
+    line-height: 1.23;
+    font-weight: 400;
+    color: rgba(31,31,31,1);
+    margin-top: 1.25rem;
+    text-transform: uppercase;
+  }
+
+  .edit-heading {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 2rem;
     line-height: 1.23;
@@ -69,8 +114,15 @@
     border: none;
   }
 
-  .example-list {
-    width: 15rem;
+  .reorder-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .reorder-list {
+    width: 25rem;
     max-width: 100%;
     border: solid 1px #ccc;
     min-height: 3rem;
@@ -78,6 +130,21 @@
     background: white;
     border-radius: 4px;
     overflow: hidden;
+  }
+
+  .label-number {
+    height: 2.5rem;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .number-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-right: 1rem;
   }
   
   .example-box {
@@ -87,7 +154,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     box-sizing: border-box;
     cursor: move;
     background: white;

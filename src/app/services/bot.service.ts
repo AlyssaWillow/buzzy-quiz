@@ -6,7 +6,7 @@ import { Observable, tap, catchError, retry, throwError, map, BehaviorSubject } 
 import { switchMap } from 'rxjs/operators';
 import { GameCollection, BoardGame, AllBoardGames, AllBoardGame } from '../models/collection'; 
 import { UtilsService } from './utils.service';
-import { Players } from '../models/player-selection';
+import { DisplayPlayerSelection, Players } from '../models/player-selection';
 
 const botId: string = 'c474e678c86fa0c4ab1eb996b6';
 const groupId: string = '40449537';
@@ -55,6 +55,27 @@ export class BotService {
     
     })
     this.postData.text = words;
+    return this.http.post<PostData>(this.url, {"text" : words, "bot_id" : this.botId}).subscribe(ref => {
+      console.log('posted', ref)
+    })
+
+  }
+
+  getPlayerOrder = (order: DisplayPlayerSelection[], players: Players[]): string => {
+    let str: string = '';
+    order.sort((a, b) => (a.order > b.order) ? 1 : -1)
+    order.forEach((plyr, index) => {
+      str += this.utils.getPlayerName(plyr.playerId, players);
+      if (order.length !== index + 1) {
+        str += ', ';
+      }
+    })
+    return str;
+  }
+
+  makeBotTalkOrderUpdate = (order: DisplayPlayerSelection[], players: Players[]): any => {
+    let words: string = "The Order has been Reset! The new order is " + this.getPlayerOrder(order, players) + '.'
+    
     return this.http.post<PostData>(this.url, {"text" : words, "bot_id" : this.botId}).subscribe(ref => {
       console.log('posted', ref)
     })
