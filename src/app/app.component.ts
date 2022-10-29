@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
     this.firebaseData.fetchFactionTypeData();
     this.firebaseData.fetchPlayerNameData();
     this.firebaseData.fetchLocationData();
+    this.firebaseData.fetchSelectionData();
     this.firebaseData.fetchListGuideData();
     this.firebaseData.fetchPlayHistoryData();
     this.firebaseData.fetchExpansionOverrideData();

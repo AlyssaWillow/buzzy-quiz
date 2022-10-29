@@ -41,6 +41,7 @@
                 </mat-select>
             </mat-form-field>
       </form>
+    <mat-checkbox class="edit-button" [(ngModel)]="postIt">Post to Group</mat-checkbox>
     <button *ngIf="edit" class="button" (click)="updatePicks(i)">Save</button>
     </div>
   </div>
@@ -71,6 +72,7 @@
       
   </div>
   <div class="edit-buttons" *ngIf="authenticationService.userData | async">
+    <mat-checkbox class="edit-button" [(ngModel)]="postIt">Post to Group</mat-checkbox>
     <button class="edit-button" *ngIf="reset" (click)="resetOrder()">Save</button>
     <button class="edit-button" *ngIf="reset" (click)="disableEdit()">Cancel</button>
   </div>

@@ -1,9 +1,9 @@
 export interface PlayerSelection {
-    selection: Selection;
+    selection: Selection2;
     players: Players;
 }
 
-export interface Selection {
+export interface Selection2 {
     player: string;
     pick: string[],
     order: number;

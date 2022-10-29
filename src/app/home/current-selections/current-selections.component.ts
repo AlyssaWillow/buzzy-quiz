@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import { DisplayPlayerSelection, Players, Selection } from '../../models/player-selection';
+import { DisplayPlayerSelection, Players, Selection2 } from '../../models/player-selection';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AngularFirestore, 
   AngularFirestoreCollection } from '@angular/fire/compat/firestore';
@@ -17,8 +17,8 @@ import { BotService } from 'src/app/services/bot.service';
   styleUrls: ['./current-selections.component.scss']
 })
 export class CurrentSelectionsComponent implements OnInit {
-  private selectionCol: AngularFirestoreCollection<Selection>;
-  selection$: Observable<Selection[]>;
+  private selectionCol: AngularFirestoreCollection<Selection2>;
+  selection$: Observable<Selection2[]>;
   selectionData: DisplayPlayerSelection[] = [];
   selectionData2: DisplayPlayerSelection[] = [];
   p011: string = '';
@@ -29,6 +29,7 @@ export class CurrentSelectionsComponent implements OnInit {
   reset: boolean = false;
   bothCol: BoardGame[] = [];
   players: Players[] = [];
+  postIt: boolean = true;
 
   constructor(private afs: AngularFirestore,
       private firebaseDataService: FirebaseDataService,
@@ -81,7 +82,7 @@ export class CurrentSelectionsComponent implements OnInit {
       });
   }
 
-  createSelectionData = (selections: Selection[], players: Players[]): DisplayPlayerSelection[]  => {
+  createSelectionData = (selections: Selection2[], players: Players[]): DisplayPlayerSelection[]  => {
     let dispList: DisplayPlayerSelection[] = [];
     let disp: DisplayPlayerSelection;
     let name: string;
@@ -116,10 +117,12 @@ export class CurrentSelectionsComponent implements OnInit {
                               .doc('selection-data')
                               .collection('current-picks')
                               .doc(this.selectionData[index].playerId);
-      await pickRef.update({ "pick": this.selectionData[index].pick }).then(
-        this.bot.makeBotTalkGameUpdate(this.selectionData[index].playerId, 
-          this.selectionData[index].pick, this.bothCol, this.players)
-      )
+      await pickRef.update({ "pick": this.selectionData[index].pick }).then(() => {
+        if(this.postIt) {
+          this.bot.makeBotTalkGameUpdate(this.selectionData[index].playerId, 
+            this.selectionData[index].pick, this.bothCol, this.players)
+        }
+      })
     }
         
     this.disableEdit();
@@ -132,10 +135,15 @@ export class CurrentSelectionsComponent implements OnInit {
                               .doc('selection-data')
                               .collection('current-picks')
                               .doc(order2.playerId);
-      await pickRef.update({ "order": (index+1) });
+      await pickRef.update({ 
+        "order": (index+1),
+        "pick": []
+      });
     }); 
 
-    this.bot.makeBotTalkOrderUpdate(this.selectionData2, this.players);
+    if (this.postIt) {
+      this.bot.makeBotTalkOrderUpdate(this.selectionData2, this.players);
+    }
     
     this.disableEdit();
   }
