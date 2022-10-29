@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Players } from '../models/player-selection';
+import { Players, Selection2 } from '../models/player-selection';
 import { factionDb2, factionTypeData } from '../models/faction';
 import { nameId, Override, Overrides } from '../models/generic';
 import { ListGuide } from '../models/list-guide';
@@ -18,6 +18,7 @@ export class FirebaseDataService {
   private playerCol: AngularFirestoreCollection<Players>;
   private factionTypeCol: AngularFirestoreCollection<factionTypeData>;
   private locationCol: AngularFirestoreCollection<nameId>;
+  private selectionCol: AngularFirestoreCollection<Selection2>;
   private listGuides: AngularFirestoreCollection<ListGuide>;
   private playsCol: AngularFirestoreCollection<PlayDb>;
   private overrideCol: AngularFirestoreCollection<Override>;
@@ -29,6 +30,7 @@ export class FirebaseDataService {
   public players$: Observable<Players[]>;
   public factionTypes$: Observable<factionTypeData[]>;
   public locations$: Observable<nameId[]>;
+  public selection$: Observable<Selection2[]>;
   public listGuides$: Observable<ListGuide[]>;
   public plays$: Observable<PlayDb[]>;
   public override$: Observable<Override[]>;
@@ -46,6 +48,7 @@ export class FirebaseDataService {
     this.factionTypeCol = afs.collection('faction-type-data');
     this.playerCol = this.afs.collection('tabletop-syndicate').doc('player-data').collection('player-names');
     this.locationCol = afs.collection('tabletop-syndicate').doc('location-data').collection('location-names');
+    this.selectionCol = afs.collection('tabletop-syndicate').doc('selection-data').collection('current-picks');
     this.listGuides = this.afs.collection('list-guides');
     this.playsCol = afs.collection('play-history');
     this.overrideCol = afs.collection('overrides');
@@ -57,6 +60,7 @@ export class FirebaseDataService {
     this.factionTypes$ = this.factionTypeCol.valueChanges();
     this.players$ = this.playerCol.valueChanges();
     this.locations$ = this.locationCol.valueChanges();
+    this.selection$ = this.selectionCol.valueChanges();
     this.listGuides$ = this.listGuides.valueChanges();
     this.plays$ = this.playsCol.valueChanges();
     this.override$ = this.overrideCol.valueChanges();
@@ -79,6 +83,11 @@ export class FirebaseDataService {
   fetchLocationData = () => { 
     this.locationCol = this.afs.collection('tabletop-syndicate').doc('location-data').collection('location-names');
     this.locations$ = this.locationCol.valueChanges();
+  }
+
+  fetchSelectionData = () => { 
+    this.selectionCol = this.afs.collection('tabletop-syndicate').doc('selection-data').collection('current-picks');
+    this.selection$ = this.selectionCol.valueChanges();
   }
 
   fetchListGuideData = () => { 

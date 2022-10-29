@@ -1,0 +1,14 @@
+<div class="video-section">
+    <div *ngFor="let video of videosForGame" class="has-video-section">
+        <iframe width="560" height="315" 
+            [src]="sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/' + video.id)" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+    <div *ngIf="videosForGame.length === 0">
+        No videos to display
+    </div>
+</div>
