@@ -56,7 +56,7 @@ export class BotService {
     })
     this.postData.text = words;
     return this.http.post<PostData>(this.url, {"text" : words, "bot_id" : this.botId}).subscribe(ref => {
-      console.log('posted', ref)
+      console.log('The Bot has spoken', ref)
     })
 
   }
@@ -77,7 +77,7 @@ export class BotService {
     let words: string = "The Order has been Reset! The new order is " + this.getPlayerOrder(order, players) + '.'
     
     return this.http.post<PostData>(this.url, {"text" : words, "bot_id" : this.botId}).subscribe(ref => {
-      console.log('posted', ref)
+      console.log('The Bot has spoken', ref)
     })
 
   }

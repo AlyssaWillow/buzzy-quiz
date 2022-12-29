@@ -39,9 +39,14 @@ export class PrepareForGnComponent implements OnInit {
           dateList.push(rPlay.date.seconds);
         }
       })
+      let numOfPicks: number = 0;
+
+      selections.forEach(sel => {
+        numOfPicks += (sel.pick.length > 0 ? 1 : 0)
+      })
 
       dateList.sort((a, b) => (a < b) ? 1 : -1);
-      dateList = dateList.slice(0, 4)
+      dateList = dateList.slice(0, numOfPicks)
 
       recentPlays = recentPlays.filter(ref => dateList.includes(ref.date.seconds))
       let recentIds: string[] = [];
@@ -50,14 +55,22 @@ export class PrepareForGnComponent implements OnInit {
         recentIds = [...recentIds, ...rPlay.expansionsUsed]
       })
       
+      let found: boolean = false
       selections.forEach(sel => {
+        found = false
+        sel.pick.forEach(ids=> {
+          if (recentIds.includes(ids)) {
+            found = true;
+          }
+        })
+        if (!found) {
         sel.pick.forEach(ids=> {
           if (!recentIds.includes(ids)) {
             idList.push(ids)
           }
         })
+      }
       })
-      console.log('final ids', idList);
 
       this.getVideoList(idList)
     })
@@ -65,7 +78,6 @@ export class PrepareForGnComponent implements OnInit {
 
   getVideoList = (idList: string[]): void => {
     // if(idList.length > 0) {
-      console.log("ids", idList)
       this.videosForGame = this.videosFromDb.filter(ref => idList.includes(ref.gameId));
       this.videosForGame.sort((a, b) => (a.order > b.order) ? 1 : -1)
     // }

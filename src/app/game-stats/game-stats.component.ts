@@ -147,7 +147,7 @@ export class GameStatsComponent implements OnInit {
 
         }
       }); 
-      
+      this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
       this.getAllGameCollection(this.bothCol);
     });
 
@@ -417,7 +417,7 @@ export class GameStatsComponent implements OnInit {
         }
       }
     }
-    winners.sort((a, b) => (a.winCount < b.winCount) ? 1 : -1)
+    winners.sort((a, b) => (a.winCount < b.winCount) ? 1 : -1);
     return winners;
   }
 
