@@ -68,7 +68,7 @@
                     {{video.description}}
                 </div>
                 <div class="delete">
-                    <button (click)="setVideoData(video.order, video.id.split('-')[1], video.description)">Edit</button>
+                    <button (click)="setVideoData(video.order, video.id, video.description)">Edit</button>
                 </div>
                 <div *ngIf="deletesEnabled" class="delete">
                     <button (click)="deleteSelectedVideo(video)">Delete</button>

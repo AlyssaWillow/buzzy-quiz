@@ -50,12 +50,12 @@ export class NavigationComponent implements OnInit {
     {
       external: false,
       value: '/add',
-      disp: 'Add',
+      disp: 'Add / Edit',
       restricted: true
     },
     {
       external: true,
-      value: 'https://sites.google.com/view/tabletop-syndicate/home',
+      value: 'https://sites.google.com/view/tabletop-syndicate',
       disp: 'Old Site',
       restricted: false
     }

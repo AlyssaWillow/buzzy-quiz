@@ -4,10 +4,10 @@
             Date
         </div>
         <div class="header game">
-            game
+            Games
         </div>
         <div class="header expansion">
-            expansions
+            Expansions
         </div>
     </div>
     <hr class="border">
@@ -21,6 +21,7 @@
         <div class="expansions">
             <div *ngFor="let exp of game.expansionsUsed">
                 {{getName(exp) | replaceText}}
+            </div>
         </div>
     </div>
 </div>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlayerStatsComponent } from './player-stats.component';
 import { PsPieModule } from './ps-pie/ps-pie.module';
+import { PsWinsByWeekModule } from './ps-wins-by-week/ps-wins-by-week.module';
 
 
 
@@ -11,7 +12,8 @@ import { PsPieModule } from './ps-pie/ps-pie.module';
   ],
   imports: [
     CommonModule,
-    PsPieModule
+    PsPieModule,
+    PsWinsByWeekModule
   ],
   exports: [
     PlayerStatsComponent
