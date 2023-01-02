@@ -78,7 +78,7 @@
         <div class="game-information">
             <div class="game-image-section">
                 <div *ngIf="game.gameImage.length !== 0">
-                    <img class="game-image" src="{{game.gameImage}}"/>
+                    <img class="game-image-stats" src="{{game.gameImage}}"/>
                 </div>
                 <div class="game-name" *ngIf="game.gameImage === undefined || game.gameImage === ''">
                     Game name not found
