@@ -130,6 +130,7 @@ export class CurrentSelectionsComponent implements OnInit {
   
 
   resetOrder = async (): Promise<void> => {
+    let postOnce: boolean = true;
     this.selectionData2.forEach(async (order2, index) => {
       const pickRef = this.afs.collection('tabletop-syndicate')
                               .doc('selection-data')
@@ -142,7 +143,12 @@ export class CurrentSelectionsComponent implements OnInit {
     }); 
 
     if (this.postIt) {
-      this.bot.makeBotTalkOrderUpdate(this.selectionData2, this.players);
+      this.selection$.subscribe(select => {
+        if (postOnce) {
+          postOnce = false;
+          this.bot.makeBotTalkOrderUpdate(this.createSelectionData(select, this.players), this.players);
+        }
+      });
     }
     
     this.disableEdit();
