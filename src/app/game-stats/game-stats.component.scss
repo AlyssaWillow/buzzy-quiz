@@ -4,11 +4,25 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 0 5rem;
+    padding: 0 2.5rem;
+}
+
+@media (max-width: 1200px) {
+    .note-banner {
+        height: auto;
+        background-color: lightgray;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 0 2.5rem;
+    }
+
 }
 
 .note-text {
+    margin-top: 1rem;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
 }
