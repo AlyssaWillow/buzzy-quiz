@@ -1,16 +1,69 @@
 <div class="player-stats-section">
-    <div class="two-items">
-        <div class="pie-chart">
-            <app-ps-pie></app-ps-pie>
+
+    <div class="date-selectors">
+        <div class="date">
+            <div class="date-picker">
+                <mat-form-field appearance="fill">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [matDatepicker]="picker" (dateInput)="addStartEvent('input', $event)" (dateChange)="addStartEvent('change', $event)" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker [startAt]="startDate" #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+    
+        <div class="date">
+            <div class="date-picker">
+                <mat-form-field appearance="fill">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="picker2" (dateInput)="addEndEvent('input', $event)" (dateChange)="addEndEvent('change', $event)" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker [startAt]="endDate" #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="startDate && endDate" class="dates-selection">
+        Showing analytics from {{startDate.getMonth() + 1}}/{{startDate.getDate()}}/{{startDate.getFullYear()}} 
+        to {{endDate.getMonth() + 1}}/{{endDate.getDate()}}/{{endDate.getFullYear()}}
+    </div>
+
+    <div class="four-items">
+        <div class="total-games-played-section">
+            <div class="total-games-played">
+                Total Games Played
+            </div>
+            <div class="player-wins total-wins">
+                {{totalGames}}
+            </div>
         </div>
 
         <div class="total-games-played-section">
             <div class="total-games-played">
-            Total Games Played
+                Competitive Games Played
+            </div>
+            <div class="player-wins total-wins">
+                {{competitiveGames}}
+            </div>
         </div>
-        <div class="player-wins total-wins">
-            {{totalGames}}
+
+        <div class="total-games-played-section">
+            <div class="total-games-played">
+                Cooperative Games Played
+            </div>
+            <div class="player-wins total-wins">
+                {{coopGames}}
+            </div>
         </div>
+
+        <div class="total-games-played-section">
+            <div class="total-games-played">
+                Semi-Cooperative Games Played
+            </div>
+            <div class="player-wins total-wins">
+                {{semiCoopGames}}
+            </div>
         </div>
     </div>
     <div class="stats-column">
@@ -27,13 +80,165 @@
         </div>
     </div>
     <div class="stats-column">
-        <div class="header">Wins By Week</div>
-        <div class="coming-soon">
-            <app-ps-wins-by-week></app-ps-wins-by-week>
+        <div class="header">Top Ten Games Played</div>
+        <div class="top-ten-games">
+    
+            <div *ngIf="startDate && endDate && gamesPlays">
+                <div *ngIf="gamesPlays[0]">
+                    <div class="game-row0">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[0].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[0].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[0].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[0].num}}
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="gamesPlays[1]">
+                    <div class="game-row1">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[1].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[1].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[1].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[1].num}}
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="gamesPlays[2]">
+                    <div class="game-row0">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[2].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[2].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[2].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[2].num}}
+                        </div>
+                    </div> 
+                </div>
+                <div *ngIf="gamesPlays[3]">
+                    <div class="game-row1">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[3].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[3].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[3].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[3].num}}
+                        </div>
+                    </div> 
+                </div>
+                <div *ngIf="gamesPlays[4]">
+                    <div class="game-row0">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[4].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[4].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[4].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[4].num}}
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="gamesPlays[5]">
+                    <div class="game-row1">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[5].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[5].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[5].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[5].num}}
+                        </div>
+                    </div> 
+                </div>
+                <div *ngIf="gamesPlays[6]">
+                    <div class="game-row0">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[6].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[6].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[6].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[6].num}}
+                        </div>
+                    </div> 
+                </div>
+                <div *ngIf="gamesPlays[7]">
+                    <div class="game-row1">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[7].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[7].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[7].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[7].num}}
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="gamesPlays[8]">
+                    <div class="game-row0">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[8].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[8].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[8].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[8].num}}
+                        </div>
+                    </div> 
+                </div>
+                <div *ngIf="gamesPlays[9]">
+                    <div class="game-row1">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(gamesPlays[9].game.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(gamesPlays[9].game.gameId, bothCol) | replaceText}} ({{utils.getGameYear(gamesPlays[9].game.gameId, bothCol)}})
+                            </div>
+                        </div>
+                        <div class="game-section-right">
+                            {{gamesPlays[9].num}}
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            
         </div>
     </div>
-    <div class="stats-column">
-        <div class="header">Wins Over Time</div>
-        <div class="coming-soon">Coming Soon</div>
-    </div>
+
+
+    
 </div>

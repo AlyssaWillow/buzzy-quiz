@@ -25,8 +25,8 @@ export class NavigationComponent implements OnInit {
     }, 
     {
       external: false,
-      value: '/player-stats',
-      disp: 'Player Stats',
+      value: '/analytics',
+      disp: 'Analytics',
       restricted: false
     }, 
     {

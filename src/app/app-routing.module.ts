@@ -55,11 +55,11 @@ const routes: Routes = [
     }
   },
   { 
-    path: 'player-stats', 
+    path: 'analytics', 
     pathMatch: 'full',  
     component: PlayerStatsComponent,
     data: {
-      title: 'Player Stats'
+      title: 'Analytics'
     }
   },
   { 

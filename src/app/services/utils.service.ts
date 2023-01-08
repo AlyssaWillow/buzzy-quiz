@@ -50,6 +50,15 @@ getGameImage = (id: string, gameCollection: BoardGame[]): string => {
   return '';
 }
 
+getGameYear = (id: string, gameCollection: BoardGame[]): string | null => {
+  for(let game of gameCollection) {
+    if (game?.objectid === id) {
+      return game?.yearpublished;
+    }
+  }
+  return '';
+}
+
   getFactionTypeName = (list: nameId[], id: string): string => {
       for(let factionType of list) {
         if (factionType?.id === id) {
