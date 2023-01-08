@@ -60,9 +60,10 @@
     align-items: center;
 }
 
-.two-items {
+.four-items {
     min-height: 13rem;
     display: flex;
+    flex-direction: row;
 }
 
 .pie-chart {
@@ -78,9 +79,78 @@
     align-items: center;
 }
 .total-games-played {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     min-height: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.date-selectors {
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: lightgray;
+}
+
+.dates-selection {
+    padding: 0 0 1rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    font-size: 1.5rem;
+    background-color: lightgray;
+}
+
+
+.game-row0 {
+    padding-left: 5%;
+    padding-right: 5%;
+    height: 6rem;
+    display: flex;
+    font-size: 1.1rem;
+    flex-direction: row;
+  }
+  
+  .game-row1 {
+    padding-left: 5%;
+    padding-right: 5%;
+    height: 6rem;
+    display: flex;
+    font-size: 1.1rem;
+    background: #ECECEC;
+    flex-direction: row;
+  }
+
+.game-section-left {
+    width: 28%;
+    height: 5.8rem;
+    
+}
+
+.game-section-middle {
+    width: 52%;
+    height: 5.8rem;
+    display:flex;
+    font-size: 3;
+    flex-direction: column;
+    justify-content: center;
+    align-items: right;
+}
+
+.game-section-right {
+    width: 20%;
+    height: 5.8rem;
+    display: flex;
+    font-size: 3rem;
+    flex-direction: column;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: right;
+}
+  
+.game-image {
+    height: 5.8rem;
 }

@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { combineLatest } from 'rxjs';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { PlayDb } from '../models/play';
 import { Players } from '../models/player-selection';
+import { BoardGameGeekService } from '../services/board-game-geek.service';
 import { FirebaseDataService } from '../services/firebase-data.service';
+import { UtilsService } from '../services/utils.service';
+import { BoardGame } from '../models/collection';
 
 interface playerWin {
   playerId: string;
@@ -14,28 +19,125 @@ interface playerWin {
   styleUrls: ['./player-stats.component.scss']
 })
 export class PlayerStatsComponent implements OnInit {
-
+  date1: Date | null = null;
+  date2: Date | null = null;
+  startDate: Date | null = new Date(0);
+  endDate: Date | null = new Date();
   playerWinCount = new Map();
   players: Players[] = [];
   totalGames: number = 0;
+  competitiveGames: number = 0;
+  coopGames: number = 0;
+  semiCoopGames: number = 0;
+  bothCol: BoardGame[] = [];
+  plays: PlayDb[] = [];
+  gamesPlays: {num: number, game: PlayDb}[] = [];
 
-  constructor(private firebaseDataService: FirebaseDataService) { }
+  constructor(private firebaseDataService: FirebaseDataService,
+    private boardGameGeekService: BoardGameGeekService,
+    public utils: UtilsService) { }
 
   ngOnInit(): void {
-    this.firebaseDataService.players$.subscribe(players => {
-      this.players = players;
-    });
-    this.firebaseDataService.plays$.subscribe(plays => {
-      this.getPlayerWins(plays);
-    });
+    combineLatest(
+      this.firebaseDataService.plays$,
+      this.firebaseDataService.players$,
+      this.boardGameGeekService.lemanCollection$,
+      this.boardGameGeekService.hendricksonCollection$
+    ).subscribe(
+      ([plays, players, lem, hen]) => {
+        this.plays = plays;
+        this.getPlayerWins(plays);
+        this.players = players;
+        lem?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            game.owner = 'own-lem';
+            this.bothCol?.push(game);
+          } else {
+            this.bothCol?.filter(e => { 
+              if(e.objectid === game.objectid) {
+                game.owner = 'own-bot'
+              }
+            })
+          }
+        }); 
+        hen?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            game.owner = 'own-hen';
+            this.bothCol.push(game);
+          } else {
+            this.bothCol?.filter(e => { 
+              if(e.objectid === game.objectid) {
+                game.owner = 'own-bot'
+              }
+            })
+          }
+        });
+        
+        this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1);
+        this.getMostPlayedGames();
+      });
+      this.getMostPlayedGames();
   }
 
   getPlayerWins = (plays: PlayDb[]): void => {
-    this.totalGames = plays.length;
+    let filteredPlays = plays.filter(ref => {
+      let date: Date = new Date(parseInt(ref.date.nanoseconds));  
+      if (this.startDate && this.endDate) {
+        if (date > this.startDate && date < this.endDate) {
+          return true;
+        }
+      }
+      return false;
+    });
+    this.totalGames = filteredPlays.length;
+    this.competitiveGames = filteredPlays.filter(ref => ref.gameType === 'gam-001').length;
+    this.coopGames = filteredPlays.filter(ref => ref.gameType === 'gam-002').length;
+    this.semiCoopGames = filteredPlays.filter(ref => ref.gameType === 'gam-003').length;
     this.players.forEach(player => {
       this.playerWinCount.set(player.id, 
-        plays.filter(play => play.winners.includes(player.id)).length);
+        filteredPlays.filter(play => play.winners.includes(player.id)).length);
     })
   }
 
+  addStartEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.startDate = event.value;
+    this.getPlayerWins(this.plays);
+    this.getMostPlayedGames();
+  }
+
+  addEndEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.endDate = event.value;
+    this.getPlayerWins(this.plays);
+    this.getMostPlayedGames();
+  }
+
+  getMostPlayedGames = (): void => { 
+    let gamesWithPlays: {num: number, game: PlayDb}[] = [];
+    let foundGame: string[] = [];
+    let filteredPlays = this.plays.filter(ref => {
+      let date: Date = new Date(parseInt(ref.date.nanoseconds));  
+      console.log("date", date);
+      if (this.startDate && this.endDate) {
+        if (date > this.startDate && date < this.endDate) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    filteredPlays.forEach(play => {
+      if (foundGame.includes(play.gameId)) {
+        gamesWithPlays.forEach(game => {
+          if (game.game.gameId === play.gameId) {
+            game.num += 1;
+          }
+        })
+      } else {
+        foundGame.push(play.gameId);
+        gamesWithPlays.push({num: 1, game: play})
+      }
+    })
+    gamesWithPlays.sort((a, b) => (a.num < b.num) ? 1 : -1)
+    this.gamesPlays = gamesWithPlays;
+  }
 }

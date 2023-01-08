@@ -21,8 +21,11 @@
     </div>
     <hr class="border">
     <div *ngFor="let game of gamesPlayed; let i = index" class="games-played row{{i%2}}">
-        <div class="game">
+        <div class="game" *ngIf="game?.gameName && game.gameName !==''">
             {{game.gameName}}
+        </div>
+        <div class="game" *ngIf="!game.gameName || game.gameName ===''">
+            {{game.gameId}}: Please add <a href="https://boardgamegeek.com/boardgame/{{game.gameId}}">THIS GAME</a> to a BGG collection
         </div>
         <div class="pick"  [ngClass]="{'has-played': game.totalPlays > 0, 'not-played': game.totalPlays === 0}">
             {{game.totalPlays}}
