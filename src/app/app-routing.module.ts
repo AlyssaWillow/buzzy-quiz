@@ -12,6 +12,7 @@ import { AddCycleComponent } from './add/add-cycle/add-cycle.component';
 import { AddAllComponent } from './add/add-all/add-all.component';
 import { PickHistoryComponent } from './pick-history/pick-history.component';
 import { PlayerStatsComponent } from './player-stats/player-stats.component';
+import { ToolsComponent } from './tools/tools.component';
 
 const routes: Routes = [
   { 
@@ -60,6 +61,14 @@ const routes: Routes = [
     component: PlayerStatsComponent,
     data: {
       title: 'Analytics'
+    }
+  },
+  { 
+    path: 'tools', 
+    pathMatch: 'full',  
+    component: ToolsComponent,
+    data: {
+      title: 'Tools'
     }
   },
   { 

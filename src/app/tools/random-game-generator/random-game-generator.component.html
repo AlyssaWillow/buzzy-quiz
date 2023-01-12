@@ -1,0 +1,66 @@
+<div class="game-pick-section">
+    <div class="drop-down-row">
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Number of Players</mat-label>
+                <mat-select [(ngModel)]="playerCount" id="num-players" name="collections" onChange="setPlayers(this.value)">
+                    <mat-option *ngFor="let num of numberOfPlayers" [value]="num">
+                        {{num}} Player{{(num > 1 ? "s" : "")}}
+                      </mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
+
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Minimum Play Time</mat-label>
+                <mat-select [(ngModel)]="minTime" name="minPlayTime" onChange="setMinTime(this.value)">
+                    <mat-option *ngFor="let min of playTimeSelect" [value]="min">
+                        {{min}} Minutes
+                      </mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
+
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Minimum Play Time</mat-label>
+                <mat-select [(ngModel)]="maxTime" name="maxPlayTime" onChange="setMaxTime(this.value)">
+                    <mat-option *ngFor="let min of playTimeSelect" [value]="min">
+                        {{min}} Minutes
+                      </mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
+
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Owned By</mat-label>
+                <mat-select [(ngModel)]="ownedBy" name="collections" onChange="setOwnedBy(this.value)">
+                    <mat-option [value]="'either'">Either</mat-option>
+                    <mat-option [value]="'own-hen'">Hendrickson</mat-option>
+                    <mat-option [value]="'own-lem'">Leman</mat-option>
+                    <mat-option [value]="'own-bot'">Both</mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
+
+        <button class="find-game-button" (click)="showGame()">Find Game!</button>
+    </div>
+</div>
+
+<div *ngIf="selectedGame && selectedGame.objectid" class="game-row">
+    <div class="title-row">
+        <div class="image-cell">
+            <img class="game-image" src="{{selectedGame.image}}"/>
+        </div>
+        <div class="name-cell">
+            <span class="name">{{selectedGame.name.text}} ({{selectedGame.yearpublished}})</span>
+        </div>
+    </div>
+    <div class="details-row">
+        <div class="info-cell">Players: {{selectedGame.stats.minplayers}}-{{selectedGame.stats.maxplayers}}</div>
+        <div class="info-cell">Playing Time: {{selectedGame.stats.minplaytime}}-{{selectedGame.stats.maxplaytime}}</div>
+            <div class="info-cell">Owned By: {{(selectedGame.owner === 'own-bot'? "" : "The")}} {{utils.getOwnerName(selectedGame.owner)}}{{(selectedGame.owner === 'own-bot'? "" : "'s")}}</div>
+        </div>
+</div>

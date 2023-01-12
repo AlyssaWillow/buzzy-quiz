@@ -42,6 +42,8 @@ import { LeastPlayedModule } from './pick-history/least-played/least-played.modu
 import { SharedModuleModule } from './pipes/shared-module/shared-module.module';
 import { PlayerStatsModule } from './player-stats/player-stats.module';
 import { BotService } from './services/bot.service';
+import { RandomGameGeneratorModule } from './tools/random-game-generator/random-game-generator.module';
+import { ToolsModule } from './tools/tools.module';
 
 @NgModule({
   declarations: [
@@ -77,13 +79,15 @@ import { BotService } from './services/bot.service';
     AddScenarioModule,
     AddCycleModule,
     AddAllModule,
+    ToolsModule,
     SharedModuleModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     HotToastModule.forRoot(),
     BrowserAnimationsModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    RandomGameGeneratorModule
   ],
   providers: [
     AuthenticationService,
