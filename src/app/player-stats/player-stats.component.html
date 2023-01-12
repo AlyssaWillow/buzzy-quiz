@@ -238,7 +238,28 @@
             
         </div>
     </div>
-
+    <div class="stats-column">
+        <div class="header">Games Played For The First Time</div>
+        <div class="top-ten-games">
+    
+            <div *ngIf="startDate && endDate && newGames">
+                <div *ngFor="let ngame of newGames; let i = index">
+                
+                    <div class="game-row{{i % 2}}">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(ngame, bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(ngame, bothCol) | replaceText}} ({{utils.getGameYear(ngame, bothCol)}})
+                            </div>
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+        </div>
+    </div>
 
     
 </div>

@@ -1,0 +1,174 @@
+@media only screen and (max-width: 400px) {
+    html {
+      font-size: 5.5px;
+    }
+  }
+   
+  @media only screen and (max-width: 500px) {
+    html {
+      font-size: 6px;
+    }
+  }
+   
+  @media only screen and (max-width: 600px) {
+    html {
+      font-size: 6.5px;
+    }
+  }
+   
+  @media only screen and (max-width: 700px) {
+    html {
+      font-size: 7px;
+    }
+  }
+   
+  .game-header {
+    padding-top: .35rem;
+    padding-bottom: .35rem;
+    min-height: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1.1rem;
+    background: #ECECEC;
+    border-bottom: solid;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+   
+  .game-content {
+    padding-top: .35rem;
+    padding-bottom: 1rem;
+    min-height: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1.1rem;
+    background: #ECECEC;
+    border-bottom: solid;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+   
+  .game-row0 {
+    min-height: 8rem;
+    display: flex;
+    font-size: 1.1rem;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-bottom: 2rem;
+  }
+   
+  .title-row {
+    width: 100%;
+    min-height: 10rem;
+    flex-direction: row;
+    display: flex;
+    align-content: space-between;
+    font-size: 1.1rem;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .details-row {
+    width: 100%;
+    min-height: 10rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    font-size: 1.1rem;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  .game-image {
+    padding: 1rem 5rem;
+    order: 1;
+    height: 10rem;
+  }
+  
+  .cycle-image {
+    padding: 1rem 1rem;
+    order: 1;
+    height: 7rem;
+  }
+  .name-cell {
+    display: flex;
+    align-items: center;
+    width: 65%;
+    line-height: normal;
+    min-height: 9.8rem;
+    font-size: 3rem;
+    order: 2;
+  }
+  
+  .info-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65%;
+    min-height: 9.8rem;
+    font-size: 2rem;
+    order: 2;
+  }
+  .wins-section {
+    flex-direction: row;
+    width: 80%;
+    padding: 0rem 2rem;
+    min-height: 6rem;
+    display: inline-flex;
+  }
+  .plays-section {
+   
+    flex-direction: column;
+    width: 80%;
+    padding: 0rem 2rem;
+    padding-bottom: 3rem;
+    display: inline-flex;
+  }
+  .cycle-section {
+    flex-direction: column;
+    width: 100%;
+    padding: 0rem 2rem;
+    display: inline-flex;
+  }
+  .wins-title {
+    font-size: 1.6rem;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 25%;
+    padding-bottom: .8rem;
+  }
+  .wins {
+    font-size: 1.2rem;
+    width: 15%;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-bottom: .5rem;
+  }
+  .plays-title {
+    font-size: 2rem;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-bottom: .8rem;
+    display: flex;
+    flex-direction: row;
+  }
+  .row1 {
+    background: #ECECEC;
+  }
+  .row0 {
+    background: #FFFFFF;
+  }
+  .drop-down-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 2rem 1rem 1rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    min-height: 4rem;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .dropdown-content {
+    margin: 1rem;
+  }
+  span {
+    vertical-align: middle;
+  }
+
+  .find-game-button {
+    height: 3.5rem;
+  }

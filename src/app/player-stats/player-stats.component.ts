@@ -32,6 +32,7 @@ export class PlayerStatsComponent implements OnInit {
   bothCol: BoardGame[] = [];
   plays: PlayDb[] = [];
   gamesPlays: {num: number, game: PlayDb}[] = [];
+  newGames: string[] = [];
 
   constructor(private firebaseDataService: FirebaseDataService,
     private boardGameGeekService: BoardGameGeekService,
@@ -75,8 +76,10 @@ export class PlayerStatsComponent implements OnInit {
         
         this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1);
         this.getMostPlayedGames();
+        this.getNewGamePlays();
       });
       this.getMostPlayedGames();
+      this.getNewGamePlays();
   }
 
   getPlayerWins = (plays: PlayDb[]): void => {
@@ -103,12 +106,14 @@ export class PlayerStatsComponent implements OnInit {
     this.startDate = event.value;
     this.getPlayerWins(this.plays);
     this.getMostPlayedGames();
+    this.getNewGamePlays();
   }
 
   addEndEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     this.endDate = event.value;
     this.getPlayerWins(this.plays);
     this.getMostPlayedGames();
+    this.getNewGamePlays();
   }
 
   getMostPlayedGames = (): void => { 
@@ -116,9 +121,8 @@ export class PlayerStatsComponent implements OnInit {
     let foundGame: string[] = [];
     let filteredPlays = this.plays.filter(ref => {
       let date: Date = new Date(parseInt(ref.date.nanoseconds));  
-      console.log("date", date);
       if (this.startDate && this.endDate) {
-        if (date > this.startDate && date < this.endDate) {
+        if (date >= this.startDate && date <= this.endDate) {
           return true;
         }
       }
@@ -139,5 +143,57 @@ export class PlayerStatsComponent implements OnInit {
     })
     gamesWithPlays.sort((a, b) => (a.num < b.num) ? 1 : -1)
     this.gamesPlays = gamesWithPlays;
+  }
+
+  getNewGamePlays = () => {
+    this.newGames =[];
+    let foundGame: string[] = [];
+    let filteredPlays = this.plays.filter(ref => {
+      let date: Date = new Date(parseInt(ref.date.nanoseconds));  
+      if (this.startDate && this.endDate) {
+        if (date >= this.startDate && date <= this.endDate) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    let previousPlays = this.plays.filter(ref => {
+      let date: Date = new Date(parseInt(ref.date.nanoseconds));  
+      if (this.startDate) {
+        if (date < this.startDate) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    previousPlays.forEach(prev => {
+      if (!foundGame.includes(prev.gameId)) {
+        foundGame.push(prev.gameId);
+      }
+      if (prev.expansionsUsed) {
+        prev.expansionsUsed.forEach(prevEx => {
+          if (!foundGame.includes(prevEx)) {
+            foundGame.push(prevEx);
+          }
+        })
+      }
+    })
+    filteredPlays.forEach(play => {
+      if (!foundGame.includes(play.gameId)) {
+        foundGame.push(play.gameId);
+        this.newGames.push(play.gameId);
+      }
+      if (play.expansionsUsed) {
+        play.expansionsUsed.forEach(plEx => {
+          if (!foundGame.includes(plEx)) {
+            foundGame.push(plEx);
+            console.log(plEx);
+            this.newGames.push(plEx);
+          }
+        })
+      }
+    });
   }
 }

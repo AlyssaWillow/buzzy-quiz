@@ -23,6 +23,18 @@ export class UtilsService {
       return name;
   }
 
+  getOwnerName = (id: string): string => {
+    let name: string = '';
+    if (id === 'own-lem') {
+      name = 'Leman';
+    } else if (id === 'own-hen') {
+      name = 'Hendrickson';
+    } else if (id === 'own-bot') {
+      name = 'Both'
+    }
+    return name;
+  }
+
   getGameName = (id: string, gameCollection: BoardGame[]): string => {
     for(let game of gameCollection) {
       if (game?.objectid === id) {

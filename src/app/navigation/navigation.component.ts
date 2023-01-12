@@ -31,6 +31,12 @@ export class NavigationComponent implements OnInit {
     }, 
     {
       external: false,
+      value: '/tools',
+      disp: 'Tools',
+      restricted: false
+    }, 
+    {
+      external: false,
       value: '/collection',
       disp: 'Collection',
       restricted: false
