@@ -37,7 +37,7 @@ export class RandomGameGeneratorComponent implements OnInit {
   selectedOwnedBy: string = 'Either';
   numberOfPlayers: number[] = [...Array(100).keys()];
   playTimeSelect: number[] = [...Array(100).keys()];
-  ownedBy: string = 'own-bot';
+  ownedBy: string = 'either';
   scenarioBased: boolean = false;
   data: any;
   returnData: ReturnData = {
