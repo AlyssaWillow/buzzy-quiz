@@ -240,6 +240,7 @@
     </div>
     <div class="stats-column">
         <div class="header">Games Played For The First Time</div>
+        <div class="sub-header">Total: {{newGames.length}}</div>
         <div class="top-ten-games">
     
             <div *ngIf="startDate && endDate && newGames">
@@ -261,5 +262,30 @@
         </div>
     </div>
 
+    <div class="stats-column">
+        <div class="header">Scenarios Played For The First Time</div>
+        <div class="sub-header">Total: {{newScenarios.length}}</div>
+        <div class="top-ten-games">
     
+            <div *ngIf="startDate && endDate && newScenarios">
+                <div *ngFor="let nSce of newScenarios; let i = index">
+                
+                    <div class="game-row{{i % 2}}">
+                        <div class="game-section-left">
+                            <img class="game-image" src="{{utils.getGameImage(nSce.split('-')[0], bothCol)}}"/>
+                        </div>
+                        <div class="game-section-middle">
+                            <div class="game-name">
+                                {{utils.getGameName(nSce.split("-")[0], bothCol) | replaceText}} ({{utils.getGameYear(nSce.split("-")[0], bothCol)}})
+                            </div>
+                            <div class="game-name">
+                                {{utils.getScenarioName(nSce, scenariosFromDb) | replaceText}} <!--({{utils.getCycleName(nSce, cycleFromDb) | replaceText}})-->
+                            </div>
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+        </div>
+    </div>
 </div>
