@@ -7,6 +7,7 @@ import { BoardGameGeekService } from '../services/board-game-geek.service';
 import { FirebaseDataService } from '../services/firebase-data.service';
 import { UtilsService } from '../services/utils.service';
 import { BoardGame } from '../models/collection';
+import { CycleDb, ScenarioDb, ScenarioDb2 } from '../models/scenario';
 
 interface playerWin {
   playerId: string;
@@ -31,8 +32,11 @@ export class PlayerStatsComponent implements OnInit {
   semiCoopGames: number = 0;
   bothCol: BoardGame[] = [];
   plays: PlayDb[] = [];
+  scenariosFromDb: ScenarioDb2[] = [];
+  cycleFromDb: CycleDb[] = [];
   gamesPlays: {num: number, game: PlayDb}[] = [];
   newGames: string[] = [];
+  newScenarios: string[] = [];
 
   constructor(private firebaseDataService: FirebaseDataService,
     private boardGameGeekService: BoardGameGeekService,
@@ -42,11 +46,15 @@ export class PlayerStatsComponent implements OnInit {
     combineLatest(
       this.firebaseDataService.plays$,
       this.firebaseDataService.players$,
+      this.firebaseDataService.scenarios$,
+      this.firebaseDataService.cycles$,
       this.boardGameGeekService.lemanCollection$,
       this.boardGameGeekService.hendricksonCollection$
     ).subscribe(
-      ([plays, players, lem, hen]) => {
+      ([plays, players, scenarios, cycles, lem, hen]) => {
         this.plays = plays;
+        this.scenariosFromDb = scenarios;
+        this.cycleFromDb = cycles;
         this.getPlayerWins(plays);
         this.players = players;
         lem?.item.forEach((game: BoardGame) => {
@@ -77,9 +85,12 @@ export class PlayerStatsComponent implements OnInit {
         this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1);
         this.getMostPlayedGames();
         this.getNewGamePlays();
+        this.getNewScenarios();
       });
       this.getMostPlayedGames();
       this.getNewGamePlays();
+      this.getNewScenarios();
+
   }
 
   getPlayerWins = (plays: PlayDb[]): void => {
@@ -107,6 +118,7 @@ export class PlayerStatsComponent implements OnInit {
     this.getPlayerWins(this.plays);
     this.getMostPlayedGames();
     this.getNewGamePlays();
+    this.getNewScenarios();
   }
 
   addEndEvent(type: string, event: MatDatepickerInputEvent<Date>) {
@@ -114,6 +126,7 @@ export class PlayerStatsComponent implements OnInit {
     this.getPlayerWins(this.plays);
     this.getMostPlayedGames();
     this.getNewGamePlays();
+    this.getNewScenarios();
   }
 
   getMostPlayedGames = (): void => { 
@@ -147,7 +160,11 @@ export class PlayerStatsComponent implements OnInit {
 
   getNewGamePlays = () => {
     this.newGames =[];
-    let foundGame: string[] = [];
+    let foundGame: string[] = ["68448", "303554", "171672", "184921", "199792", "259996", "280136", "224517", 
+    "270844", "198522", "205059", "206547", "241533", "229987","167791", "255681", "218127", "247030", "230123", 
+    "202825", "226297", "231965", "220308", "237182", "241386", "272637", "233247", "253344","286096", "315708",
+    "266192","195421", "129090","279254","156129","265736","284760","242684","194594","268201","281332","291794",
+    "244271","146508","256874","16992","2381","160499","926","13","150376","198740","113924","131357", "301255"];
     let filteredPlays = this.plays.filter(ref => {
       let date: Date = new Date(parseInt(ref.date.nanoseconds));  
       if (this.startDate && this.endDate) {
@@ -193,6 +210,46 @@ export class PlayerStatsComponent implements OnInit {
             this.newGames.push(plEx);
           }
         })
+      }
+    });
+  }
+
+  getNewScenarios = () => {
+    this.newScenarios =[];
+    let foundGame: string[] = [];
+    let filteredPlays = this.plays.filter(ref => {
+      let date: Date = new Date(parseInt(ref.date.nanoseconds));  
+      if (this.startDate && this.endDate) {
+        if (date >= this.startDate && date <= this.endDate) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    let previousPlays = this.plays.filter(ref => {
+      let date: Date = new Date(parseInt(ref.date.nanoseconds));  
+      if (this.startDate) {
+        if (date < this.startDate) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    previousPlays.forEach(prev => {
+      if (prev?.scenario?.id) {
+        if (!foundGame.includes(prev.scenario.id)) {
+          foundGame.push(prev.scenario.id);
+        }
+      }
+    })
+    filteredPlays.forEach(play => {
+      if (play?.scenario?.id) {
+        if (!foundGame.includes(play.scenario.id)) {
+          foundGame.push(play.scenario.id);
+          this.newScenarios.push(play.scenario.id);
+        }
       }
     });
   }

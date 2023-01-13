@@ -3,7 +3,7 @@ import { Players } from '../models/player-selection';
 import { BoardGame, Link, textId } from '../models/collection';
 import { cycle, nameId } from '../models/generic';
 import { Timestamp } from '../models/play';
-import { CycleDb } from '../models/scenario';
+import { CycleDb, ScenarioDb2 } from '../models/scenario';
 
 @Injectable({
   providedIn: 'root'
@@ -39,9 +39,20 @@ export class UtilsService {
     for(let game of gameCollection) {
       if (game?.objectid === id) {
         return game.name.text;
+      } else if (id === "349998") {
+        return "Tapestry: Arts & Architecture";
       }
     }
     return '';
+}
+
+getScenarioName = (id: string, scenariosFromDb: ScenarioDb2[]): string => {
+  for(let scenario of scenariosFromDb) {
+    if (scenario?.id === id) {
+      return scenario.name;
+    }
+  }
+  return '';
 }
 
 getCycleName = (id: string, cycleList: CycleDb[]): string => {

@@ -10,6 +10,18 @@
     background-color: lightgray
 }
 
+.sub-header {
+    height: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    justify-content:center;
+    color:black;
+    background-color: gray
+}
+
 .player-stats-section {
     display: flex;
     flex-direction: column;
