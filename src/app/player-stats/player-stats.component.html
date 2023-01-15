@@ -76,6 +76,9 @@
                 <div class="player-wins">
                     {{playerWinCount.get(player.id)}}
                 </div>
+                <div class="player-percent">
+                    {{(playerWinCount.get(player.id)/totalGames) * 100 | number : '1.0-2' }}%
+                </div>
             </div>
         </div>
     </div>

@@ -16,6 +16,16 @@
     background-color: grey;
 }
 
+.submit-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.disabled-submit {
+    opacity: 50%;
+}
+
 .date {
     display: flex;
     flex-direction: row;
