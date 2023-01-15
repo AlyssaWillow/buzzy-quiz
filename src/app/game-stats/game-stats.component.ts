@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { Players } from '../models/player-selection';
 import { DisplayFactions, Faction, factionDb2, FactionGame, factionTypeData, PlayerCount } from '../models/faction';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { GameInstance, PlayInstance, PlayerFaction, Wins, PlayDb, GameDetails, ownedAndUnownedExpansions } from '../models/play';
 import { Overrides } from '../models/generic';
 import { BoardGameGeekService } from '../services/board-game-geek.service';
@@ -89,31 +89,28 @@ export class GameStatsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.firebaseDataService.factionTypes$.subscribe(factionTypes => {
-      this.allFactionTypes = factionTypes;
-    });
-    this.firebaseDataService.players$.subscribe(players => {
-      this.players = players;
-    });
-    this.firebaseDataService.listGuides$.subscribe(listGuides => {
-      this.listGuides = listGuides;
-    });
-    this.firebaseDataService.scenarios$.subscribe(scenarioz => {
-      this.newScenarios = scenarioz;
-    });
-    this.firebaseDataService.cycles$.subscribe(cyclez => {
-      this.newCycles = cyclez;
-    });
-    this.firebaseDataService.plays$.subscribe(plays => {
-      this.firebaseDataService.factions$.subscribe(factionz => {
+    combineLatest(
+      this.firebaseDataService.factionTypes$,
+      this.firebaseDataService.players$,
+      this.firebaseDataService.listGuides$,
+      this.firebaseDataService.scenarios$,
+      this.firebaseDataService.cycles$,
+      this.firebaseDataService.factions$,
+      this.firebaseDataService.plays$,
+      this.firebaseDataService.overrides$
+    ).subscribe(
+      ([factionTypes, players, listGuides, scenarioz, cyclez, factionz, plays, overrides]) => {
+        this.allFactionTypes = factionTypes;
+        this.players = players;
+        this.listGuides = listGuides;
+        this.newScenarios = scenarioz;
+        this.newCycles = cyclez;
         this.newFactions = factionz;
+        this.collectionOverrides = overrides;
+        this.playData = [];
         this.playData = this.collectGameData(this.nonExpansion, plays);
-    });
-    });
-    this.firebaseDataService.overrides$.subscribe(overrides => {
-      this.collectionOverrides = overrides;
-      this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId))
-    });
+        this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId));
+      });
 
     this.lemanCollection$.subscribe(lem => {
       this.lemCol = lem?.item;

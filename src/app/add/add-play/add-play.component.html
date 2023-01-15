@@ -237,6 +237,66 @@
         </div>
     </div>
 
+    <div *ngIf="containsCustomNames" class="select-factions">
+        <div class="factions-title">
+            <div class="factions-section-title">
+                Add Custom Names
+            </div>
+            <div class="factions-section-title">
+                <button (click)="showCustomNames()">Hide Custom Names</button>
+            </div>
+        </div>
+        <div class="selection-factions-row" *ngFor="let selectedPlayerNamesInstance of selectedPlayerNameList; let i = index">
+            <div class="select-score-pick">
+                <mat-form-field class="select-faction-dropdown" appearance="fill">
+                    <mat-label>Select Player</mat-label>
+                    <mat-select [(ngModel)]="selectedPlayerNamesInstance.playerId" name="players">
+                        <mat-option *ngFor="let player of players" [value]="player.id">
+                            {{player.firstName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="score-input">
+                <mat-form-field class="input-full" appearance="fill">
+                    <mat-label>Name</mat-label>
+                    <input matInput placeholder="Ex: Terminatortown" [(ngModel)]="selectedPlayerNamesInstance.name">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="remove-row">
+            <button class="remove-button" (click)="removeNamesRow()">Remove Last Row</button>
+        </div>
+        <div class="additional-factions-button">
+            <button (click)="additionalName()">Add Another Name</button>
+        </div>
+    </div>
+
+    <div *ngIf="containsGameNotes" class="select-factions">
+        <div class="factions-title">
+            <div class="factions-section-title">
+                Add Game Notes
+            </div>
+            <div class="factions-section-title">
+                <button (click)="showGameNotes()">Hide Game Notes</button>
+            </div>
+        </div>
+        <div class="selection-factions-row" *ngFor="let gameNotesInstance of gameNotesList; let i = index">
+            <div class="score-input">
+                <mat-form-field class="input-full" appearance="fill">
+                    <mat-label>Note</mat-label>
+                    <input matInput placeholder="Ex: Resolution 2" [(ngModel)]="gameNotesList[i]">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="remove-row">
+            <button class="remove-button" (click)="removeGameNotesRow()">Remove Last Row</button>
+        </div>
+        <div class="additional-factions-button">
+            <button (click)="additionalGameNote()">Add Another Game Note</button>
+        </div>
+    </div>
 
     <div *ngIf="containsScenario" class="select-factions">
         <div class="factions-title">
@@ -366,9 +426,28 @@
         <div *ngIf="!containsFactions" class="additional-factions-button">
             <button (click)="showFactions()">Add Factions</button>
         </div>
+        <div *ngIf="!containsCustomNames" class="additional-factions-button">
+            <button (click)="showCustomNames()">Add Custon Names</button>
+        </div>
+        <div *ngIf="!containsGameNotes" class="additional-factions-button">
+            <button (click)="showGameNotes()">Add Game Notes</button>
+        </div>
     </div>
 
-    <div class="submit-button">
-        <button (click)="submit()">Submit</button>
+    <div class="submit-row">
+        <div *ngIf="existingIds.includes(utils.getDateHyphenYYYYMMDD(selectedDate) + '-' + selectedId)"  class="submit-button">
+            <button (click)="enableOverwrite()">
+                <span *ngIf="!overwritesEnabled">Enable Overwrite</span>
+                <span *ngIf="overwritesEnabled">Disable Overwrite</span>
+            </button>
+        </div>
+    
+        <div *ngIf="existingIds.includes(utils.getDateHyphenYYYYMMDD(selectedDate) + '-' + selectedId) && !overwritesEnabled"  class="submit-button">
+            <button class="disabled-submit" disable>Submit</button>
+        </div>
+    
+        <div *ngIf="!existingIds.includes(utils.getDateHyphenYYYYMMDD(selectedDate) + '-' + selectedId) || overwritesEnabled"  class="submit-button">
+            <button (click)="submit()">Submit</button>
+        </div>
     </div>
 </div>

@@ -5,7 +5,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { Players } from 'src/app/models/player-selection';
 import { BoardGame } from 'src/app/models/collection';
 import { nameId } from 'src/app/models/generic';
-import { GamePlayerFaction, PlayDb, PlayerFaction, PlayFaction, ScoreDb, Timestamp } from 'src/app/models/play';
+import { CustomName, GamePlayerFaction, PlayDb, PlayerFaction, PlayFaction, ScoreDb, Timestamp } from 'src/app/models/play';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { CycleDb, ScenarioDb, ScenarioDb2, ScenarioPlayDb } from 'src/app/models/scenario';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -49,10 +49,12 @@ export class AddPlayComponent implements OnInit {
     win: false
   }
   cycles: CycleDb[] = [];
+  gameNotesList: string[] = [];
   scenarios: ScenarioDb2[] = [];
   selectedWinners: Players[] | undefined = undefined;
   selectedDate: Date | null = null;
   selectedFactionGame: string[] = [];
+  selectedPlayerNameList: CustomName[] = [];
   selectedOrder: number = 0;
   selectedPlayerFaction: GamePlayerFaction = {
     gameId: '',
@@ -66,9 +68,12 @@ export class AddPlayComponent implements OnInit {
 
   containsFactions: boolean = false;
   containsScores: boolean = false;
+  containsGameNotes: boolean = false;
+  containsCustomNames: boolean = false;
   containsScenario: boolean = false;
   addFactionShow: boolean = false;
   addScenarioShow: boolean = false;
+  overwritesEnabled: boolean = false;
 
   private gameTypeCol: AngularFirestoreCollection<nameId>;
 
@@ -82,6 +87,8 @@ export class AddPlayComponent implements OnInit {
     order: 0,
     expansionsUsed: [],
     factions: [],
+    customNames: [],
+    gameNotes: [],
     gameId: '',
     gameType: '',
     location: '',
@@ -187,6 +194,18 @@ export class AddPlayComponent implements OnInit {
     };
     this.selectedPlayerScoresList.push(newInstance);
   }
+
+  additionalName = (): void => {
+    let newInstance: CustomName = {
+      playerId: '',
+      name: ''
+    };
+    this.selectedPlayerNameList.push(newInstance);
+  }
+
+  additionalGameNote = (): void => {
+    this.gameNotesList.push("");
+  }
   
   showFactions = () => {
     this.containsFactions = !this.containsFactions;
@@ -194,6 +213,14 @@ export class AddPlayComponent implements OnInit {
 
   showScores = () => {
     this.containsScores = !this.containsScores;
+  }
+
+  showCustomNames = () => {
+    this.containsCustomNames = !this.containsCustomNames;
+  }
+
+  showGameNotes = () => {
+    this.containsGameNotes = !this.containsGameNotes;
   }
 
   submit = async () => {
@@ -216,9 +243,11 @@ export class AddPlayComponent implements OnInit {
         expansionsUsed: this.createExpansions(this.selectedExpansions),
         factions: (this.containsFactions ? this.createFactions(this.selectedPlayerFactionList) : []),
         gameId: gameId,
+        customNames: (this.containsCustomNames ? this.selectedPlayerNameList : []),
         gameType: typeId,
         location: locationId,
         pick: pickId,
+        gameNotes: (this.containsGameNotes ? this.gameNotesList : []),
         scenario: (this.containsScenario ? this.createScenario(this.selectedScenario.id, this.selectedScenario.win) : {id: '', win: false}),
         winners: this.createWinners(this.selectedWinners),
         scores: (this.containsScores ? this.selectedPlayerScoresList : [])
@@ -341,6 +370,10 @@ export class AddPlayComponent implements OnInit {
   enableDeletes = () => {
     this.deletesEnabled = !this.deletesEnabled;
     this.playDeleted = false;
+  }
+
+  enableOverwrite = (): void => {
+    this.overwritesEnabled = !this.overwritesEnabled;
   }
 
   convertNumber = (str: string): number => {
@@ -467,5 +500,13 @@ export class AddPlayComponent implements OnInit {
   
   removeScoreRow = (): void => {
     this.selectedPlayerScoresList.pop()
+  }
+
+  removeNamesRow = (): void => {
+    this.selectedPlayerNameList.pop()
+  }
+
+  removeGameNotesRow = (): void => {
+    this.gameNotesList.pop()
   }
 }

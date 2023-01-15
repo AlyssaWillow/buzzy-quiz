@@ -23,6 +23,8 @@ export interface PlayDb {
     date: Timestamp;
     expansionsUsed: string[];
     factions: PlayFaction[];
+    customNames: CustomName[];
+    gameNotes: string[];
     gameId: string;
     gameType: string;
     location: string;
@@ -137,6 +139,11 @@ export interface DisplayPlayerFaction {
 export interface PlayerFaction {
     playerId: string;
     factionId: string;
+}
+
+export interface CustomName {
+    playerId: string;
+    name: string;
 }
 
 export interface GamePlayerFaction {
