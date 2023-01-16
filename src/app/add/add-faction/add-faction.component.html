@@ -61,13 +61,16 @@
             <div class="faction-name">
                 Faction Name
             </div>
+            <div class="delete">
+                Edit
+            </div>
             <div *ngIf="deletesEnabled" class="delete">
                 Delete
             </div>
         </div>
         <hr>
         <div *ngFor="let faction of seletedNewFactionList; let i = index">
-            <div class="faction-row selectable row{{i % 2}}" (click)="setFactonDate(faction.order, faction.id.split('-')[1], faction.name)">
+            <div class="faction-row row{{i % 2}}">
                 <div class="fation-order">
                     {{faction.order}}
                 </div>
@@ -85,6 +88,9 @@
                 </div>
                 <div class="faction-name">
                     {{faction.name}}
+                </div>
+                <div class="delete">
+                    <button (click)="setFactonDate(faction.order, faction.id.split('-')[1], faction.name)">Edit</button>
                 </div>
                 <div *ngIf="deletesEnabled" class="delete">
                     <button (click)="deleteSelectedFaction(faction)">Delete</button>

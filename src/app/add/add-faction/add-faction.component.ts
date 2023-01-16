@@ -165,12 +165,14 @@ export class AddFactionComponent implements OnInit {
   }
 
   deleteSelectedFaction = (faction: factionDb) => {
-    if (faction && this.deletesEnabled) {
-      const pickRef = this.afs.collection('factions').doc(faction.id.split('-')[0]).collection(faction.typeId);
-      pickRef.doc(faction.id).delete().then(() => {
+    if (faction && this.deletesEnabled && this.selectedGame?.objectid) {
+      const pickRef = this.afs.collection('factions');
+      pickRef.doc(this.selectedGame.objectid + '-' + this.selectedGameType.id.split('-')[1] + '-' + faction.id.split('-')[1]).delete().then(() => {
         this.factionDeletedName = faction;
         this.factionDeleted = true;
-        console.info("Document successfully deleted!");
+        console.info("Document successfully deleted!",);
+        this.seletedNewFactionList = this.newFactions.filter(ref => ref.gameId === this.selectedGame?.objectid && ref.typeId === this.selectedGameType.id);
+        this.seletedNewFactionList.sort((a, b) => (a.order > b.order) ? 1 : -1)
     }).catch((error) => {
         console.error("Error removing document: ", error);
     });
