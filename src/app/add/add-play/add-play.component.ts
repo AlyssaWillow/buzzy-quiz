@@ -268,6 +268,8 @@ export class AddPlayComponent implements OnInit {
           id: '',
           win: false
         }
+        this.gameNotesList = [];
+        this.selectedPlayerNameList = [];
       this.selectedWinners = undefined;
       this.selectedDate = null;
       this.selectedFactionGame = [];
@@ -281,6 +283,8 @@ export class AddPlayComponent implements OnInit {
       this.selectedPlayerFactionList = [];
       this.selectedPlayerScoresList = [];
       this.containsFactions = false;
+      this.containsGameNotes = false;
+      this.containsGameNotes = false;
       this.containsScores = false;
       this.containsScenario = false;
       this.addFactionShow = false;
@@ -381,23 +385,34 @@ export class AddPlayComponent implements OnInit {
   }
 
   setPlayData = (play: PlayDb): void => {
+    // LOCATION
     this.locations.forEach(location => {
       if (location.id === play.location) {
         this.selectedLocation = location;
       }
     })
+
+    // ID
     this.selectedId = Number(play.id.split('-')[3]);
+
+    // ORDER
     this.selectedOrder = play.order;
+
+    // GAME
     this.bothCol.forEach(game => {
       if (game.objectid === play.gameId) {
         this.selectedGame = game;
       }
     })
+
+    // PICK
     this.players.forEach(player => {
       if (player.id === play.pick) {
         this.selectedPick = player;
       }
     })
+
+    // PLAYERS
     this.players.forEach(player => {
       if (play.winners.includes(player.id)) {
         if (this.selectedWinners === undefined) {
@@ -406,12 +421,15 @@ export class AddPlayComponent implements OnInit {
         this.selectedWinners.push(player);
       }
     })
+
+    // GAME TYPE
     this.gameTypes.forEach(type => {
       if (type.id === play.gameType) {
         this.selectedGameType = type;
       }
     })
    
+    // EXPANSIONS
     this.bothCol.forEach(game => {
       if (play.expansionsUsed.includes((game ? (game.objectid !== null ? game.objectid : '') : ''))) {
         if (this.selectedExpansions === undefined) {
@@ -421,12 +439,19 @@ export class AddPlayComponent implements OnInit {
       }
     })
 
+    // SCORES
     if (play.scores?.length > 0) {
       this.containsScores = true;
     }
-
     this.selectedPlayerScoresList = play.scores;
 
+    // CUSTOM NAMES
+    if (play.customNames?.length > 0) {
+      this.containsCustomNames = true;
+    }
+    this.selectedPlayerNameList = play.customNames;
+    
+    // SCENARIO
     if (play.scenario && play.scenario?.id !== '') {
       this.containsScenario = true;
       this.selectedScenarioGame = play.scenario.id.split("-")[0];
@@ -435,6 +460,7 @@ export class AddPlayComponent implements OnInit {
       this.selectedScenario.win = play.scenario.win;
     }
 
+    // FACTIONS
     let eye = -1;
     if (play.factions?.length > 0) {
       this.containsFactions = true;
