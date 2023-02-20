@@ -82,9 +82,10 @@ export class RandomGameGeneratorComponent implements OnInit {
       this.firebaseDataService.plays$,
       this.firebaseDataService.players$,
       this.boardGameGeekService.lemanCollection$,
-      this.boardGameGeekService.hendricksonCollection$
+      this.boardGameGeekService.hendricksonCollection$,
+      this.boardGameGeekService.hendricksonOverflow$
     ).subscribe(
-      ([plays, players, lem, hen]) => {
+      ([plays, players, lem, hen, henOver]) => {
         this.plays = plays;
         this.players = players;
         this.bothCol = [];
@@ -121,6 +122,24 @@ export class RandomGameGeneratorComponent implements OnInit {
           } else {
             this.bothCol?.filter(e => { 
               if(e.objectid === game.objectid) {
+                e.owner = 'own-bot';
+              }
+            })
+          }
+        }
+        });
+
+        henOver?.item.forEach((game: BoardGame) => {
+          if (game.objectid ? !henDeDup.includes(game.objectid) : false) {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            if (game?.objectid) {
+              henDeDup.push(game.objectid);
+            }
+            game.owner = 'own-hen';
+            this.bothCol.push(game);
+          } else {
+            this.bothCol?.filter(e => { 
+              if(e.objectid === game.objectid && e.owner !== 'own-hen') {
                 e.owner = 'own-bot';
               }
             })

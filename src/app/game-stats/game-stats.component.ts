@@ -3,13 +3,14 @@ import { AuthenticationService } from '../services/authentication.service';
 import { Players } from '../models/player-selection';
 import { DisplayFactions, Faction, factionDb2, FactionGame, factionTypeData, PlayerCount } from '../models/faction';
 import { combineLatest, Observable } from 'rxjs';
-import { GameInstance, PlayInstance, PlayerFaction, Wins, PlayDb, GameDetails, ownedAndUnownedExpansions } from '../models/play';
+import { GameInstance, PlayInstance, PlayerFaction, Wins, PlayDb, GameDetails, ownedAndUnownedExpansions, Expansion } from '../models/play';
 import { Overrides } from '../models/generic';
 import { BoardGameGeekService } from '../services/board-game-geek.service';
 import { AllBoardGame, AllBoardGames, BoardGame, GameCollection, Link } from '../models/collection';
 import { Cycle, CycleDb, DisplayScenario, ScenarioDb, ScenarioDb2, ScenarioGame, ScenarioPlayDb } from '../models/scenario';
 import { FirebaseDataService } from '../services/firebase-data.service';
 import { ListGuide } from '../models/list-guide';
+import { UtilsService } from '../services/utils.service';
 
 
 interface CollectionGroups {
@@ -45,6 +46,7 @@ export class GameStatsComponent implements OnInit {
   bothCol: BoardGame[] = [];
   lemCol: BoardGame[] = [];
   henCol: BoardGame[] = [];
+  henColOver: BoardGame[] = [];
   newFactions: factionDb2[] = [];
   allFactionTypes: factionTypeData[] = [];
   allCol: AllBoardGame[] = [];
@@ -82,9 +84,10 @@ export class GameStatsComponent implements OnInit {
 
   constructor(private boardGameGeekService: BoardGameGeekService,
               private firebaseDataService: FirebaseDataService,
+              private utils: UtilsService,
               public authenticationService: AuthenticationService) {
     this.lemanCollection$ = this.boardGameGeekService.lemanCollection$;
-    this.hendCollection$ = this.boardGameGeekService.hendricksonCollection$
+    this.hendCollection$ = this.boardGameGeekService.hendricksonCollection$;
     this.allCollection$ = this.boardGameGeekService.listOfCollection$;
   }
 
@@ -138,6 +141,25 @@ export class GameStatsComponent implements OnInit {
         } else {
           this.bothCol?.find(e => { 
             if(e.objectid === game.objectid) {
+              game.owner = 'own-bot'
+            }
+          })
+
+        }
+      }); 
+      this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
+      this.getAllGameCollection(this.bothCol);
+    });
+
+    this.boardGameGeekService.hendricksonOverflow$.subscribe(henOver => {
+      this.henColOver = henOver?.item;
+      this.henColOver?.forEach(game => {
+        if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+          game.owner = 'own-hen';
+          this.bothCol.push(game);
+        } else {
+          this.bothCol?.find(e => { 
+            if(e.objectid === game.objectid && game.owner !== 'own-hen') {
               game.owner = 'own-bot'
             }
           })
@@ -264,13 +286,12 @@ export class GameStatsComponent implements OnInit {
       winners: [],
       pick: '',
       expansionsUsed: [],
+      factions: [],
       location: '',
       variant: '',
       scenario: {
-        scenarioId: '',
-        scenarioName: '',
-        plays: 0,
-        wins: 0
+        id: '', 
+        win: false
       },
       gameNotes: ''
     };
@@ -297,6 +318,12 @@ export class GameStatsComponent implements OnInit {
               gamePlay.scores = play.scores;
               gamePlay.winners = play.winners;
               gamePlay.pick = play.pick;
+              gamePlay.expansionsUsed = this.getExpansionsUsed(play.expansionsUsed, game.expansions);
+              gamePlay.factions = play.factions;
+              if (play.scenario !== undefined) {
+                gamePlay.scenario = play.scenario;
+              }
+              
               if (play.scenario?.id !== undefined && play.scenario?.id !== '') {
                 gameInstance.scenarios = this.createScenarios(gameInstance.scenarios, play);
               }
@@ -315,6 +342,22 @@ export class GameStatsComponent implements OnInit {
     });
     games.sort((a, b) => (a.gameName > b.gameName) ? 1 : -1)
     return games;
+  }
+
+  getExpansionsUsed = (ids: string[], bothCol: BaseToExpansion[]): Expansion[] => {
+    let expansionList: Expansion[] = [];
+    let expansion: Expansion = {
+      gameId: '',
+      gameName: ''
+    }
+    bothCol.forEach(expansions => {
+      if (ids.includes(expansions.expansionId.toString())) {
+        expansionList.push({gameId: expansions.expansion.id, gameName: this.utils.getGameName(expansions.expansion.id, this.bothCol)})
+      }
+    })
+
+
+    return expansionList;
   }
 
   getGameDetails = (game: BaseToGame): GameDetails => {
@@ -344,7 +387,11 @@ export class GameStatsComponent implements OnInit {
       factions: [],
       expansions: {
         owned:[],
-        unowned:[]
+        unowned:[],
+        ownedPromo: [],
+        unownedPromo: [],
+        ownedFan: [],
+        unownedFan: []
       },
       gameType: '',
       location: '',
@@ -844,20 +891,44 @@ export class GameStatsComponent implements OnInit {
   getDisplayExpansions = (game: BaseToGame): ownedAndUnownedExpansions => {
     let expList: ownedAndUnownedExpansions = {
       owned: [],
-      unowned: []
+      unowned: [],
+      ownedPromo: [],
+      unownedPromo: [],
+      ownedFan: [],
+      unownedFan: []
     };
     let ownedIds:number[] = []
 
     game.expansions.forEach(exp => {
       if (exp.expansion.id.length > 0) {
-        ownedIds.push(exp.expansionId)
-          expList.owned.push(exp.expansion);
+        ownedIds.push(exp.expansionId);
+        expList.owned.push(exp.expansion);
       }
     })
 
     expList.unowned = game.base.link.filter(ref => ref.type === 'boardgameexpansion' && 
       !ref.inbound && 
-      !ownedIds.includes(ref.id));
+      !ownedIds.includes(ref.id) && 
+      !ref.value.includes("promo") && 
+      !ref.value.includes("Promo") && 
+      !ref.value.includes("promos") && 
+      !ref.value.includes("Promos") && 
+      !ref.value.includes("fan expansion") );
+
+    expList.unownedPromo = game.base.link.filter(ref => ref.type === 'boardgameexpansion' && 
+      !ref.inbound && 
+      !ownedIds.includes(ref.id) && 
+      (ref.value.includes("Promo") || 
+      ref.value.includes("promo") || 
+      ref.value.includes("Promos") || 
+      ref.value.includes("promos")));
+
+
+
+    expList.unownedFan = game.base.link.filter(ref => ref.type === 'boardgameexpansion' && 
+      !ref.inbound && 
+      !ownedIds.includes(ref.id) &&
+      ref.value.includes("fan expansion") );
 
     return expList;
   }

@@ -22,7 +22,7 @@ export class GsVideosComponent implements OnInit {
     scenarios: [],
     gameImage: '',
     factions: [],
-    expansions: {owned: [], unowned: []},
+    expansions: {owned: [], unowned: [], ownedPromo: [],  unownedPromo: [], ownedFan: [], unownedFan: []},
     gameType: '',
     location: '',
     pick: '',

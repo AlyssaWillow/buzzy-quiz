@@ -12,11 +12,118 @@
 
   }
 
-  .plays-list {
-    font-size: 1rem;
-    display: inline-flex;
+  .open-arrow {
+    transition: .5s;
+    display: flex;
+    rotate: 90deg;
+    width: 2%;
     flex-direction: row;
   }
+
+  
+  .closed-arrow {
+    transition: .5s;
+    display: flex;
+    width: 2%;
+    flex-direction: row;
+  }
+
+  .plays-list {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .play-instance {
+    transition: .5s;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .scenario-instance {
+    transition: .5s;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .expansions-used {
+
+    display: flex;
+    flex-direction: row;
+  }
+  .factions-section {
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faction-type {
+    width: 15%;
+    padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+      }
+
+  .expansions-title {
+width: 15%;
+padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .faction-title {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+      }
+
+  .expansions-names {
+    width:85%;
+    padding: 1rem 1rem 1rem 2rem;
+    justify-content: center;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .factions-used {
+    width:85%;
+    padding: 1rem 1rem 1rem 2rem;
+    justify-content: center;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faction-names {
+    width:100%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .arrow-section {
+    width: 2%;
+    display: flex;
+    padding-right: 1%;
+    align-items: flex-end;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .body-section {
+    width: 98%;
+  }
+
 .wins-title {
   font-size: 2rem;
     font-weight: 600;
@@ -40,11 +147,6 @@
     flex-direction: row;
   }
 
-  .plays-list{
-    display:flex;
-    flex-direction: row;
-  }
-
   .plays-section {
     background-color: white;
     padding: 2rem 7rem;
@@ -54,7 +156,7 @@
     width: 12%;
   }
   .plays-scores {
-    width: 53%;
+    width: 51%;
   }
   .plays-winner {
     width: 20%;

@@ -49,9 +49,10 @@ export class PlayerStatsComponent implements OnInit {
       this.firebaseDataService.scenarios$,
       this.firebaseDataService.cycles$,
       this.boardGameGeekService.lemanCollection$,
-      this.boardGameGeekService.hendricksonCollection$
+      this.boardGameGeekService.hendricksonCollection$,
+      this.boardGameGeekService.hendricksonOverflow$
     ).subscribe(
-      ([plays, players, scenarios, cycles, lem, hen]) => {
+      ([plays, players, scenarios, cycles, lem, hen, henOver]) => {
         this.plays = plays;
         this.scenariosFromDb = scenarios;
         this.cycleFromDb = cycles;
@@ -76,6 +77,19 @@ export class PlayerStatsComponent implements OnInit {
           } else {
             this.bothCol?.filter(e => { 
               if(e.objectid === game.objectid) {
+                game.owner = 'own-bot'
+              }
+            })
+          }
+        });
+
+        henOver?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            game.owner = 'own-hen';
+            this.bothCol.push(game);
+          } else {
+            this.bothCol?.filter(e => { 
+              if(e.objectid === game.objectid && game.owner !== 'own-hen') {
                 game.owner = 'own-bot'
               }
             })
@@ -206,7 +220,6 @@ export class PlayerStatsComponent implements OnInit {
         play.expansionsUsed.forEach(plEx => {
           if (!foundGame.includes(plEx)) {
             foundGame.push(plEx);
-            console.log(plEx);
             this.newGames.push(plEx);
           }
         })

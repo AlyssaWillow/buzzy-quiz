@@ -2,8 +2,8 @@
     <div class="section-heading">
         <div class="heading-text">Kelly & Matt's Collection</div>
     </div>
-    <div *ngIf="collection$ | async as collectionHendrickson">
-        <div class="game-row{{i % 2}}" *ngFor="let game of collectionHendrickson.item | collectionFilter: players : time; let i = index">
+    <div *ngIf="bothCol.length > 0">
+        <div class="game-row{{i % 2}}" *ngFor="let game of bothCol | collectionFilter: players : time; let i = index">
             <div class="game-section-left">
                 <img class="game-image" src="{{game.image}}"/>
             </div>

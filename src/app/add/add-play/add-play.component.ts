@@ -220,6 +220,9 @@ export class AddPlayComponent implements OnInit {
   }
 
   showGameNotes = () => {
+    if (this.gameNotesList.length === 0) {
+      this.gameNotesList.push("");
+    }
     this.containsGameNotes = !this.containsGameNotes;
   }
 
@@ -271,7 +274,6 @@ export class AddPlayComponent implements OnInit {
         this.gameNotesList = [];
         this.selectedPlayerNameList = [];
       this.selectedWinners = undefined;
-      this.selectedDate = null;
       this.selectedFactionGame = [];
       this.selectedOrder = 0;
       this.selectedPlayerFaction = {
@@ -438,6 +440,12 @@ export class AddPlayComponent implements OnInit {
         this.selectedExpansions.push(game);
       }
     })
+
+    // NOTES
+    if (play.gameNotes?.length > 0) {
+      this.containsGameNotes = true;
+    }
+    this.gameNotesList = play.gameNotes;
 
     // SCORES
     if (play.scores?.length > 0) {

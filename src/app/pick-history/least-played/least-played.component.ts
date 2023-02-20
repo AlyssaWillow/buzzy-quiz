@@ -47,6 +47,18 @@ export class LeastPlayedComponent implements OnInit {
         }
       })
     });
+
+    this.boardGameGeekService.hendricksonOverflow$.subscribe(hen => {
+      hen?.item?.forEach(game => {
+        if (game?.objectid) {
+          this.gamePlays.set(game.objectid, {
+            count: 0,
+            gameId: game.objectid,
+            gameName: game.name.text
+          })
+        }
+      })
+    });
     this.firebaseDataService.plays$.subscribe(plays => {
       if (this.iteration) {
       let game: dispLeastPlayedGames | undefined;

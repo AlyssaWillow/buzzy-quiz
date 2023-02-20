@@ -7,7 +7,6 @@ import { BoardGame, GameCollection } from 'src/app/models/collection';
 import { doc, setDoc } from "firebase/firestore"; 
 import { nameId } from 'src/app/models/generic';
 import { Locations } from 'src/app/models/locations';
-import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { timeStamp } from 'console';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';

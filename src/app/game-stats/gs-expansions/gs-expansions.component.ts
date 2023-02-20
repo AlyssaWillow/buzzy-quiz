@@ -13,11 +13,19 @@ export class GsExpansionsComponent implements OnInit {
   @Input() bothCol: BoardGame[] = [];
   @Input() expansions: ownedAndUnownedExpansions = {
     owned: [],
-    unowned: []
+    unowned: [],
+    ownedPromo: [],
+    unownedPromo: [],
+    ownedFan: [],
+    unownedFan: []
   };
 
   expandOwned: boolean = false;
   expandUnowned: boolean = false;
+  expandOwnedPromos: boolean = false;
+  expandUnownedPromos: boolean = false;
+  expandOwnedFan: boolean = false;
+  expandUnownedFan: boolean = false;
   
   constructor() { }
 
@@ -30,6 +38,22 @@ export class GsExpansionsComponent implements OnInit {
 
   toggleUnowned = () => {
     this.expandUnowned = !this.expandUnowned;
+  }
+
+  toggleOwnedPromo = () => {
+    this.expandOwnedPromos = !this.expandOwnedPromos;
+  }
+
+  toggleUnownedPromo = () => {
+    this.expandUnownedPromos = !this.expandUnownedPromos;
+  }
+
+  toggleOwnedFan = () => {
+    this.expandOwnedFan = !this.expandOwnedFan;
+  }
+  
+  toggleUnownedFan = () => {
+    this.expandUnownedFan = !this.expandUnownedFan;
   }
 
 }

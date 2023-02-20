@@ -31,6 +31,11 @@ export class PlayerPicksComponent implements OnInit {
         this.gameNames.set(game.objectid, game.name.text)
       })
     });
+    this.boardGameGeekService.hendricksonOverflow$.subscribe(henOver => {
+      henOver?.item?.forEach(game => {
+        this.gameNames.set(game.objectid, game.name.text)
+      })
+    });
     this.firebaseDataService.plays$.subscribe(plays => {
       this.playData = plays.filter(play => play.pick === this.playerId);
       this.playData.sort((a, b) => (a.date < b.date) ? 1 : -1)

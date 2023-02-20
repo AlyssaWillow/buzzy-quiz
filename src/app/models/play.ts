@@ -62,8 +62,9 @@ export interface PlayInstance {
     expansionsUsed: Expansion[];
     location: string;
     variant: string;
-    scenario: Scenario;
+    scenario: ScenarioPlayDb;
     gameNotes: string;
+    factions: PlayFaction[];
 }
 
 export interface PlayerWins {
@@ -87,7 +88,7 @@ export interface GameInstance {
     playerWins: PlayerWins[];
     scenarios: ScenarioGame[];
     gameImage: string;
-    factions: DisplayFactions[]
+    factions: DisplayFactions[];
     expansions: ownedAndUnownedExpansions;
     gameType: string;
     location: string;
@@ -98,6 +99,10 @@ export interface GameInstance {
 export interface ownedAndUnownedExpansions {
     owned: AllBoardGame[];
     unowned: Link[];
+    ownedPromo: AllBoardGame[];
+    unownedPromo: Link[];
+    ownedFan: AllBoardGame[];
+    unownedFan: Link[];
 }
 
 export interface GameDetails {

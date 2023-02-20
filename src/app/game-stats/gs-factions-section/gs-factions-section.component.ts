@@ -5,7 +5,6 @@ import { Players } from 'src/app/models/player-selection';
 import { BoardGame, GameCollection } from 'src/app/models/collection';
 import { DisplayFactions, Faction, FactionCollection, factionDb, factionDb2, factionTypeData } from 'src/app/models/faction';
 import { PlayDb } from 'src/app/models/play';
-import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
