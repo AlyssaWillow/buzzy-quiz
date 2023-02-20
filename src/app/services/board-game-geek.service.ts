@@ -24,6 +24,7 @@ export class BoardGameGeekService implements OnInit {
   //baseUrl3: string = 'https://boardgamegeek.com/xmlapi/boardgame/';
   leman: string = 'Bluexeclipse';
   hendrickson: string = 'sammysandwich';
+  hendricksonOverflow: string = 'sammysandwich2';
   suffix1: string = '?own=1';
   suffix2: string = '&stats=1&own=1';
 
@@ -36,6 +37,12 @@ export class BoardGameGeekService implements OnInit {
   };
 
   hendricksonCollection: GameCollection = {
+    totalitems: 0,
+    termsofuse: '',
+    pubdate: '',
+    item: []
+  };
+  hendricksonCollectionO: GameCollection = {
     totalitems: 0,
     termsofuse: '',
     pubdate: '',
@@ -55,6 +62,9 @@ export class BoardGameGeekService implements OnInit {
   private _hendricksonCollection: BehaviorSubject<GameCollection> = new BehaviorSubject(this.hendricksonCollection);
   public readonly hendricksonCollection$: Observable<GameCollection> = this._hendricksonCollection.asObservable();
 
+  private _hendricksonOverflow: BehaviorSubject<GameCollection> = new BehaviorSubject(this.hendricksonCollectionO);
+  public readonly hendricksonOverflow$: Observable<GameCollection> = this._hendricksonOverflow.asObservable();
+
   private _listOfCollection: BehaviorSubject<AllBoardGames> = new BehaviorSubject(this.listOfCollection);
   public readonly listOfCollection$: Observable<AllBoardGames> = this._listOfCollection.asObservable();
 
@@ -70,6 +80,7 @@ export class BoardGameGeekService implements OnInit {
   getCollections() {
     this._lemanCollection.next(this.getLemanGames());
     this._hendricksonCollection.next(this.getHendricksonGames());
+    this._hendricksonOverflow.next(this.getHendricksonOverflowGames());
   }
   
   getLemanGames(): any {
@@ -107,6 +118,25 @@ export class BoardGameGeekService implements OnInit {
       }
     }
     xhr.open("GET", this.baseUrl1 + this.hendrickson + this.suffix1, true);
+    xhr.send();
+  }
+
+  getHendricksonOverflowGames(): any {
+    let xhr = new XMLHttpRequest();
+    
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            const parser = new XMLParser(options);
+            this._hendricksonOverflow.next(parser.parse(xhr.response).items);
+            return parser.parse(xhr.response);
+          } else {
+              console.error('error', xhr.response);
+              return undefined;
+          }
+      }
+    }
+    xhr.open("GET", this.baseUrl1 + this.hendricksonOverflow + this.suffix1, true);
     xhr.send();
   }
 

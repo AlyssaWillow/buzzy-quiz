@@ -36,6 +36,12 @@ export class GamesPlayedComponent implements OnInit {
           this.gameNames.set(game.objectid, game.name.text)
         })
       });
+
+      this.boardGameGeekService.hendricksonOverflow$.subscribe(hen => {
+        hen?.item?.forEach(game => {
+          this.gameNames.set(game.objectid, game.name.text)
+        })
+      });
     this.firebaseDataService.plays$.subscribe(plays => {
       this.gamesPlayed = this.collectPlayData(plays);
     });

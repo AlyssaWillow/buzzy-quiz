@@ -9,7 +9,6 @@ import { Faction, factionDb, factionDb2 } from 'src/app/models/faction';
 import { nameId } from 'src/app/models/generic';
 import { Locations } from 'src/app/models/locations';
 import { GamePlayerFaction, Play, PlayerFaction } from 'src/app/models/play';
-import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { timeStamp } from 'console';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';

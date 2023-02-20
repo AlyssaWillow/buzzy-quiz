@@ -13,21 +13,24 @@ export class AddAllComponent implements OnInit {
   
   lemCollection$: Observable<GameCollection>;
   henCollection$: Observable<GameCollection>;
+  henOverflow$: Observable<GameCollection>;
   expandedIndex = 0;
 
   bothCol: BoardGame[] = [];
 
   constructor(private boardGameGeekService: BoardGameGeekService) { 
     this.henCollection$ = this.boardGameGeekService.hendricksonCollection$;
+    this.henOverflow$ = this.boardGameGeekService.hendricksonOverflow$;
     this.lemCollection$ = this.boardGameGeekService.lemanCollection$;
   }
 
   ngOnInit(): void {
     combineLatest(
       this.boardGameGeekService.lemanCollection$,
-      this.boardGameGeekService.hendricksonCollection$
+      this.boardGameGeekService.hendricksonCollection$,
+      this.boardGameGeekService.hendricksonOverflow$
     ).subscribe(
-      ([lem, hen]) => {
+      ([lem, hen, henOver]) => {
         lem?.item.forEach((game: BoardGame) => {
           if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
             game.owner = 'own-lem';
@@ -52,6 +55,19 @@ export class AddAllComponent implements OnInit {
             })
           }
         });
+
+        henOver?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            game.owner = 'own-hen';
+            this.bothCol.push(game);
+          } else {
+            this.bothCol?.filter(e => { 
+              if(e.objectid === game.objectid && game.owner !== 'own-hen') {
+                game.owner = 'own-bot'
+              }
+            })
+          }
+        })
         
         this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
       });

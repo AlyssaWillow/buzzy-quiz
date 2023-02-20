@@ -3,6 +3,7 @@
         <span class="plays-title wins-title">Play History</span>
     </div>
     <div class="plays-titles">
+        <div class="arrow-section"></div>
         <div class="title plays-date">Date</div>
         <div class="title plays-scores">Scores</div>
         <div class="title plays-winner">Winner</div>
@@ -10,17 +11,80 @@
     </div>
     <hr>
     <div *ngFor="let play of plays; let i = index" class="plays-list row{{i % 2}}">
-        <div class="play plays-date">{{utils.getDate(play.date)}}</div>
-        <div class="play plays-scores">
-            <div *ngFor="let score of play.scores; let i = index">
-                {{utils.getPlayerName(score.playerId, players)}}:&nbsp;{{score.score}}<span *ngIf="(i + 1) < play.scores.length">,&nbsp;</span>
+        <div class="play-instance">
+            <div class="arrow-section">
+                <div *ngIf="play.scenario.id !=='' 
+                    || play.expansionsUsed.length > 0
+                    || play.factions.length > 0" 
+                    (click)="openPlay(i)">
+                    <span [ngClass]="{'closed-arrow': !expanded[i], 'open-arrow': expanded[i]}">></span>
+                </div>
             </div>
-        </div>
-        <div class="play plays-winner">
-            <div *ngFor="let winner of play.winners; let i = index">
-                {{utils.getPlayerName(winner, players)}}<span *ngIf="(i + 1) < play.winners.length">,&nbsp;</span>
+            <div class="body-section">
+                <div class="play-instance">
+                    <div class="play plays-date">{{utils.getDate(play.date)}}</div>
+                    <div class="play plays-scores">
+                        <div *ngFor="let score of play.scores; let i = index">
+                            {{utils.getPlayerName(score.playerId, players)}}:&nbsp;{{score.score}}<span *ngIf="(i + 1) < play.scores.length">,&nbsp;</span>
+                        </div>
+                    </div>
+                    <div class="play plays-winner">
+                        <div *ngFor="let winner of play.winners; let i = index">
+                            {{utils.getPlayerName(winner, players)}}<span *ngIf="(i + 1) < play.winners.length">,&nbsp;</span>
+                        </div>
+                    </div>
+                    <div class="play plays-pick">{{utils.getPlayerName(play.pick, players)}}</div>
+                </div>
+                
+                <hr  *ngIf="expanded[i] && play.scenario.id !==''">
+                <div *ngIf="expanded[i] && play.scenario.id !==''" class="expansions-used">
+                    <div class="expansions-title">
+                        Scenario Used:
+                    </div>
+                    <div class="expansions-names">
+                        <div>Cycle:&emsp;{{utils.getCycleNameAlwaysDisplay(play.scenario.id, cycles, scenarios)}}</div>
+                        <div>Scenario:&emsp;{{utils.getScenarioName(play.scenario.id, scenarios)}}</div>
+                        <div>Win:&emsp;{{(play.scenario.win ? "Yes" : "No")}}</div>
+                    </div>
+                </div>
+
+                <hr  *ngIf="expanded[i] && play.expansionsUsed.length > 0">
+                <div *ngIf="expanded[i] && play.expansionsUsed.length > 0" class="expansions-used">
+                    <div class="expansions-title">
+                        Expansions Used:
+                    </div>
+                    <div class="expansions-names">
+                        <div *ngFor="let exp of play.expansionsUsed">{{exp.gameName}}</div>
+                    </div>
+                </div>
+                <hr  *ngIf="expanded[i] && play.factions.length > 0">
+                <div *ngIf="expanded[i] && play.factions.length > 0" class="factions-section">
+                        <div class="faction-names" *ngFor="let fac of play.factions">
+                            <div class="faction-type">
+                                {{utils.getFactionTypeName(factionTypes, fac.typeId)}}:
+                            </div>
+                            <div class="factions-used">
+                                <div *ngFor="let faction of fac.factions">
+                                    {{utils.getPlayerName(faction.playerId, players)}}:&emsp;{{utils.getFactionName(faction.factionId, factions)}}
+                                </div>
+                            </div>
+                        </div>
+                
+                </div>
             </div>
+            <!-- <div class="closed-arrow" (click)="openPlay(i)">></div>
+            <div class="play plays-date">{{utils.getDate(play.date)}}</div>
+            <div class="play plays-scores">
+                <div *ngFor="let score of play.scores; let i = index">
+                    {{utils.getPlayerName(score.playerId, players)}}:&nbsp;{{score.score}}<span *ngIf="(i + 1) < play.scores.length">,&nbsp;</span>
+                </div>
+            </div>
+            <div class="play plays-winner">
+                <div *ngFor="let winner of play.winners; let i = index">
+                    {{utils.getPlayerName(winner, players)}}<span *ngIf="(i + 1) < play.winners.length">,&nbsp;</span>
+                </div>
+            </div>
+            <div class="play plays-pick">{{utils.getPlayerName(play.pick, players)}}</div> -->
         </div>
-        <div class="play plays-pick">{{utils.getPlayerName(play.pick, players)}}</div>
     </div>
 </div>

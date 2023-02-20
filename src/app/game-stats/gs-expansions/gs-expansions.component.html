@@ -25,4 +25,37 @@
             </div>
         </div>
     </div>
+
+    <div *ngIf="expansions?.ownedPromo?.length && expansions.ownedPromo.length > 0" class="owned-expansion-section">
+        <div (click)="toggleOwnedPromo()" class="expansion-sub-title">
+            Owned Promos ({{ expansions.owned.length }})
+        </div> 
+        <div *ngIf="expandOwnedPromos" class="games-list">
+            <div class="expansion-game-row" *ngFor="let game of expansions.ownedPromo; let i = index">
+                <tts-gs-e-exansion-game [game]="game" [last]="i + 1 === expansions.ownedPromo.length"></tts-gs-e-exansion-game>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="expansions?.unownedPromo?.length && expansions.unownedPromo.length > 0"  class="owned-expansion-section">
+        <div (click)="toggleUnownedPromo()" class="expansion-sub-title">
+            Unowned Promos ({{ expansions.unownedPromo.length }})
+        </div> 
+        <div *ngIf="expandUnownedPromos" class="games-list">
+            <div *ngFor="let games of expansions.unownedPromo">
+                <a target="_blank" href="https://boardgamegeek.com/boardgame/{{games.id}}">{{games.value}}</a>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="expansions?.unownedFan?.length && expansions.unownedFan.length > 0"  class="owned-expansion-section">
+        <div (click)="toggleUnownedFan()" class="expansion-sub-title">
+            Fan Expansions ({{ expansions.unownedFan.length }})
+        </div> 
+        <div *ngIf="expandUnownedFan" class="games-list">
+            <div *ngFor="let games of expansions.unownedFan">
+                <a target="_blank" href="https://boardgamegeek.com/boardgame/{{games.id}}">{{games.value}}</a>
+            </div>
+        </div>
+    </div>
 </div>

@@ -50,9 +50,10 @@ export class CurrentSelectionsComponent implements OnInit {
   ngOnInit(): void {
     combineLatest(
       this.boardGameGeekService.lemanCollection$,
-      this.boardGameGeekService.hendricksonCollection$
+      this.boardGameGeekService.hendricksonCollection$,
+      this.boardGameGeekService.hendricksonOverflow$
     ).subscribe(
-      ([lem, hen]) => {
+      ([lem, hen, henOver]) => {
         lem?.item.forEach((game: BoardGame) => {
           if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
             game.owner = 'own-lem';
@@ -78,6 +79,19 @@ export class CurrentSelectionsComponent implements OnInit {
           }
         });
         
+        henOver?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            game.owner = 'own-hen';
+            this.bothCol.push(game);
+          } else {
+            this.bothCol?.filter(e => { 
+              if(e.objectid === game.objectid && game.owner !== 'own-hen') {
+                game.owner = 'own-bot'
+              }
+            })
+          }
+        });
+
         this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
       });
   }

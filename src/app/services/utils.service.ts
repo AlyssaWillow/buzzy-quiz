@@ -4,6 +4,7 @@ import { BoardGame, Link, textId } from '../models/collection';
 import { cycle, nameId } from '../models/generic';
 import { Timestamp } from '../models/play';
 import { CycleDb, ScenarioDb2 } from '../models/scenario';
+import { factionDb2 } from '../models/faction';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,29 @@ getCycleName = (id: string, cycleList: CycleDb[]): string => {
   for(let cycle of cycleList) {
     if (cycle?.id === id) {
       return (cycle.display ? cycle.name : '');
+    }
+  }
+  return '';
+}
+
+getCycleNameAlwaysDisplay = (id: string, cycleList: CycleDb[], scenariosFromDb: ScenarioDb2[]): string => {
+  for(let scenario of scenariosFromDb) {
+    if (scenario?.id === id) {
+      for(let cycle of cycleList) {
+        if (cycle?.id === scenario.cycle) {
+          return cycle.name;
+        }
+      }
+    }
+  }
+  return '';
+}
+
+
+getFactionName = (id: string, factionList: nameId[]): string => {
+  for(let faction of factionList) {
+    if (faction?.id === id) {
+      return faction.name;
     }
   }
   return '';
