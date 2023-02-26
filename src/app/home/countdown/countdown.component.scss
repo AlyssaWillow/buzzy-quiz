@@ -35,13 +35,13 @@
   }
 
   .border-alert {
-    border-style: solid;
-    border-color: red;
-    border-width: 5px;
+    -webkit-box-shadow:inset 0px 0px 0px 5px #f00;
+    -moz-box-shadow:inset 0px 0px 0px 5px #f00;
+    box-shadow:inset 0px 0px 0px 5px #f00;
   }
 
   .border-not {
-    border-style: solid;
-    border-color: white;
-    border-width: 5px;
+    -webkit-box-shadow:inset 0px 0px 0px 5px white;
+    -moz-box-shadow:inset 0px 0px 0px 5px white;
+    box-shadow:inset 0px 0px 0px 5px white;
   }
