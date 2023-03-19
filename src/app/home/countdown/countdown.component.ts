@@ -45,8 +45,7 @@ export class CountdownComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.subscription = interval(1000)
-        .subscribe(x => { this.getTimeDifference(); });
+    this.getTimeDifference();
   }
 
   ngOnDestroy() {
