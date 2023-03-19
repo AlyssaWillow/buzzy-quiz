@@ -14,7 +14,7 @@ export class CountdownComponent implements OnInit {
   // June 21, 2023 8:00am
   //year,month,date[,hour,minute,second,millisecond ]
   countDownTo: string = "Origins";
-  startTime: Date = new Date(2023,6,21,8);
+  startTime: Date = new Date(2023,6,21);
 
   private subscription: Subscription = new Subscription;
 

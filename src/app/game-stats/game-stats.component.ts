@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { Players } from '../models/player-selection';
 import { DisplayFactions, Faction, factionDb2, FactionGame, factionTypeData, PlayerCount } from '../models/faction';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { GameInstance, PlayInstance, PlayerFaction, Wins, PlayDb, GameDetails, ownedAndUnownedExpansions, Expansion } from '../models/play';
 import { Overrides } from '../models/generic';
 import { BoardGameGeekService } from '../services/board-game-geek.service';
@@ -11,7 +11,6 @@ import { Cycle, CycleDb, DisplayScenario, ScenarioDb, ScenarioDb2, ScenarioGame,
 import { FirebaseDataService } from '../services/firebase-data.service';
 import { ListGuide } from '../models/list-guide';
 import { UtilsService } from '../services/utils.service';
-
 
 interface CollectionGroups {
   value: string;
@@ -36,12 +35,7 @@ interface BaseToExpansion {
   styleUrls: ['./game-stats.component.scss']
 })
 export class GameStatsComponent implements OnInit {
-  lemanCollection$: Observable<GameCollection>;
-  hendCollection$: Observable<GameCollection>;
-  allCollection$: Observable<AllBoardGames>;
-
   collectionNum: number = 0;
-
   playData: GameInstance[] = [];
   bothCol: BoardGame[] = [];
   lemCol: BoardGame[] = [];
@@ -65,7 +59,7 @@ export class GameStatsComponent implements OnInit {
   displayCategory: number[] = [];
   displayArtists: number[] = [];
   displayDesigners: number[] = [];
-
+  plays: PlayDb[] = [];
   display: string[] = [];
 
   types: CollectionGroups[] = [
@@ -85,11 +79,7 @@ export class GameStatsComponent implements OnInit {
   constructor(private boardGameGeekService: BoardGameGeekService,
               private firebaseDataService: FirebaseDataService,
               private utils: UtilsService,
-              public authenticationService: AuthenticationService) {
-    this.lemanCollection$ = this.boardGameGeekService.lemanCollection$;
-    this.hendCollection$ = this.boardGameGeekService.hendricksonCollection$;
-    this.allCollection$ = this.boardGameGeekService.listOfCollection$;
-  }
+              public authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
     combineLatest(
@@ -102,7 +92,17 @@ export class GameStatsComponent implements OnInit {
       this.firebaseDataService.plays$,
       this.firebaseDataService.overrides$
     ).subscribe(
-      ([factionTypes, players, listGuides, scenarioz, cyclez, factionz, plays, overrides]) => {
+      ([
+        factionTypes, 
+        players, 
+        listGuides, 
+        scenarioz, 
+        cyclez, 
+        factionz, 
+        plays, 
+        overrides
+      ]) => {
+        this.plays = plays;
         this.allFactionTypes = factionTypes;
         this.players = players;
         this.listGuides = listGuides;
@@ -111,159 +111,104 @@ export class GameStatsComponent implements OnInit {
         this.newFactions = factionz;
         this.collectionOverrides = overrides;
         this.playData = [];
-        this.playData = this.collectGameData(this.nonExpansion, plays);
-        this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId));
-      });
-
-    this.lemanCollection$.subscribe(lem => {
-      this.lemCol = lem?.item;
-      this.lemCol?.forEach(game => {
-        if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
-          game.owner = 'own-lem';
-          this.bothCol?.push(game);
-        } else {
-          this.bothCol?.find(e => { 
-            if(e.objectid === game.objectid) {
-              game.owner = 'own-bot'
-            }
-          })
+        this.bothCol = [];
+        if (this.playData.length === 0) {
+          this.bothCol = this.utils.getAggregateCollections();
+          this.getAllGameCollection(this.bothCol);
         }
-      }); 
-      this.getAllGameCollection(this.bothCol);
-    });
-
-    this.hendCollection$.subscribe(hen => {
-      this.henCol = hen?.item;
-      this.henCol?.forEach(game => {
-        if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
-          game.owner = 'own-hen';
-          this.bothCol.push(game);
-        } else {
-          this.bothCol?.find(e => { 
-            if(e.objectid === game.objectid) {
-              game.owner = 'own-bot'
-            }
-          })
-
-        }
-      }); 
-      this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
-      this.getAllGameCollection(this.bothCol);
-    });
-
-    this.boardGameGeekService.hendricksonOverflow$.subscribe(henOver => {
-      this.henColOver = henOver?.item;
-      this.henColOver?.forEach(game => {
-        if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
-          game.owner = 'own-hen';
-          this.bothCol.push(game);
-        } else {
-          this.bothCol?.find(e => { 
-            if(e.objectid === game.objectid && game.owner !== 'own-hen') {
-              game.owner = 'own-bot'
-            }
-          })
-
-        }
-      }); 
-      this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
-      this.getAllGameCollection(this.bothCol);
-    });
-
-    let expansionIds: string[] = [];
-    this.allCollection$.subscribe(allCollection => {
-      this.allCol = allCollection.item;
-      this.allCol?.forEach(game => {
-        if (!this.collectionOverrides?.bases.includes(game.id)) {
-          if (this.collectionOverrides?.expansions.includes(game.id)) {
-            expansionIds.push(game.id)
-          } else {
-
-            if (game && game.link.filter(ref => ref.type === 'boardgamecategory').length > 0) {
-              game?.link.filter(ref =>  ref.type === 'boardgamecategory').forEach(category => {
-                if (category.id === 1042) {
-                  expansionIds.push(game.id)
-                } 
-              })
-              game?.link.filter(ref => ref.type === 'boardgameexpansion').forEach(category => {
-                if (!category.inbound) {
-                  expansionIds.push(""+category.id)
-                }
-              })
-            }
-          } 
-        }
+        
       })
-      
-      let baseGame: BaseToGame;
-      let newExpansion: BaseToExpansion;
-      this.allCol?.forEach(game => {
-        this.collectMechanics(game);
-        this.collectArtists(game);
-        this.collectDesigner(game);
-       if ((this.collectionOverrides.bases.includes(game.id) || !expansionIds.includes(game.id)) 
-       && !this.collectionOverrides.expansions.includes(game.id)) {
-        baseGame = {
-          baseId: game.id,
-          base: game,
-          expansions: []
-        }
-        if (game.link.filter(ref => ref.type == 'boardgameexpansion').length > 0 ) {
-          game.link.filter(ref =>  ref.type == 'boardgameexpansion').forEach(expansion => {
-            newExpansion = {
-              expansionId: expansion.id,
-              expansion: {
-                id: "",
-                image: "",
-                description: "",
-                link: [],
-                maxplayers: {value: 0},
-                maxplaytime: {value: 0},
-                minage: {value: 0},
-                minplayers: {value: 0},
-                minplaytime: {value: 0},
-                name: [],
-                playingtime: 0,
-                poll: [],
-                thumbnail: "",
-                type: "",
-                yearpublished: {value: 0}
-              }
-            }
-            baseGame.expansions.push(newExpansion)
-          })
-        }
-        this.nonExpansion.push(baseGame)
-       }
-      })
-
-      this.allCol?.forEach(game => {
-        if (expansionIds.includes(game.id)) {
-         this.nonExpansion.forEach(base => {
-          base.expansions.forEach(expansion => {
-            if (("" + expansion.expansionId) === game.id) {
-              expansion.expansion = game;
-            }
-          })
-         })
-        }
-       })
-    })
   };
 
   getAllGameCollection = (both: BoardGame[]) => {
-    this.collectionNum++;
     let idCol: string[] = []
-    if (this.collectionNum > 3) {
       both.forEach(game => {
         if (game && game.objectid) {
           idCol.push(game.objectid);
         }
       })
-      this.boardGameGeekService.getlistOfGames(idCol);
-    }
-
+      this.boardGameGeekService.getlistOfGames(idCol)
+      let expansionIds: string[] = [];
+      this.boardGameGeekService.listOfCollection$.subscribe(allCollection => {
+        this.allCol = allCollection.item;
+        this.allCol?.forEach(game => {
+          if (!this.collectionOverrides?.bases.includes(game.id)) {
+            if (this.collectionOverrides?.expansions.includes(game.id)) {
+              expansionIds.push(game.id)
+            } else {
   
+              if (game && game.link.filter(ref => ref.type === 'boardgamecategory').length > 0) {
+                game?.link.filter(ref =>  ref.type === 'boardgamecategory').forEach(category => {
+                  if (category.id === 1042) {
+                    expansionIds.push(game.id)
+                  } 
+                })
+                game?.link.filter(ref => ref.type === 'boardgameexpansion').forEach(category => {
+                  if (!category.inbound) {
+                    expansionIds.push(""+category.id)
+                  }
+                })
+              }
+            } 
+          }
+        })
+        
+        let baseGame: BaseToGame;
+        let newExpansion: BaseToExpansion;
+        this.allCol?.forEach(game => {
+          this.collectMechanics(game);
+          this.collectArtists(game);
+          this.collectDesigner(game);
+         if ((this.collectionOverrides.bases.includes(game.id) || !expansionIds.includes(game.id)) 
+         && !this.collectionOverrides.expansions.includes(game.id)) {
+          baseGame = {
+            baseId: game.id,
+            base: game,
+            expansions: []
+          }
+          if (game.link.filter(ref => ref.type == 'boardgameexpansion').length > 0 ) {
+            game.link.filter(ref =>  ref.type == 'boardgameexpansion').forEach(expansion => {
+              newExpansion = {
+                expansionId: expansion.id,
+                expansion: {
+                  id: "",
+                  image: "",
+                  description: "",
+                  link: [],
+                  maxplayers: {value: 0},
+                  maxplaytime: {value: 0},
+                  minage: {value: 0},
+                  minplayers: {value: 0},
+                  minplaytime: {value: 0},
+                  name: [],
+                  playingtime: 0,
+                  poll: [],
+                  thumbnail: "",
+                  type: "",
+                  yearpublished: {value: 0}
+                }
+              }
+              baseGame.expansions.push(newExpansion)
+            })
+          }
+          this.nonExpansion.push(baseGame)
+         }
+        })
+  
+        this.allCol?.forEach(game => {
+          if (expansionIds.includes(game.id)) {
+           this.nonExpansion.forEach(base => {
+            base.expansions.forEach(expansion => {
+              if (("" + expansion.expansionId) === game.id) {
+                expansion.expansion = game;
+              }
+            })
+           })
+          }
+         })
+        this.playData = this.collectGameData(this.nonExpansion, this.plays);
+        this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId));
+      })
   }
 
   getGameIdList = (plays: PlayDb[]) => {
@@ -355,8 +300,6 @@ export class GameStatsComponent implements OnInit {
         expansionList.push({gameId: expansions.expansion.id, gameName: this.utils.getGameName(expansions.expansion.id, this.bothCol)})
       }
     })
-
-
     return expansionList;
   }
 
@@ -922,8 +865,6 @@ export class GameStatsComponent implements OnInit {
       ref.value.includes("promo") || 
       ref.value.includes("Promos") || 
       ref.value.includes("promos")));
-
-
 
     expList.unownedFan = game.base.link.filter(ref => ref.type === 'boardgameexpansion' && 
       !ref.inbound && 

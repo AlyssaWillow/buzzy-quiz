@@ -9,6 +9,7 @@ import { Locations } from './models/locations';
 import { GameInstance, PlayDb } from './models/play';
 import { BoardGameGeekService } from './services/board-game-geek.service';
 import { FirebaseDataService } from './services/firebase-data.service';
+import { UtilsService } from './services/utils.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ export class AppComponent implements OnInit {
   title = 'TabletopSyndicate';
   constructor(private firebaseData: FirebaseDataService,
     private afs: AngularFirestore,
-    private boardGameGeekService: BoardGameGeekService) {
+    private boardGameGeekService: BoardGameGeekService,
+    private utils: UtilsService) {
   }
   ngOnInit(): void {
     this.firebaseData.fetchFactionTypeData();
@@ -34,5 +36,14 @@ export class AppComponent implements OnInit {
     this.firebaseData.fetchCycleData();
     this.firebaseData.fetchVideoData();
     this.boardGameGeekService.getCollections();
+    this.boardGameGeekService.hendricksonCollection$.subscribe(hen => {
+      this.utils.aggregateCollections(hen, 'hendrickson');
+    });
+    this.boardGameGeekService.hendricksonOverflow$.subscribe(hen => {
+      this.utils.aggregateCollections(hen, 'hendrickson');
+    });
+    this.boardGameGeekService.lemanCollection$.subscribe(leman => {
+      this.utils.aggregateCollections(leman, 'leman');
+    });
   }
 }

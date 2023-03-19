@@ -1,17 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Players } from '../models/player-selection';
-import { BoardGame, Link, textId } from '../models/collection';
+import { BoardGame, GameCollection, Link, textId } from '../models/collection';
 import { cycle, nameId } from '../models/generic';
 import { Timestamp } from '../models/play';
 import { CycleDb, ScenarioDb2 } from '../models/scenario';
 import { factionDb2 } from '../models/faction';
+import { BoardGameGeekService } from './board-game-geek.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-  constructor() {
+  idCol: string[] = [];
+  collections: BoardGame[] = [];
+  lemanCollection: BoardGame[] = [];
+  hendricksonCollection: BoardGame[] = [];
+  hendricksonOverflowCollection: BoardGame[] = [];
+
+  constructor(private boardGameGeekService: BoardGameGeekService) {
   }
 
   getPlayerName = (id: string, players: Players[]): string => {
@@ -32,6 +39,19 @@ export class UtilsService {
       name = 'Hendrickson';
     } else if (id === 'own-bot') {
       name = 'Both'
+    }
+    return name;
+  }
+
+  getOwnerId = (name: string): string => {
+    let id: string = '';
+    if (name.toLocaleLowerCase() === 'leman') {
+      id = 'own-lem';
+    } else if (name.toLocaleLowerCase() === 'hendrickson' ||
+               name.toLocaleLowerCase() === 'hendricksonOverflow') {
+      id = 'own-hen';
+    } else if (name.toLocaleLowerCase() === 'both') {
+      id = 'own-bot'
     }
     return name;
   }
@@ -194,5 +214,49 @@ getGameYear = (id: string, gameCollection: BoardGame[]): string | null => {
       list.push(typeList);
       return list;
     }
+  }
+
+  setGameIds = (both: BoardGame[]): void => {
+      both.forEach(game => {
+        if (game && game.objectid && !this.idCol.includes(game.objectid)) {
+          this.idCol.push(game.objectid);
+        }
+      })
+  }
+
+  getGameIds = (): string[] => {
+    return this.idCol;
+  }
+
+  setCollections = (col: GameCollection, owner: string): void => {
+    if (this.getOwnerId(owner) === 'own-lem') {
+      this.lemanCollection = col?.item;
+    } else if (this.getOwnerId(owner) === 'own-hen') {
+      this.hendricksonCollection = col?.item;
+    } else if (this.getOwnerId(owner) === 'henOver') {
+      this.hendricksonOverflowCollection = col?.item;
+    }
+  }
+
+  aggregateCollections = (col: GameCollection, owner: string): void => {
+    this.setCollections(col, owner);
+
+    col?.item?.forEach(game => {
+      if (!this.collections?.find(e => e.objectid === game.objectid)) {
+        game.owner = this.getOwnerId(owner);
+        this.collections?.push(game);
+      } else {
+        this.collections?.find(e => { 
+          if(e.objectid === game.objectid && game.owner !== this.getOwnerId(owner)) {
+            game.owner = 'own-bot'
+          }
+        })
+      }
+    }); 
+    this.collections?.sort((a, b) => (a.name.text < b.name.text) ? 1 : -1)
+  }
+
+  getAggregateCollections = (): BoardGame[] => {
+    return this.collections;
   }
 }
