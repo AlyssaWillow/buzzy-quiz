@@ -1,10 +1,7 @@
-<div class="countdown-section" [ngClass]="secondsToDday%2 === 0? 'border-alert': 'border-not'">
-    <div class="countdown-title">Countdown to {{countDownTo}}!!</div>
-    <div class="start-time">Event start: {{startTime.getMonth()}}/{{startTime.getDate()}}/{{startTime.getFullYear()}} {{startTime.getHours()}}am</div>
+<div class="countdown-section">
+    <div class="countdown-title">Count down to {{countDownTo}}!!</div>
+    <div class="start-time">Event start: {{startTime.getMonth()}}/{{startTime.getDate()}}/{{startTime.getFullYear()}}</div>
     <div class="timer">
-        <span id="days"> {{daysToDday}} </span>Day{{(daysToDday>1? "s": "")}}
-        <span id="hours"> {{hoursToDday}} </span>Hour{{(hoursToDday>1? "s": "")}}
-        <span id="minutes"> {{minutesToDday}} </span>Minute{{(minutesToDday>1? "s": "")}}
-        <span id="seconds"> {{secondsToDday}} </span>Second{{(secondsToDday>1? "s": "")}}
+        <span id="days"> {{daysToDday}} Day{{(daysToDday>1? "s": "")}}</span>
       </div>
 </div>
