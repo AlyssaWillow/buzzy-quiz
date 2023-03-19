@@ -110,10 +110,10 @@ export class GameStatsComponent implements OnInit {
         this.newCycles = cyclez;
         this.newFactions = factionz;
         this.collectionOverrides = overrides;
-        this.playData = [];
         this.bothCol = [];
         if (this.playData.length === 0) {
           this.bothCol = this.utils.getAggregateCollections();
+          this.bothCol.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
           this.getAllGameCollection(this.bothCol);
         }
         
@@ -205,7 +205,7 @@ export class GameStatsComponent implements OnInit {
             })
            })
           }
-         })
+         });
         this.playData = this.collectGameData(this.nonExpansion, this.plays);
         this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId));
       })
