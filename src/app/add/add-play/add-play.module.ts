@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AddFactionModule } from '../add-faction/add-faction.module';
 import { AddScenarioModule } from '../add-scenario/add-scenario.module';
+import { SharedModuleModule } from 'src/app/pipes/shared-module/shared-module.module';
 
 
 
@@ -24,7 +25,8 @@ import { AddScenarioModule } from '../add-scenario/add-scenario.module';
     ReactiveFormsModule, 
     FormsModule,
     AddFactionModule,
-    AddScenarioModule
+    AddScenarioModule,
+    SharedModuleModule
   ],
   exports: [
     AddPlayComponent
