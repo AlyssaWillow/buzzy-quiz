@@ -318,7 +318,7 @@
             <mat-form-field class="select-faction-dropdown" appearance="fill">
                 <mat-label>Select Game</mat-label>
                 <mat-select [(ngModel)]="selectedScenarioGame" name="getScenario" (selectionChange)="getScenarios($event.value)">
-                    <mat-option *ngFor="let col of bothCol" [value]="col?.objectid">
+                    <mat-option *ngFor="let col of bothCol | selectedGameFilter: [selectedGame, selectedExpansions]" [value]="col?.objectid">
                         {{col?.name?.text}}
                     </mat-option>
                 </mat-select>
@@ -365,7 +365,8 @@
                 <mat-form-field class="select-faction-dropdown" appearance="fill">
                     <mat-label>Select Game</mat-label>
                     <mat-select [(ngModel)]="selectedPlayerFactionInstance.gameId" name="getGames" (selectionChange)="getFactions($event.value, i, '')">
-                        <mat-option *ngFor="let col of bothCol" [value]="col?.objectid">
+                        <mat-option *ngFor="let col of bothCol | selectedGameFilter: [selectedGame, selectedExpansions]" 
+                        [value]="col?.objectid">
                             {{col?.name?.text}}
                         </mat-option>
                     </mat-select>
