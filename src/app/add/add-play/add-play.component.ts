@@ -164,7 +164,7 @@ export class AddPlayComponent implements OnInit {
         this.boardGameGeekService.listOfCollection$.subscribe(allCollection => {
           this.allCol = allCollection.item;
           this.expansionIds = allCollection.item
-                              .filter(f => f.link.find(f=> f.type ==='boardgamecateogry' && f.id === 1042))
+                              .filter(f => f.link.find(f => ''+f.id === '1042'))
                               .map(m => m.id);
         });
   }
