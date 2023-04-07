@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionFilterPipe } from '../collection-filter.pipe';
 import { ReplaceTextPipe } from '../replace-text.pipe';
-import { selectedGamePipe } from '../selected-game.pipe';
+import { basePipe, expansionPipe, factionTypesPipe, selectedGamePipe, specificExpansionsPipe } from '../selected-game.pipe';
 
 
 
@@ -10,7 +10,11 @@ import { selectedGamePipe } from '../selected-game.pipe';
   declarations: [
     CollectionFilterPipe,
     ReplaceTextPipe,
-    selectedGamePipe
+    selectedGamePipe,
+    basePipe,
+    expansionPipe,
+    specificExpansionsPipe,
+    factionTypesPipe
   ],
   imports: [
     CommonModule
@@ -18,7 +22,11 @@ import { selectedGamePipe } from '../selected-game.pipe';
   exports:[
     CollectionFilterPipe,
     ReplaceTextPipe,
-    selectedGamePipe
+    selectedGamePipe,
+    expansionPipe,
+    basePipe,
+    specificExpansionsPipe,
+    factionTypesPipe
   ]
 })
 export class SharedModuleModule { }

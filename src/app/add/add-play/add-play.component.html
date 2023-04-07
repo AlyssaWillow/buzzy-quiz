@@ -115,18 +115,21 @@
         <mat-form-field class="select-faction-dropdown" appearance="fill">
             <mat-label>Select Game</mat-label>
             <mat-select [(ngModel)]="selectedGame" name="bothCol">
-                <mat-option *ngFor="let col of bothCol" [value]="col">
+                <mat-option *ngFor="let col of bothCol | baseGameFilter: expansionIds" [value]="col">
                     {{col?.name?.text}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
 
-    <div class="select-expansions">
+    <div *ngIf="selectedGame !== undefined && selectedGame.objectid !== null
+                             && expansionIdMap?.get(selectedGame.objectid) !== undefined
+                             && expansionIdMap?.get(selectedGame.objectid)?.length !== 0" 
+        class="select-expansions">
         <mat-form-field class="select-faction-dropdown" appearance="fill">
             <mat-label>Select Expansions</mat-label>
             <mat-select [(ngModel)]="selectedExpansions" multiple name="bothCol">
-                <mat-option *ngFor="let col of bothCol" [value]="col">
+                <mat-option *ngFor="let col of bothCol | specificExpansionFilter: [selectedGame.objectid, expansionIdMap]" [value]="col">
                     {{col?.name?.text}}
                 </mat-option>
             </mat-select>
@@ -282,11 +285,11 @@
                 <button (click)="showGameNotes()">Hide Game Notes</button>
             </div>
         </div>
-        <div class="selection-factions-row" *ngFor="let gameNotesInstance of gameNotesList; let i = index">
+        <div class="selection-factions-row" *ngFor="let gameNotesInstance of gameNotesList">
             <div class="score-input">
                 <mat-form-field class="input-full" appearance="fill">
                     <mat-label>Note</mat-label>
-                    <input matInput placeholder="Ex: Resolution 2" [(ngModel)]="gameNotesList[i]">
+                    <input matInput placeholder="Ex: Resolution 2" [(ngModel)]="gameNotesInstance.note">
                 </mat-form-field>
             </div>
         </div>
@@ -378,7 +381,7 @@
                 <mat-form-field class="select-faction-dropdown" appearance="fill">
                     <mat-label>Select Faction Type</mat-label>
                     <mat-select [(ngModel)]="selectedPlayerFactionInstance.factionTypeId" name="getFactionTypes" (selectionChange)="getFactions('', i, $event.value)">
-                        <mat-option *ngFor="let col of factionTypes" [value]="col?.id">
+                        <mat-option *ngFor="let col of factionTypes | factionTypesFilter: [factions, selectedGame?.objectid]" [value]="col?.id">
                             {{col.name}}
                         </mat-option>
                     </mat-select>
@@ -418,19 +421,19 @@
     </div>
 
     <div class="button-row">
-        <div *ngIf="!containsScores" class="additional-factions-button">
+        <div *ngIf="!containsScores && this.selectedGame" class="additional-factions-button">
             <button (click)="showScores()">Add Scores</button>
         </div>
-        <div *ngIf="!containsScenario" class="additional-factions-button">
+        <div *ngIf="!containsScenario && this.selectedGame" class="additional-factions-button">
             <button (click)="showScenario()">Add Scenario</button>
         </div>
-        <div *ngIf="!containsFactions" class="additional-factions-button">
+        <div *ngIf="!containsFactions && this.selectedGame" class="additional-factions-button">
             <button (click)="showFactions()">Add Factions</button>
         </div>
-        <div *ngIf="!containsCustomNames" class="additional-factions-button">
+        <div *ngIf="!containsCustomNames && this.selectedGame" class="additional-factions-button">
             <button (click)="showCustomNames()">Add Custon Names</button>
         </div>
-        <div *ngIf="!containsGameNotes" class="additional-factions-button">
+        <div *ngIf="!containsGameNotes && this.selectedGame" class="additional-factions-button">
             <button (click)="showGameNotes()">Add Game Notes</button>
         </div>
     </div>

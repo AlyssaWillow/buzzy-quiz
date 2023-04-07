@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { MatFormField } from '@angular/material/form-field';
 import { combineLatest, Observable } from 'rxjs';
 import { Players } from 'src/app/models/player-selection';
-import { BoardGame } from 'src/app/models/collection';
+import { AllBoardGame, BoardGame } from 'src/app/models/collection';
 import { nameId } from 'src/app/models/generic';
 import { CustomName, GamePlayerFaction, PlayDb, PlayerFaction, PlayFaction, ScoreDb, Timestamp } from 'src/app/models/play';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -11,6 +11,7 @@ import { CycleDb, ScenarioDb, ScenarioDb2, ScenarioPlayDb } from 'src/app/models
 import { UtilsService } from 'src/app/services/utils.service';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { factionDb2 } from 'src/app/models/faction';
+import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 
 @Component({
   selector: 'app-add-play',
@@ -19,7 +20,10 @@ import { factionDb2 } from 'src/app/models/faction';
 })
 export class AddPlayComponent implements OnInit {
   @Input('bothCol') bothCol: BoardGame[] = [];
+  allCol: AllBoardGame[] = [];
   gameTypes$: Observable<nameId[]>;
+  expansionIds: string[] = [];
+  expansionIdMap: Map<string, number[]> = new Map();
 
   numbers: number[] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
   gamePlayedOrder: number = 0;
@@ -49,7 +53,7 @@ export class AddPlayComponent implements OnInit {
     win: false
   }
   cycles: CycleDb[] = [];
-  gameNotesList: string[] = [];
+  gameNotesList: {note: string}[] = [];
   scenarios: ScenarioDb2[] = [];
   selectedWinners: Players[] | undefined = undefined;
   selectedDate: Date | null = null;
@@ -103,6 +107,7 @@ export class AddPlayComponent implements OnInit {
 
   constructor(public utils: UtilsService,
     private firebaseDataService: FirebaseDataService,
+    private boardGameGeekService: BoardGameGeekService,
     private afs: AngularFirestore) { 
     this.gameTypeCol = afs.collection('game-type-data');
     this.gameTypes$ = this.gameTypeCol.valueChanges();
@@ -124,15 +129,63 @@ export class AddPlayComponent implements OnInit {
       this.plays = playz;
       this.scenarios = scenarioz;
       this.factions = factionz;
+      this.getExpansionIds(this.bothCol);
       });
-    this.selectedPlayerFactionList.push(this.selectedPlayerFaction);
-    this.selectedPlayerScoresList.push({playerId: '', score: ''});
+
+      this.boardGameGeekService.listOfCollection$.subscribe(allCollection => {
+        this.allCol = allCollection.item;
+        this.allCol.filter(f => f.type === "boardgame").forEach(base => {
+          if (!this.expansionIdMap.has(base.id)) {
+            this.expansionIdMap.set(base.id, base.link.filter(f => f.type === 'boardgameexpansion').map(m => m.id));
+          } else {
+            this.expansionIdMap.get(base.id)?.push(...base.link.filter(f => f.type === 'boardgameexpansion').map(m => m.id))
+          }
+        });
+      });
+      this.getSpecificExpansionIdMap(this.bothCol);
+    this.selectedPlayerFactionList;
+    this.selectedPlayerScoresList;
     
     this.gameTypes$.subscribe(gameTypes => {
       this.gameTypes = gameTypes;
     });
     this.firebaseDataService.factionTypes$.subscribe(factionTypes => {
       this.factionTypes = factionTypes;
+    });
+  }
+  getExpansionIds = (both: BoardGame[]) => {
+    let idCol: string[] = [];
+        both.forEach(game => {
+          if (game && game.objectid) {
+            idCol.push(game.objectid);
+          }
+        })
+        this.boardGameGeekService.getlistOfGames(idCol);
+        this.boardGameGeekService.listOfCollection$.subscribe(allCollection => {
+          this.allCol = allCollection.item;
+          this.expansionIds = allCollection.item
+                              .filter(f => f.link.find(f=> f.type ==='boardgamecateogry' && f.id === 1042))
+                              .map(m => m.id);
+        });
+  }
+
+  getSpecificExpansionIdMap = (both: BoardGame[]) => {
+    let idCol: string[] = [];
+    both.forEach(game => {
+      if (game && game.objectid) {
+        idCol.push(game.objectid);
+      }
+    })
+    this.boardGameGeekService.getlistOfGames(idCol);
+    this.boardGameGeekService.listOfCollection$.subscribe(allCollection => {
+      this.allCol = allCollection.item;
+      this.allCol.filter(f => f.type === "boardgame").forEach(base => {
+        if (!this.expansionIdMap.has(base.id)) {
+          this.expansionIdMap.set(base.id, base.link.filter(f => f.type === 'boardgameexpansion').map(m => m.id));
+        } else {
+          this.expansionIdMap.get(base.id)?.push(...base.link.filter(f => f.type === 'boardgameexpansion').map(m => m.id))
+        }
+      });
     });
   }
 
@@ -204,26 +257,54 @@ export class AddPlayComponent implements OnInit {
   }
 
   additionalGameNote = (): void => {
-    this.gameNotesList.push("");
+    this.gameNotesList.push({note: ''});
   }
   
   showFactions = () => {
-    this.containsFactions = !this.containsFactions;
+    if (this.selectedGame !== undefined && this.selectedGame !== null) {
+      this.players.forEach(player => {
+        this.selectedPlayerFactionList.push({
+          gameId: "" + this.selectedGame?.objectid,
+          playerId: player.id,
+          factionId: '',
+          factionTypeId: ''
+        })
+      })
+      this.containsFactions = !this.containsFactions;
+    }
   }
 
   showScores = () => {
+    if (this.selectedGame !== undefined && this.selectedGame !== null) {
+    this.players.forEach(player => {
+      this.selectedPlayerScoresList.push({
+        playerId: player.id,
+        score: ''
+      })
+    })
     this.containsScores = !this.containsScores;
+  }
   }
 
   showCustomNames = () => {
+    if (this.selectedGame !== undefined && this.selectedGame !== null) {
+    this.players.forEach(player => {
+      this.selectedPlayerNameList.push({
+        playerId: player.id,
+        name: ''
+      })
+    })
     this.containsCustomNames = !this.containsCustomNames;
+  }
   }
 
   showGameNotes = () => {
+    if (this.selectedGame !== undefined && this.selectedGame !== null) {
     if (this.gameNotesList.length === 0) {
-      this.gameNotesList.push("");
+      this.gameNotesList.push({note: ''});
     }
     this.containsGameNotes = !this.containsGameNotes;
+  }
   }
 
   submit = async () => {
@@ -250,7 +331,7 @@ export class AddPlayComponent implements OnInit {
         gameType: typeId,
         location: locationId,
         pick: pickId,
-        gameNotes: (this.containsGameNotes ? this.gameNotesList : []),
+        gameNotes: (this.containsGameNotes ? this.gameNotesList.map(m => m.note) : []),
         scenario: (this.containsScenario ? this.createScenario(this.selectedScenario.id, this.selectedScenario.win) : {id: '', win: false}),
         winners: this.createWinners(this.selectedWinners),
         scores: (this.containsScores ? this.selectedPlayerScoresList : [])
@@ -370,6 +451,8 @@ export class AddPlayComponent implements OnInit {
   }
 
   showScenario = () => {
+    this.selectedScenarioGame = "" + this.selectedGame?.objectid;
+    this.getScenarios(this.selectedScenarioGame);
     this.containsScenario = !this.containsScenario;
   }
 
@@ -445,7 +528,7 @@ export class AddPlayComponent implements OnInit {
     if (play.gameNotes?.length > 0) {
       this.containsGameNotes = true;
     }
-    this.gameNotesList = play.gameNotes;
+    this.gameNotesList = play.gameNotes.map(m => ({note: m}));
 
     // SCORES
     if (play.scores?.length > 0) {
