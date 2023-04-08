@@ -373,6 +373,7 @@ export class AddPlayComponent implements OnInit {
       this.addFactionShow = false;
       this.addScenarioShow = false;
         console.info("Document successfully added!");
+      this.overwritesEnabled = false;
     }).catch((error) => {
         console.error("Error adding document: ", error);
     });
@@ -440,6 +441,13 @@ export class AddPlayComponent implements OnInit {
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     this.selectedDate = event.value;
+    this.selectedId = (this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf()).length > 0 ?
+                      Math.max(...this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf())
+                                            .map(m => Number(m.id.split('-')[3]))) +1 : 1);
+
+    this.selectedOrder = (this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf()).length > 0 ?
+                      Math.max(...this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf())
+                                            .map(m => Number(m.order))) + 1 : 1);
   }
 
   showAddFactions = () => {
@@ -470,6 +478,7 @@ export class AddPlayComponent implements OnInit {
   }
 
   setPlayData = (play: PlayDb): void => {
+    this.overwritesEnabled = false;
     // LOCATION
     this.locations.forEach(location => {
       if (location.id === play.location) {
