@@ -57,7 +57,7 @@ export class basePipe implements PipeTransform {
           if (args[0] === null) {
             return true;
           } else {
-              return (!args.includes(v.objectid));
+              return (!args[0].includes(v.objectid));
           }
         } else {
           return false;
