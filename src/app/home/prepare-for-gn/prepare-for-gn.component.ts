@@ -77,10 +77,12 @@ export class PrepareForGnComponent implements OnInit {
   }
 
   getVideoList = (idList: string[]): void => {
-    // if(idList.length > 0) {
-      this.videosForGame = this.videosFromDb.filter(ref => idList.includes(ref.gameId));
-      this.videosForGame.sort((a, b) => (a.order > b.order) ? 1 : -1)
-    // }
+    this.videosForGame = [];
+    if(idList.length > 0) {
+      idList.forEach(id => {
+        this.videosForGame.push(...this.videosFromDb.filter(ref => ref.gameId === id).sort((a, b) => (a.order > b.order) ? 1 : -1));
+      })
+    }
   }
 }
 
