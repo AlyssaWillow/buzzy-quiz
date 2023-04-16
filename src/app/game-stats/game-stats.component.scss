@@ -78,7 +78,8 @@
 
 .game-image-stats {
     height: 12rem;
-    width: fit-content;
+    width: 100%;
+    object-fit: contain;
 }
 
 .game-image-section {
