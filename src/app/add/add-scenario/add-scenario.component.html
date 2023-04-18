@@ -51,13 +51,16 @@
             <div class="scenario-name">
                 Scenario Name
             </div>
+            <div class="delete">
+                Edit
+            </div>
             <div *ngIf="deletesEnabled" class="delete">
                 Delete
             </div>
         </div>
         <hr>
         <div *ngFor="let scenario of seletedNewScenarioList; let i = index">
-            <div class="scenario-row selectable row{{i % 2}}" (click)="setFactonDate(scenario.order, scenario.id.split('-')[1], scenario.cycle, scenario.name)">
+            <div class="scenario-row row{{i % 2}}">
                 <div class="scenario-order">
                     {{scenario.order}}
                 </div>
@@ -75,6 +78,9 @@
                 </div>
                 <div class="scenario-name">
                     {{scenario.name}}
+                </div>
+                <div class="delete">
+                    <button (click)="setFactonDate(scenario.order, scenario.id.split('-')[1], scenario.cycle, scenario.name)">Edit</button>
                 </div>
                 <div *ngIf="deletesEnabled" class="delete">
                     <button (click)="deleteSelectedScenario(scenario)">Delete</button>

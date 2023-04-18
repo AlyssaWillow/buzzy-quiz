@@ -334,7 +334,8 @@ export class GameStatsComponent implements OnInit {
         ownedPromo: [],
         unownedPromo: [],
         ownedFan: [],
-        unownedFan: []
+        unownedFan: [],
+        unownedAcc: []
       },
       gameType: '',
       location: '',
@@ -838,7 +839,8 @@ export class GameStatsComponent implements OnInit {
       ownedPromo: [],
       unownedPromo: [],
       ownedFan: [],
-      unownedFan: []
+      unownedFan: [],
+      unownedAcc: []
     };
     let ownedIds:number[] = []
 
@@ -870,6 +872,9 @@ export class GameStatsComponent implements OnInit {
       !ref.inbound && 
       !ownedIds.includes(ref.id) &&
       ref.value.includes("fan expansion") );
+
+    expList.unownedAcc = game.base.link.filter(ref => ref.type === 'boardgameaccessory' && 
+      !ownedIds.includes(ref.id));
 
     return expList;
   }

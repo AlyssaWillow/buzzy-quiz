@@ -103,6 +103,7 @@ export interface ownedAndUnownedExpansions {
     unownedPromo: Link[];
     ownedFan: AllBoardGame[];
     unownedFan: Link[];
+    unownedAcc: Link[];
 }
 
 export interface GameDetails {
