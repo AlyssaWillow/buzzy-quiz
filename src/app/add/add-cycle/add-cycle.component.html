@@ -33,16 +33,16 @@
     
     <div *ngIf="selectedGame" class="show-cycles">
         <div class="cycle-row headers">
-            <div class="cycle-type-id">
-                Cycle Id
+            <div class="cycle-order">
+                Order
             </div>
-            <div class="game-cycle-id">
-                Combined Id
+            <div class="cycle-id">
+                Cycle Id
             </div>
             <div class="cycle-name">
                 Cycle Name
             </div>
-            <div class="game-cycle-id">
+            <div class="cycle-display">
                 Display
             </div>
             <div class="delete">
@@ -55,17 +55,16 @@
         <hr>
         <div *ngFor="let cycle of newCycleList; let i = index">
             <div class="cycle-row row{{i % 2}}">
-                
-                <div class="game-cycle-id">
-                    {{cycle.id.split('-')[1]}}
+                <div class="cycle-order">
+                    {{cycle.order}}
                 </div>
-                <div class="game-cycle-id">
+                <div class="cycle-id">
                     {{cycle.id}}
                 </div>
                 <div class="cycle-name">
                     {{cycle.name}}
                 </div>
-                <div class="game-cycle-id">
+                <div class="cycle-display">
                     {{cycle.display}}
                 </div>
                 <div class="delete">

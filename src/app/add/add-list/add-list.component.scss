@@ -30,11 +30,21 @@
     background-color: white;
     padding: .3rem 1rem;
 }
+.list-order {
+    width: 5%;
+}
+.list-row{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    padding: .3rem 1rem;
+}
+
 .cycle-id {
     padding: 0 2rem;
 }
 
-.row1 {
+.row0 {
     background-color: lightgray;
 }
 
@@ -110,12 +120,10 @@ hr {
 
 .select-game-dropdown {
     padding-right: 3rem;
-    min-width: 75%;
+    min-width: 40%;
 }
-
-.select-game-dropdown {
-    padding-right: 3rem;
-    min-width: 10%;
+.notes {
+    min-width: 40%;
 }
 
 .cycle-input {

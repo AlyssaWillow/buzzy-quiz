@@ -133,4 +133,11 @@ interface Result {
   numvotes: string;
 }
 
+export interface ListPlayerGame {
+  playerId: string;
+  rank: number;
+  game: BoardGame;
+  previousRank: number;
+}
+
 interface Inbound {text: string, objectid: string, inbound: string}
