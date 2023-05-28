@@ -44,6 +44,7 @@ import { PlayerStatsModule } from './player-stats/player-stats.module';
 import { BotService } from './services/bot.service';
 import { RandomGameGeneratorModule } from './tools/random-game-generator/random-game-generator.module';
 import { ToolsModule } from './tools/tools.module';
+import { ListsModule } from './lists/lists.module';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { ToolsModule } from './tools/tools.module';
     HotToastModule.forRoot(),
     BrowserAnimationsModule,
     MatNativeDateModule,
-    RandomGameGeneratorModule
+    RandomGameGeneratorModule,
+    ListsModule
   ],
   providers: [
     AuthenticationService,

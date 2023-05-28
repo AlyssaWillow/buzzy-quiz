@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CollectionFilterPipe } from '../collection-filter.pipe';
 import { ReplaceTextPipe } from '../replace-text.pipe';
 import { basePipe, expansionPipe, factionTypesPipe, selectedGamePipe, specificExpansionsPipe } from '../selected-game.pipe';
+import { ImageByPlayerFilterPipe } from '../getGameImageByPlayer-filter.pipe';
 
 
 
@@ -14,7 +15,8 @@ import { basePipe, expansionPipe, factionTypesPipe, selectedGamePipe, specificEx
     basePipe,
     expansionPipe,
     specificExpansionsPipe,
-    factionTypesPipe
+    factionTypesPipe,
+    ImageByPlayerFilterPipe
   ],
   imports: [
     CommonModule
@@ -26,7 +28,8 @@ import { basePipe, expansionPipe, factionTypesPipe, selectedGamePipe, specificEx
     expansionPipe,
     basePipe,
     specificExpansionsPipe,
-    factionTypesPipe
+    factionTypesPipe,
+    ImageByPlayerFilterPipe
   ]
 })
 export class SharedModuleModule { }

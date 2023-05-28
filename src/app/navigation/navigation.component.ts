@@ -49,6 +49,12 @@ export class NavigationComponent implements OnInit {
     }, 
     {
       external: false,
+      value: '/lists',
+      disp: 'Lists',
+      restricted: false
+    },
+    {
+      external: false,
       value: '/shirts',
       disp: 'Convention Shirt History',
       restricted: true

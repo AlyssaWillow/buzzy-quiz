@@ -1,0 +1,41 @@
+<div class=lists>
+    <div class="inputs">
+        <mat-form-field class="select-game-dropdown" appearance="fill">
+            <mat-label>Select Game</mat-label>
+            <mat-select [(ngModel)]="selectedList" name="getGames">
+                <mat-option *ngFor="let col of lists" 
+                [value]="col.listId">
+                    {{col.name (col.year)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="list-content">
+        <div class="headers">
+            <div class="upper-header">
+
+            </div>
+            <div class="lower-header">
+                <div class="rank">Rank</div>
+                <div class="player" *ngFor="let player of lists.header">
+                    {{player.playerName}}
+                </div>
+            </div>
+        </div>
+        <div class="lists">
+            <div class="game-row{{i % 2}}" *ngFor="let list of lists.content; let i = index">
+                <div class="rank">
+                    {{list.rank}}
+                </div>
+                <div class="player" *ngFor="let player of list.selections">
+                    <div class="game-image">
+                        <img class="game-image" src="{{list.selections | getGameImageByPlayer: player.playerId}}"/>
+                    </div>
+                    <div class="previous">
+                         <!-- {{list.selections | getPreviousByPlayer: player.playerId}} -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
