@@ -17,13 +17,15 @@ export class GsExpansionsComponent implements OnInit {
     ownedPromo: [],
     unownedPromo: [],
     ownedFan: [],
-    unownedFan: []
+    unownedFan: [],
+    unownedAcc: []
   };
 
   expandOwned: boolean = false;
   expandUnowned: boolean = false;
   expandOwnedPromos: boolean = false;
   expandUnownedPromos: boolean = false;
+  expandUnownedAcc: boolean = false;
   expandOwnedFan: boolean = false;
   expandUnownedFan: boolean = false;
   
@@ -46,6 +48,10 @@ export class GsExpansionsComponent implements OnInit {
 
   toggleUnownedPromo = () => {
     this.expandUnownedPromos = !this.expandUnownedPromos;
+  }
+
+  toggleUnownedAcc = () => {
+    this.expandUnownedAcc = !this.expandUnownedAcc;
   }
 
   toggleOwnedFan = () => {

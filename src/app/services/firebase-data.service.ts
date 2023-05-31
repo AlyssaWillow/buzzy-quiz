@@ -7,8 +7,9 @@ import { nameId, Override, Overrides } from '../models/generic';
 import { ListGuide } from '../models/list-guide';
 import { Locations } from '../models/locations';
 import { PlayDb } from '../models/play';
-import { CycleDb, ScenarioDb2 } from '../models/scenario';
+import { CycleDb, ScenarioDb2, listDb } from '../models/scenario';
 import { videoDb } from '../models/video';
+import { ListType } from '../models/collection';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,8 @@ export class FirebaseDataService {
   private scenarioCol: AngularFirestoreCollection<ScenarioDb2>;
   private cycleCol: AngularFirestoreCollection<CycleDb>;
   private videoCol: AngularFirestoreCollection<videoDb>;
+  private listCol: AngularFirestoreCollection<listDb>;
+  private listTypeCol: AngularFirestoreCollection<ListType>;
 
   public players$: Observable<Players[]>;
   public factionTypes$: Observable<factionTypeData[]>;
@@ -38,6 +41,8 @@ export class FirebaseDataService {
   public scenarios$: Observable<ScenarioDb2[]>;
   public cycles$: Observable<CycleDb[]>;
   public videos$: Observable<videoDb[]>;
+  public lists$: Observable<listDb[]>;
+  public listTypes$: Observable<ListType[]>;
   
   oRide: Overrides = {bases: [],expansions: []}
 
@@ -56,6 +61,8 @@ export class FirebaseDataService {
     this.scenarioCol = afs.collection('scenarios');
     this.cycleCol = afs.collection('cycles');
     this.videoCol = afs.collection('videos');
+    this.listCol = afs.collection('lists');
+    this.listTypeCol = afs.collection('listTypes');
 
     this.factionTypes$ = this.factionTypeCol.valueChanges();
     this.players$ = this.playerCol.valueChanges();
@@ -68,6 +75,8 @@ export class FirebaseDataService {
     this.scenarios$ = this.scenarioCol.valueChanges();
     this.cycles$ = this.cycleCol.valueChanges();
     this.videos$ = this.videoCol.valueChanges();
+    this.lists$ = this.listCol.valueChanges();
+    this.listTypes$ = this.listTypeCol.valueChanges();
   }
 
   fetchFactionTypeData = () => { 
@@ -116,6 +125,14 @@ export class FirebaseDataService {
   fetchVideoData = () => { 
     this.videoCol = this.afs.collection('videos');
     this.videos$ = this.videoCol.valueChanges();
+  }
+  fetchListData = () => { 
+    this.listCol = this.afs.collection('lists');
+    this.lists$ = this.listCol.valueChanges();
+  }
+  fetchListTypeData = () => { 
+    this.listTypeCol = this.afs.collection('listTypes');
+    this.listTypes$ = this.listTypeCol.valueChanges();
   }
 
   fetchExpansionOverrideData = () => { 

@@ -35,6 +35,7 @@ export class AppComponent implements OnInit {
     this.firebaseData.fetchScenarioData();
     this.firebaseData.fetchCycleData();
     this.firebaseData.fetchVideoData();
+    this.firebaseData.fetchListData();
     this.boardGameGeekService.getCollections();
     this.boardGameGeekService.hendricksonCollection$.subscribe(hen => {
       this.utils.aggregateCollections(hen, 'hendrickson');

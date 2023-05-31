@@ -8,6 +8,7 @@ import { AddScenarioModule } from '../add-scenario/add-scenario.module';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import { AddFactionTypeModule } from '../add-faction-type/add-faction-type.module';
 import { AddVideoModule } from '../add-video/add-video.module';
+import { AddListModule } from '../add-list/add-list.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { AddVideoModule } from '../add-video/add-video.module';
     AddVideoModule,
     AddScenarioModule,
     CdkAccordionModule,
-    AddFactionTypeModule
+    AddFactionTypeModule,
+    AddListModule
   ],
   exports: [
     AddAllComponent

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Players } from '../models/player-selection';
-import { BoardGame, GameCollection, Link, textId } from '../models/collection';
+import { BoardGame, GameCollection, Link, ListType, textId } from '../models/collection';
 import { cycle, nameId } from '../models/generic';
 import { Timestamp } from '../models/play';
 import { CycleDb, ScenarioDb2 } from '../models/scenario';
@@ -103,6 +103,15 @@ getFactionName = (id: string, factionList: nameId[]): string => {
   for(let faction of factionList) {
     if (faction?.id === id) {
       return faction.name;
+    }
+  }
+  return '';
+}
+
+getListTypeName = (id: string, listTypes: ListType[]): string => {
+  for(let listType of listTypes) {
+    if (listType?.id === id) {
+      return listType.name;
     }
   }
   return '';

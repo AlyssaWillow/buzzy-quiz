@@ -61,6 +61,7 @@ export class GameStatsComponent implements OnInit {
   displayDesigners: number[] = [];
   plays: PlayDb[] = [];
   display: string[] = [];
+  expansionIds: string[] = [];
 
   types: CollectionGroups[] = [
     {viewValue: 'Details', value: 'typ-06D'},
@@ -128,24 +129,24 @@ export class GameStatsComponent implements OnInit {
         }
       })
       this.boardGameGeekService.getlistOfGames(idCol)
-      let expansionIds: string[] = [];
+      this.expansionIds = [];
       this.boardGameGeekService.listOfCollection$.subscribe(allCollection => {
         this.allCol = allCollection.item;
         this.allCol?.forEach(game => {
           if (!this.collectionOverrides?.bases.includes(game.id)) {
             if (this.collectionOverrides?.expansions.includes(game.id)) {
-              expansionIds.push(game.id)
+              this.expansionIds.push(game.id)
             } else {
   
               if (game && game.link.filter(ref => ref.type === 'boardgamecategory').length > 0) {
                 game?.link.filter(ref =>  ref.type === 'boardgamecategory').forEach(category => {
                   if (category.id === 1042) {
-                    expansionIds.push(game.id)
+                    this.expansionIds.push(game.id)
                   } 
                 })
                 game?.link.filter(ref => ref.type === 'boardgameexpansion').forEach(category => {
                   if (!category.inbound) {
-                    expansionIds.push(""+category.id)
+                    this.expansionIds.push(""+category.id)
                   }
                 })
               }
@@ -159,7 +160,7 @@ export class GameStatsComponent implements OnInit {
           this.collectMechanics(game);
           this.collectArtists(game);
           this.collectDesigner(game);
-         if ((this.collectionOverrides.bases.includes(game.id) || !expansionIds.includes(game.id)) 
+         if ((this.collectionOverrides.bases.includes(game.id) || !this.expansionIds.includes(game.id)) 
          && !this.collectionOverrides.expansions.includes(game.id)) {
           baseGame = {
             baseId: game.id,
@@ -196,7 +197,7 @@ export class GameStatsComponent implements OnInit {
         })
   
         this.allCol?.forEach(game => {
-          if (expansionIds.includes(game.id)) {
+          if (this.expansionIds.includes(game.id)) {
            this.nonExpansion.forEach(base => {
             base.expansions.forEach(expansion => {
               if (("" + expansion.expansionId) === game.id) {
@@ -206,6 +207,7 @@ export class GameStatsComponent implements OnInit {
            })
           }
          });
+         this.playData = [];
         this.playData = this.collectGameData(this.nonExpansion, this.plays);
         this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId));
       })
@@ -334,7 +336,8 @@ export class GameStatsComponent implements OnInit {
         ownedPromo: [],
         unownedPromo: [],
         ownedFan: [],
-        unownedFan: []
+        unownedFan: [],
+        unownedAcc: []
       },
       gameType: '',
       location: '',
@@ -838,7 +841,8 @@ export class GameStatsComponent implements OnInit {
       ownedPromo: [],
       unownedPromo: [],
       ownedFan: [],
-      unownedFan: []
+      unownedFan: [],
+      unownedAcc: []
     };
     let ownedIds:number[] = []
 
@@ -870,6 +874,9 @@ export class GameStatsComponent implements OnInit {
       !ref.inbound && 
       !ownedIds.includes(ref.id) &&
       ref.value.includes("fan expansion") );
+
+    expList.unownedAcc = game.base.link.filter(ref => ref.type === 'boardgameaccessory' && 
+      !ownedIds.includes(ref.id));
 
     return expList;
   }

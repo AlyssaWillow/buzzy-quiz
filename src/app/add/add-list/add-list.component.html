@@ -1,0 +1,187 @@
+<div class="page">
+    <div class="add-play-header">
+        Add / Edit List
+    </div>
+    
+    <div class="select-game">
+        <div class="select-game-message">
+            Select a year to view/add/edit/delete lists
+        </div>
+        <div class="top-inputs">
+            <div class="enable-deletes" *ngIf="selectedDate">
+                <button (click)="enableDeletes()">
+                    <span *ngIf="!deletesEnabled">Enable Delete</span>
+                    <span *ngIf="deletesEnabled">Disable Delete</span>
+                </button>
+            </div>
+            <div class="enable-deletes">
+                <button (click)="addListType()">
+                    <span *ngIf="!addAListType">Add a List Type</span>
+                    <span *ngIf="addAListType">Hide Add List Type</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="listDeleted && deletesEnabled" class="deleted-cycle-text">
+        {{listDeletedName.name}} ({{listDeletedName.year}}) has been deleted
+    </div>
+
+    <div *ngIf="addAListType">
+        <div class="cycle-row">
+            <div class="cycle-input">
+                <mat-form-field class="input-full" appearance="fill">
+                    <mat-label>List askldfja</mat-label>
+                    <input matInput placeholder="Top 10" [(ngModel)]="typeName">
+                </mat-form-field>
+                <div class="submit">
+                    <button (click)="submitType()">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="selectedDate" class="show-cycles">
+            <div class="cycle-row headers">
+                <div class="cycle-id">
+                    Id
+                </div>
+                <div class="cycle-name">
+                    List Type Name
+                </div>
+                <div class="delete">
+                    Edit
+                </div>
+                <div class="delete">
+                    Delete
+                </div>
+            </div>
+            <hr>
+            <div *ngFor="let list of listTypes; let i = index">
+                <div class="cycle-row row{{i % 2}}">
+                    <div class="cycle-id">
+                        {{list.id}}
+                    </div>
+                    <div class="cycle-name">
+                        {{list.name}}
+                    </div>
+                    <div class="delete">
+                        <button (click)="editSelectedListType(list)">Edit</button>
+                    </div>
+                    <div *ngIf="deleteableType(list.id)" class="delete">
+                        <button (click)="deleteSelectedListType(list)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="selectedDate" class="show-cycles">
+        <div class="cycle-row headers">
+            <div class="cycle-order">
+                Year
+            </div>
+            <div class="cycle-id">
+                Id
+            </div>
+            <div class="cycle-name">
+                List Name
+            </div>
+            <div class="cycle-display">
+                Notes
+            </div>
+            <div class="delete">
+                Edit
+            </div>
+            <div *ngIf="deletesEnabled" class="delete">
+                Delete
+            </div>
+        </div>
+        <hr>
+        <div *ngFor="let list of lists; let i = index">
+            <div class="cycle-row row{{i % 2}}">
+                <div class="cycle-order">
+                    {{list.year}}
+                </div>
+                <div class="cycle-id">
+                    {{list.listId}}
+                </div>
+                <div class="cycle-name">
+                    {{utils.getListTypeName(list.name, listTypes)}}
+                </div>
+                <div class="delete">
+                    <button (click)="editSelectedList(list)">Edit</button>
+                </div>
+                <div *ngIf="deletesEnabled" class="delete">
+                    <button (click)="deleteSelectedList(list)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cycle-row">
+        <div class="cycle-input">
+            <mat-form-field class="select-game-dropdown" appearance="fill">
+                <mat-label>Select Year</mat-label>
+                <mat-select [(ngModel)]="selectedDate" name="getGames">
+                    <mat-option *ngFor="let col of yearList" 
+                    [value]="col">
+                        {{col}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="select-game-dropdown" appearance="fill">
+                <mat-label>Select ListType</mat-label>
+                <mat-select [(ngModel)]="selectedName" name="getGames">
+                    <mat-option *ngFor="let col of listTypes" 
+                    [value]="col.id">
+                        {{col.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="add-cycle">
+        <div class="select-factions">
+            <div class="add-cycle" *ngFor="let selectedList of selectedListList; let i = index">
+                <div class="list-row row{{selectedList.order % 2}}">
+                    <div class="list-order">
+                        {{selectedList.order}}
+                    </div>
+                    <div class="list-order">
+                        {{utils.getPlayerName(selectedList.playerId, players)}}
+                    </div>
+                        <mat-form-field class="select-game-dropdown" appearance="fill">
+                            <mat-label>Select Game</mat-label>
+                            <mat-select [(ngModel)]="selectedList.gameId" name="getGames">
+                                <mat-option *ngFor="let col of bothCol" 
+                                [value]="col?.objectid">
+                                    {{col?.name?.text}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    
+                        <mat-form-field class="notes" appearance="fill">
+                            <mat-label>Notes</mat-label>
+                            <input matInput placeholder="Ex: The Marcy Case" [(ngModel)]="selectedList.notes">
+                        </mat-form-field>
+                </div>
+                
+            </div>
+        </div>
+        <div>
+            <div class="cycle-row">
+                <div class="cycle-input">
+                <div *ngIf="selectedDate && selectedName" class="additional-factions-button">
+                    <button (click)="addlistsRow()">Add An Additional Row</button>
+                </div>
+                <div *ngIf="order > 1" class="remove-row">
+                    <button class="remove-button" (click)="removeListRow()">Remove Last Row</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="submit">
+        <button (click)="submit()" 
+            [attr.disabled]="selectedDate && selectedName ? null : ''">Submit</button>
+    </div>
+</div>

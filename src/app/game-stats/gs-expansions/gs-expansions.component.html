@@ -48,6 +48,17 @@
         </div>
     </div>
 
+    <div *ngIf="expansions?.unownedAcc?.length && expansions.unownedAcc.length > 0"  class="owned-expansion-section">
+        <div (click)="toggleUnownedAcc()" class="expansion-sub-title">
+            Accessories ({{ expansions.unownedAcc.length }})
+        </div> 
+        <div *ngIf="expandUnownedAcc" class="games-list">
+            <div *ngFor="let games of expansions.unownedAcc">
+                <a target="_blank" href="https://boardgamegeek.com/boardgame/{{games.id}}">{{games.value}}</a>
+            </div>
+        </div>
+    </div>
+
     <div *ngIf="expansions?.unownedFan?.length && expansions.unownedFan.length > 0"  class="owned-expansion-section">
         <div (click)="toggleUnownedFan()" class="expansion-sub-title">
             Fan Expansions ({{ expansions.unownedFan.length }})

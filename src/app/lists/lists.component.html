@@ -1,0 +1,43 @@
+<div class=list-section>
+    <div class="inputs">
+        <div class="label">Select a list </div>
+        <mat-form-field class="select-list-dropdown" appearance="fill">
+            <mat-label>Lists</mat-label>
+            <mat-select [(ngModel)]="selectedList" name="getGames" (selectionChange)="getList()">
+                <mat-option *ngFor="let col of lists" 
+                [value]="col.listId">
+                    {{col.name}} ({{col.year}})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div *ngIf="selectedList" class="list-content">
+        <div class="headers">
+            <div class="rank header">Rank</div>
+            <div class="player header" *ngFor="let player of displayList.header | orderBy: 'asc'">
+                {{utils.getPlayerName(player.playerId, players)}}
+            </div>
+        </div>
+        <hr/>
+        <div class="lists">
+            <div class="game-row row{{i % 2}}" *ngFor="let list of displayList.content; let i = index">
+                <div class="rank rank-number">
+                    {{list.rank}}
+                </div>
+                <div class="player" *ngFor="let player of list.selections; let last = last">
+                    <div class="game-image-section">
+                         <img class="game-image" src="{{utils.getGameImage(player.gameId, bothCol)}}"/>
+                    </div> 
+                    <div class="section-right">
+                        <div class="previous">
+                            <div class="dash" *ngIf="player.previous == 0">-</div>
+                            <div class="down-arrow" *ngIf="player.previous != 0 && player.previous < list.rank">^</div>
+                            <div class="up-arrow" *ngIf="player.previous != 0 && player.previous > list.rank">^</div>
+                        </div>
+                        <div *ngIf="!last" class="divider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 import { stringLength } from "@firebase/util";
+import { Timestamp } from "./play";
 
 export interface FactionCollection {
     typeId: string
@@ -68,6 +69,20 @@ export interface CycleDb {
     order: number;
     display: boolean;
     gameId: string;
+}
+
+export interface listDb {
+    listId: string;
+    year: number;
+    name: string;
+    lists: PlayerList[];
+}
+
+export interface PlayerList {
+    playerId: string;
+    gameId: string;
+    order: number;
+    notes: string;
 }
 
 export interface Cycle {
