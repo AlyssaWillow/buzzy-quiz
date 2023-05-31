@@ -1,38 +1,40 @@
-<div class=lists>
+<div class=list-section>
     <div class="inputs">
-        <mat-form-field class="select-game-dropdown" appearance="fill">
-            <mat-label>Select Game</mat-label>
-            <mat-select [(ngModel)]="selectedList" name="getGames">
+        <div class="label">Select a list </div>
+        <mat-form-field class="select-list-dropdown" appearance="fill">
+            <mat-label>Lists</mat-label>
+            <mat-select [(ngModel)]="selectedList" name="getGames" (selectionChange)="getList()">
                 <mat-option *ngFor="let col of lists" 
                 [value]="col.listId">
-                    {{col.name (col.year)}}
+                    {{col.name}} ({{col.year}})
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
-    <div class="list-content">
+    <div *ngIf="selectedList" class="list-content">
         <div class="headers">
-            <div class="upper-header">
-
-            </div>
-            <div class="lower-header">
-                <div class="rank">Rank</div>
-                <div class="player" *ngFor="let player of lists.header">
-                    {{player.playerName}}
-                </div>
+            <div class="rank header">Rank</div>
+            <div class="player header" *ngFor="let player of displayList.header | orderBy: 'asc'">
+                {{utils.getPlayerName(player.playerId, players)}}
             </div>
         </div>
+        <hr/>
         <div class="lists">
-            <div class="game-row{{i % 2}}" *ngFor="let list of lists.content; let i = index">
-                <div class="rank">
+            <div class="game-row row{{i % 2}}" *ngFor="let list of displayList.content; let i = index">
+                <div class="rank rank-number">
                     {{list.rank}}
                 </div>
-                <div class="player" *ngFor="let player of list.selections">
-                    <div class="game-image">
-                        <img class="game-image" src="{{list.selections | getGameImageByPlayer: player.playerId}}"/>
-                    </div>
-                    <div class="previous">
-                         <!-- {{list.selections | getPreviousByPlayer: player.playerId}} -->
+                <div class="player" *ngFor="let player of list.selections; let last = last">
+                    <div class="game-image-section">
+                         <img class="game-image" src="{{utils.getGameImage(player.gameId, bothCol)}}"/>
+                    </div> 
+                    <div class="section-right">
+                        <div class="previous">
+                            <div class="dash" *ngIf="player.previous == 0">-</div>
+                            <div class="down-arrow" *ngIf="player.previous != 0 && player.previous < list.rank">^</div>
+                            <div class="up-arrow" *ngIf="player.previous != 0 && player.previous > list.rank">^</div>
+                        </div>
+                        <div *ngIf="!last" class="divider"></div>
                     </div>
                 </div>
             </div>

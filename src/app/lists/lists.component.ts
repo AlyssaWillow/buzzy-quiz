@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { BoardGame } from '../models/collection';
+import { BoardGame, ListContent, Selections, displayHeader, displayLists } from '../models/collection';
 import { Players } from '../models/player-selection';
 import { listDb, PlayerList } from '../models/scenario';
 
@@ -19,6 +19,10 @@ export class ListsComponent implements OnInit {
   lists: listDb[] = [];
   selectedList: string = '';
   players: Players[] = [];
+  displayList: displayLists = {
+    header: [],
+    content: []
+  };
 
   constructor(public utils: UtilsService,
     private firebaseDataService: FirebaseDataService,
@@ -81,4 +85,63 @@ export class ListsComponent implements OnInit {
       });
   }
 
+  getList = () => {
+    let selected: listDb[] = this.lists.filter(f => f.listId == this.selectedList)
+    let playerIds: string[] = [];
+    let order: number = 0;
+    let ranks: number[] = [];
+    let selections: Selections[] = [];
+    let listContent: ListContent[] = [];
+    let displayHeaders: displayHeader[] = [];
+    if (selected.length == 1) {
+      console.log(selected[0])
+
+      selected[0].lists.forEach(list => {
+        if (!playerIds.includes(list.playerId)) {
+          playerIds.push(list.playerId)
+        }
+        playerIds?.sort((a, b) => (a > b) ? 1 : -1)
+      });
+      playerIds.forEach(player => {
+        displayHeaders.push({
+          order: order,
+          playerId: player
+        })
+        order++;
+      })
+      this.displayList.header = displayHeaders
+      selected[0].lists.forEach(list => {
+
+        //  ListContent {
+      //   rank: number;
+      //   selections: Selections[];
+      // }
+      
+      // Selections {
+      //   player: displayHeader;
+      //   gameId: string;
+      //notes
+      //   previous: number
+      // }
+
+        if (!ranks.includes(list.order)) {
+          listContent.push({
+            rank: list.order,
+            selections: []
+          })
+        }
+        ranks.push(list.order)
+        listContent.find(f => f.rank == list.order)?.selections.push({
+          player: displayHeaders.find(f=> { return f.playerId === list.playerId}),
+          gameId: list.gameId,
+          notes: list.notes,
+          previous: 0
+        })
+        listContent.find(f => f.rank == list.order)?.selections.sort((a, b) => (a > b) ? 1 : -1)
+        listContent?.sort((a, b) => (a.rank > b.rank) ? 1 : -1)
+        console.log(listContent)
+      });
+      this.displayList.content = listContent;
+    }
+  }
 }

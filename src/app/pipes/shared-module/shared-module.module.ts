@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CollectionFilterPipe } from '../collection-filter.pipe';
+import { CollectionFilterPipe, OrderByPipe } from '../collection-filter.pipe';
 import { ReplaceTextPipe } from '../replace-text.pipe';
 import { basePipe, expansionPipe, factionTypesPipe, selectedGamePipe, specificExpansionsPipe } from '../selected-game.pipe';
-import { ImageByPlayerFilterPipe } from '../getGameImageByPlayer-filter.pipe';
 
 
 
@@ -16,7 +15,7 @@ import { ImageByPlayerFilterPipe } from '../getGameImageByPlayer-filter.pipe';
     expansionPipe,
     specificExpansionsPipe,
     factionTypesPipe,
-    ImageByPlayerFilterPipe
+    OrderByPipe
   ],
   imports: [
     CommonModule
@@ -29,7 +28,7 @@ import { ImageByPlayerFilterPipe } from '../getGameImageByPlayer-filter.pipe';
     basePipe,
     specificExpansionsPipe,
     factionTypesPipe,
-    ImageByPlayerFilterPipe
+    OrderByPipe
   ]
 })
 export class SharedModuleModule { }

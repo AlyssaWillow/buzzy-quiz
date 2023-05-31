@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { now } from 'd3';
-import { BoardGame } from 'src/app/models/collection';
+import { BoardGame, ListType } from 'src/app/models/collection';
 import { Players } from 'src/app/models/player-selection';
 import { CycleDb, PlayerList, listDb } from 'src/app/models/scenario';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
@@ -24,10 +24,14 @@ export class AddListComponent implements OnInit {
   selectedDate: number = this.thisYear;
   lists: listDb[] = [];
   selectedName: string = '';
+  typeName: string = '';
+  typeId: string = '';
   order: number = 0;
+  listTypes: ListType[] =[];
   listDeleted: boolean = false;
   selectedListList: PlayerList[] = [];
   deletesEnabled: boolean = false;
+  addAListType: boolean = false;
   players: Players[] = [];
   listDeletedName: listDb = {
     listId: '',
@@ -47,10 +51,23 @@ export class AddListComponent implements OnInit {
     this.firebaseDataService.lists$.subscribe(listz => {
       this.lists = listz;
     });
+    this.firebaseDataService.listTypes$.subscribe(listTypez => {
+      this.listTypes = listTypez;
+    });
     this.firebaseDataService.players$.subscribe(playerz => {
       this.players = playerz;
     });
     this.yearList = this.addToDateList(this.yearList);
+  }
+
+  deleteableType = (id: string) => {
+    let deleteable: boolean = true;
+    this.lists.forEach(list => {
+      if (id === list.name) {
+        deleteable = false
+      }
+    })
+    return deleteable
   }
 
   addToDateList = (numberOfYears: number[]) => {
@@ -92,6 +109,11 @@ export class AddListComponent implements OnInit {
     this.selectedListList = list.lists
   }
 
+  editSelectedListType = (list: ListType) => {
+    this.typeId = list.id;
+    this.typeName = list.name;
+  }
+
   submit = async () => {
     if (this.selectedDate) {
       let concatId = this.selectedDate + '-' + this.selectedName
@@ -116,9 +138,37 @@ export class AddListComponent implements OnInit {
     }
   }
 
+  submitType = async () => {
+    if (this.typeName) {
+      let concatId = '';
+      if (this.typeId === '') {
+        concatId = this.typeName + '-' + Math.floor(Math.random() * 1000)
+      } else {
+        concatId = this.typeId
+      }
+      const newList2: ListType = {
+        id: concatId,
+        name: this.typeName
+      };
+
+      if (this.selectedDate) {
+        const newPickRef = this.afs.collection('listTypes');
+        await newPickRef.doc(concatId).set(newList2);
+
+        this.typeName = '';
+        this.typeId = ''
+      }
+
+    }
+  }
+
   enableDeletes = () => {
     this.deletesEnabled = !this.deletesEnabled;
     this.listDeleted = false;
+  }
+
+  addListType = () => {
+    this.addAListType = !this.addAListType;
   }
 
   deleteSelectedList = (list: listDb) => {
@@ -128,6 +178,17 @@ export class AddListComponent implements OnInit {
         this.listDeletedName = list;
         this.listDeleted = true;
         this.order = 1;
+        console.info("Document successfully deleted!");
+    }).catch((error) => {
+        console.error("Error removing document: ", error);
+    });
+    }
+  }
+
+  deleteSelectedListType = (list: ListType) => {
+    if (list) {
+      const pickRef = this.afs.collection('listTypes');
+      pickRef.doc(list.id).delete().then(() => {
         console.info("Document successfully deleted!");
     }).catch((error) => {
         console.error("Error removing document: ", error);

@@ -51,3 +51,19 @@ export class CollectionFilterPipe implements PipeTransform {
   }
 
 }
+
+@Pipe({
+  name: "orderBy",
+})
+export class OrderByPipe implements PipeTransform {
+  transform(value: any[], type: "asc" | "desc" = "asc"): any[] {
+    return value.sort((a, b) => {
+      if (type === "asc") {
+        return a.order - b.order;
+      } else if (type === "desc") {
+        return b.order - a.order;
+      }
+      return 0;
+    });
+  }
+}

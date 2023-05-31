@@ -140,4 +140,32 @@ export interface ListPlayerGame {
   previousRank: number;
 }
 
+export interface displayLists {
+  header: displayHeader[];
+  content: ListContent[];
+}
+
+
+export interface displayHeader {
+  order: number;
+  playerId: string;
+}
+
+export interface ListContent {
+  rank: number;
+  selections: Selections[];
+}
+
+export interface Selections {
+  player: displayHeader | undefined;
+  gameId: string;
+  notes: string;
+  previous: number
+}
+
+export interface ListType {
+  id: string;
+  name: string;
+}
+
 interface Inbound {text: string, objectid: string, inbound: string}
