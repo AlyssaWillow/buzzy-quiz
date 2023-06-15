@@ -16,7 +16,7 @@ interface Time {
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.scss']
 })
-export class CollectionComponent implements OnInit {
+export class CollectionComponent {
   display: string = 'ALL';
   players: number = 0;
   time: number = 0;
@@ -81,11 +81,6 @@ export class CollectionComponent implements OnInit {
     {value: 'LEM', viewValue: 'Leman'},
     {value: 'HEN', viewValue: 'Hendrickson'},
   ];
-  constructor() { 
-    }
-
-  ngOnInit(): void {
-  }
 
   playerSuffix = (i: number) => {
     if (i === 0) {

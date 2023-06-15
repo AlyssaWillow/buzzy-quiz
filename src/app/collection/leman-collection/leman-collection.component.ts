@@ -12,6 +12,7 @@ export class LemanCollectionComponent implements OnInit {
   @Input('player-count') players: number | undefined;
   @Input('time') time: number | undefined;
   collection$: Observable<GameCollection>;
+
   constructor(private boardGameGeekService: BoardGameGeekService) { 
     this.boardGameGeekService.getCollections();
     this.collection$ = this.boardGameGeekService.lemanCollection$;

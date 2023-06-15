@@ -103,6 +103,7 @@ export class AddPlayComponent implements OnInit {
   };
   
   deletesEnabled: boolean = false;
+  subscriptions: any;
   
 
   constructor(public utils: UtilsService,
@@ -114,7 +115,7 @@ export class AddPlayComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    combineLatest(
+    this.subscriptions = combineLatest(
       this.firebaseDataService.cycles$,
       this.firebaseDataService.players$,
       this.firebaseDataService.locations$,
@@ -167,6 +168,10 @@ export class AddPlayComponent implements OnInit {
                               .filter(f => f.link.find(f => ''+f.id === '1042'))
                               .map(m => m.id);
         });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   getSpecificExpansionIdMap = (both: BoardGame[]) => {

@@ -86,14 +86,11 @@
             <div class="cycle-name">
                 List Name
             </div>
-            <div class="cycle-display">
-                Notes
-            </div>
             <div class="delete">
                 Edit
             </div>
-            <div *ngIf="deletesEnabled" class="delete">
-                Delete
+            <div class="delete">
+                <span *ngIf="deletesEnabled">Delete</span>
             </div>
         </div>
         <hr>
@@ -111,8 +108,8 @@
                 <div class="delete">
                     <button (click)="editSelectedList(list)">Edit</button>
                 </div>
-                <div *ngIf="deletesEnabled" class="delete">
-                    <button (click)="deleteSelectedList(list)">Delete</button>
+                <div class="delete">
+                    <button *ngIf="deletesEnabled" (click)="deleteSelectedList(list)">Delete</button>
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@
             <mat-select [(ngModel)]="selectedList" name="getGames" (selectionChange)="getList()">
                 <mat-option *ngFor="let col of lists" 
                 [value]="col.listId">
-                    {{col.name}} ({{col.year}})
+                    {{utils.getListTypeName(col.name, listTypes)}} ({{col.year}})
                 </mat-option>
             </mat-select>
         </mat-form-field>

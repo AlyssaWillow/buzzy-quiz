@@ -8,7 +8,7 @@ import { ownedAndUnownedExpansions } from 'src/app/models/play';
   templateUrl: './gs-expansions.component.html',
   styleUrls: ['./gs-expansions.component.scss']
 })
-export class GsExpansionsComponent implements OnInit {
+export class GsExpansionsComponent {
 
   @Input() bothCol: BoardGame[] = [];
   @Input() expansions: ownedAndUnownedExpansions = {
@@ -28,11 +28,6 @@ export class GsExpansionsComponent implements OnInit {
   expandUnownedAcc: boolean = false;
   expandOwnedFan: boolean = false;
   expandUnownedFan: boolean = false;
-  
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   toggleOwned = () => {
     this.expandOwned = !this.expandOwned;

@@ -43,6 +43,9 @@ export class AddScenarioComponent implements OnInit {
   };
   scenarioList: ScenarioDb[] = [];
   scenarioDeleted: boolean = false;
+  
+  cycleSubscription: any;
+  scenariosSubscription: any;
   scenarioDeletedName: ScenarioDb = {
     order: 0,
     id: '',
@@ -64,13 +67,18 @@ export class AddScenarioComponent implements OnInit {
         this.router.navigate(['/home']);
       }
     })
-    this.firebaseDataService.scenarios$.subscribe(scenarioz => {
+    this.scenariosSubscription = this.firebaseDataService.scenarios$.subscribe(scenarioz => {
       this.newScenarios = scenarioz;
     });
 
-    this.firebaseDataService.cycles$.subscribe(cyclez => {
+    this.cycleSubscription = this.firebaseDataService.cycles$.subscribe(cyclez => {
       this.newCycles = cyclez;
     });
+  }
+
+  ngOnDestroy() {
+    this.cycleSubscription.unsubscribe();
+    this.scenariosSubscription.unsubscribe();
   }
 
   getScenarios = (gameId: string): void => {

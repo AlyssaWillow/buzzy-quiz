@@ -10,7 +10,7 @@ import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 })
 export class AddAllComponent implements OnInit {
 
-  
+  subscriptions: any;
   lemCollection$: Observable<GameCollection>;
   henCollection$: Observable<GameCollection>;
   henOverflow$: Observable<GameCollection>;
@@ -25,7 +25,7 @@ export class AddAllComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    combineLatest(
+    this.subscriptions = combineLatest(
       this.boardGameGeekService.lemanCollection$,
       this.boardGameGeekService.hendricksonCollection$,
       this.boardGameGeekService.hendricksonOverflow$
@@ -71,5 +71,9 @@ export class AddAllComponent implements OnInit {
         
         this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
       });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

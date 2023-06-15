@@ -27,9 +27,7 @@ export class GsFnGameFactionComponent implements OnInit {
   @Input('last') last: boolean = false;
 
   factionListForGame: factionDb[] = [];
-  constructor(public utils: UtilsService,
-    private firebaseDataService: FirebaseDataService,
-    private afs: AngularFirestore) { }
+  constructor(public utils: UtilsService) { }
 
   ngOnInit(): void {
     this.getFactionList(this.factionGame.gameId, this.factionTypeId.id)

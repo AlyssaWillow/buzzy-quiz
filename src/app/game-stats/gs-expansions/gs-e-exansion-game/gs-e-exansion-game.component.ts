@@ -7,7 +7,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './gs-e-exansion-game.component.html',
   styleUrls: ['./gs-e-exansion-game.component.scss']
 })
-export class GsEExansionGameComponent implements OnInit {
+export class GsEExansionGameComponent {
 
   @Input() game: AllBoardGame = {
     id: '',
@@ -28,8 +28,5 @@ export class GsEExansionGameComponent implements OnInit {
   };
   @Input() last: boolean = false;
   constructor(public utils: UtilsService) { }
-
-  ngOnInit(): void {
-  }
 
 }

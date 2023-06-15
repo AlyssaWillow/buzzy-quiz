@@ -44,6 +44,9 @@ export class AddFactionComponent implements OnInit {
   newFactions: factionDb2[] = [];
   seletedNewFactionList: factionDb2[] = [];
   factionDeleted: boolean = false;
+  
+  subscriptionFaction: any;
+  subscriptionFactionTypes: any;
   factionDeletedName: factionDb = {
     order: 0,
     id: '',
@@ -59,13 +62,18 @@ export class AddFactionComponent implements OnInit {
   ngOnInit(): void {
     // this.selectedPlayerFactionList.push(this.selectedPlayerFaction);
 
-    this.firebaseDataService.factions$.subscribe(factionz => {
+    this.subscriptionFaction = this.firebaseDataService.factions$.subscribe(factionz => {
       this.newFactions = factionz;
     });
 
-    this.firebaseDataService.factionTypes$.subscribe(factionTypes => {
+    this.subscriptionFactionTypes = this.firebaseDataService.factionTypes$.subscribe(factionTypes => {
       this.factionTypes = factionTypes;
     });
+  }
+
+  ngOnDestroy() {
+    this.subscriptionFaction.unsubscribe();
+    this.subscriptionFactionTypes.unsubscribe();
   }
 
   getFactions = (gameId: string, factionTypeId: string): void => {

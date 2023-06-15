@@ -21,6 +21,8 @@ export class GsFactionsSectionComponent implements OnInit {
 
   factionTypeData: factionTypeData[];
   players: Players[];
+  factionTypesSubscription: any;
+  playersSubscription: any;
 
   constructor(public utils: UtilsService,
     private firebaseDataService: FirebaseDataService) {
@@ -31,13 +33,18 @@ export class GsFactionsSectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.firebaseDataService.factionTypes$.subscribe(factionTypeData => {
+    this.factionTypesSubscription = this.firebaseDataService.factionTypes$.subscribe(factionTypeData => {
       this.factionTypeData = factionTypeData;
       this.factionTypeData.sort((a, b) => (a.order > b.order) ? 1 : -1)
     });
 
-    this.firebaseDataService.players$.subscribe(players => {
+    this.playersSubscription = this.firebaseDataService.players$.subscribe(players => {
       this.players = players;
     });
+  }
+
+  ngOnDestroy() {
+    this.factionTypesSubscription.unsubscribe();
+    this.playersSubscription.unsubscribe();
   }
 }

@@ -24,6 +24,7 @@ export class AddFactionTypeComponent implements OnInit {
   numbers: number[] = [...Array(100).keys()]
   factionTypeList: factionTypeData[] = [];
   deletesEnabled: boolean = false;
+  subscriptionFactionTypes: any;
   factionType: factionTypeData = {
     id: '',
     name: '',
@@ -46,10 +47,14 @@ export class AddFactionTypeComponent implements OnInit {
     this.getCycles();
   }
 
+  ngOnDestroy() {
+    this.subscriptionFactionTypes.unsubscribe();
+  }
+
   getCycles = (): void => {
       let factionTypes: AngularFirestoreCollection<factionTypeData> = this.afs.collection('faction-type-data');
       let factionTypes$ = factionTypes.valueChanges();
-      this.firebaseDataService.factionTypes$.subscribe(factionTypez => {
+      this.subscriptionFactionTypes = this.firebaseDataService.factionTypes$.subscribe(factionTypez => {
         this.factionTypeList = factionTypez;
       })
   }

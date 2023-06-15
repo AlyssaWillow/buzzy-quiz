@@ -13,13 +13,14 @@ export class HendricksonCollectionComponent implements OnInit {
     @Input('time') time: number | undefined;
     
     bothCol: BoardGame[] = [];
+    subscriptions: any;
 
     constructor(private boardGameGeekService: BoardGameGeekService) { 
     }
   
     ngOnInit(): void {
       this.boardGameGeekService.getCollections();
-      combineLatest(
+      this.subscriptions = combineLatest(
         this.boardGameGeekService.hendricksonCollection$,
         this.boardGameGeekService.hendricksonOverflow$
       ).subscribe(
@@ -42,5 +43,8 @@ export class HendricksonCollectionComponent implements OnInit {
         });
     }
   
+    ngOnDestroy() {
+      this.subscriptions.unsubscribe();
+    }
   }
   
