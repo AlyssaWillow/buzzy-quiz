@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { BoardGame, ListContent, Selections, displayHeader, displayLists } from '../models/collection';
+import { BoardGame, ListContent, ListType, Selections, displayHeader, displayLists } from '../models/collection';
 import { Players } from '../models/player-selection';
 import { listDb, PlayerList } from '../models/scenario';
 
@@ -16,9 +16,11 @@ import { combineLatest } from 'rxjs';
 })
 export class ListsComponent implements OnInit {
   bothCol: BoardGame[] = [];
+  listTypes: ListType[] = [];
   lists: listDb[] = [];
   selectedList: string = '';
   players: Players[] = [];
+  subscriptions: any;
   displayList: displayLists = {
     header: [],
     content: []
@@ -30,15 +32,17 @@ export class ListsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    combineLatest(
+    this.subscriptions = combineLatest(
       this.firebaseDataService.lists$,
+      this.firebaseDataService.listTypes$,
       this.firebaseDataService.players$,
       this.boardGameGeekService.lemanCollection$,
       this.boardGameGeekService.hendricksonCollection$,
       this.boardGameGeekService.hendricksonOverflow$
     ).subscribe(
-      ([listz, playerz, lem, hen, henOver]) => {
+      ([listz, listTypez,playerz, lem, hen, henOver]) => {
         this.players = playerz;
+        this.listTypes = listTypez;
         this.lists = listz;
         this.lists?.sort((a, b) => (a.year > b.year) ? 1 : -1)
         this.lists?.sort((a, b) => (a.name > b.name) ? 1 : -1)
@@ -83,6 +87,10 @@ export class ListsComponent implements OnInit {
         
         this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1);
       });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   getList = () => {

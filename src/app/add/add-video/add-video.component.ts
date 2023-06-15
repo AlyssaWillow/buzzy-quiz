@@ -31,6 +31,7 @@ export class AddVideoComponent implements OnInit {
   videoList: videoDb[] = [];
   newVideos: videoDb[] = [];
   seletedNewVideoList: videoDb[] = [];
+  subscriptions: any;
   videoDeleted: boolean = false;
   videoDeletedDescription: videoDb = {
     gameId: '',
@@ -47,9 +48,13 @@ export class AddVideoComponent implements OnInit {
   ngOnInit(): void {
     // this.selectedPlayerVideoList.push(this.selectedPlayerVideo);
 
-    this.firebaseDataService.videos$.subscribe(videoz => {
+    this.subscriptions = this.firebaseDataService.videos$.subscribe(videoz => {
       this.newVideos = videoz;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   getVideos = (gameId: string): void => {

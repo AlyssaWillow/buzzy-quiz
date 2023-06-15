@@ -47,6 +47,7 @@ export class GameStatsComponent implements OnInit {
   nonExpansion: BaseToGame[] = [];
   players: Players[] = [];
   listGuides: ListGuide[] = [];
+  subscriptions: any;
   newScenarios: ScenarioDb2[] = [];
   newCycles: CycleDb[] = [];
   selectedGames: string[] = [];
@@ -83,7 +84,7 @@ export class GameStatsComponent implements OnInit {
               public authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
-    combineLatest(
+    this.subscriptions = combineLatest(
       this.firebaseDataService.factionTypes$,
       this.firebaseDataService.players$,
       this.firebaseDataService.listGuides$,
@@ -211,6 +212,10 @@ export class GameStatsComponent implements OnInit {
         this.playData = this.collectGameData(this.nonExpansion, this.plays);
         this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId));
       })
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   getGameIdList = (plays: PlayDb[]) => {
@@ -880,4 +885,8 @@ export class GameStatsComponent implements OnInit {
 
     return expList;
   }
+}
+
+function ngOnDestroy() {
+  throw new Error('Function not implemented.');
 }

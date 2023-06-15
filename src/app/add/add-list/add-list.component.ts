@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { now } from 'd3';
+import { combineLatest } from 'rxjs';
 import { BoardGame, ListType } from 'src/app/models/collection';
 import { Players } from 'src/app/models/player-selection';
 import { CycleDb, PlayerList, listDb } from 'src/app/models/scenario';
@@ -32,6 +33,7 @@ export class AddListComponent implements OnInit {
   selectedListList: PlayerList[] = [];
   deletesEnabled: boolean = false;
   addAListType: boolean = false;
+  subscriptions: any;
   players: Players[] = [];
   listDeletedName: listDb = {
     listId: '',
@@ -48,16 +50,25 @@ export class AddListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.firebaseDataService.lists$.subscribe(listz => {
-      this.lists = listz;
-    });
-    this.firebaseDataService.listTypes$.subscribe(listTypez => {
-      this.listTypes = listTypez;
-    });
-    this.firebaseDataService.players$.subscribe(playerz => {
-      this.players = playerz;
-    });
+    this.subscriptions = combineLatest(
+      this.firebaseDataService.lists$,
+      this.firebaseDataService.listTypes$,
+      this.firebaseDataService.players$
+    ).subscribe(
+      ([
+        listz, 
+        listTypez, 
+        playerz
+      ]) => {
+        this.lists = listz;
+        this.listTypes = listTypez;
+        this.players = playerz;
+      })
     this.yearList = this.addToDateList(this.yearList);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   deleteableType = (id: string) => {
@@ -104,6 +115,7 @@ export class AddListComponent implements OnInit {
   }
 
   editSelectedList = (list: listDb) => {
+    this.order = list.lists.length / this.players.length;
     this.selectedDate = list.year;
     this.selectedName = list.name;
     this.selectedListList = list.lists

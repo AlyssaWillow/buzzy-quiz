@@ -31,6 +31,7 @@ export class AddCycleComponent implements OnInit {
   newCycleList: CycleDb[] = [];
   cycleOrder: number = 0;
   selectedGame: BoardGame | undefined = undefined;
+  subscriptions: any;
   cycle: CycleDb = {
     id: '',
     name: '',
@@ -54,9 +55,13 @@ export class AddCycleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.firebaseDataService.cycles$.subscribe(cyclez => {
+    this.subscriptions = this.firebaseDataService.cycles$.subscribe(cyclez => {
       this.newCycles = cyclez;
     });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   getCycles = (gameId: string): void => {
