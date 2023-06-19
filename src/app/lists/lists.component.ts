@@ -149,6 +149,9 @@ export class ListsComponent implements OnInit {
         listContent?.sort((a, b) => (a.rank > b.rank) ? 1 : -1)
         console.log(listContent)
       });
+      listContent.forEach(list => {
+        list.selections.sort((a, b) => ((a.player ? a.player.order : 0) >= (b.player ? b.player.order : 0)) ? 1 : -1)
+      })
       this.displayList.content = listContent;
     }
   }
