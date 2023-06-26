@@ -38,9 +38,10 @@ export class ListsComponent implements OnInit {
       this.firebaseDataService.players$,
       this.boardGameGeekService.lemanCollection$,
       this.boardGameGeekService.hendricksonCollection$,
-      this.boardGameGeekService.hendricksonOverflow$
+      this.boardGameGeekService.hendricksonOverflow$,
+      this.boardGameGeekService.unownedCollection$
     ).subscribe(
-      ([listz, listTypez,playerz, lem, hen, henOver]) => {
+      ([listz, listTypez,playerz, lem, hen, henOver, unown]) => {
         this.players = playerz;
         this.listTypes = listTypez;
         this.lists = listz;
@@ -59,6 +60,7 @@ export class ListsComponent implements OnInit {
             })
           }
         }); 
+        
         hen?.item.forEach((game: BoardGame) => {
           if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
             game.owner = 'own-hen';
@@ -84,6 +86,12 @@ export class ListsComponent implements OnInit {
             })
           }
         });
+
+        unown?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            this.bothCol?.push(game);
+          }
+        }); 
         
         this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1);
       });

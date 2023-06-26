@@ -25,11 +25,19 @@ export class BoardGameGeekService implements OnInit {
   leman: string = 'Bluexeclipse';
   hendrickson: string = 'sammysandwich';
   hendricksonOverflow: string = 'sammysandwich2';
+  unowned: string = 'tabletopsyndicate'
   suffix1: string = '?own=1';
   suffix2: string = '&stats=1&own=1';
 
 
   lemanCollection: GameCollection = {
+    totalitems: 0,
+    termsofuse: '',
+    pubdate: '',
+    item: []
+  };
+
+  unownedCollection: GameCollection = {
     totalitems: 0,
     termsofuse: '',
     pubdate: '',
@@ -65,6 +73,9 @@ export class BoardGameGeekService implements OnInit {
   private _hendricksonOverflow: BehaviorSubject<GameCollection> = new BehaviorSubject(this.hendricksonCollectionO);
   public readonly hendricksonOverflow$: Observable<GameCollection> = this._hendricksonOverflow.asObservable();
 
+  private _unowned: BehaviorSubject<GameCollection> = new BehaviorSubject(this.unownedCollection);
+  public readonly unownedCollection$: Observable<GameCollection> = this._unowned.asObservable();
+
   private _listOfCollection: BehaviorSubject<AllBoardGames> = new BehaviorSubject(this.listOfCollection);
   public readonly listOfCollection$: Observable<AllBoardGames> = this._listOfCollection.asObservable();
 
@@ -81,6 +92,7 @@ export class BoardGameGeekService implements OnInit {
     this._lemanCollection.next(this.getLemanGames());
     this._hendricksonCollection.next(this.getHendricksonGames());
     this._hendricksonOverflow.next(this.getHendricksonOverflowGames());
+    this._unowned.next(this.getUnownedGames());
   }
   
   getLemanGames(): any {
@@ -137,6 +149,25 @@ export class BoardGameGeekService implements OnInit {
       }
     }
     xhr.open("GET", this.baseUrl1 + this.hendricksonOverflow + this.suffix1, true);
+    xhr.send();
+  }
+
+  getUnownedGames(): any {
+    let xhr = new XMLHttpRequest();
+    
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            const parser = new XMLParser(options);
+            this._unowned.next(parser.parse(xhr.response).items);
+            return parser.parse(xhr.response);
+          } else {
+              console.error('error', xhr.response);
+              return undefined;
+          }
+      }
+    }
+    xhr.open("GET", this.baseUrl1 + this.unowned + this.suffix1, true);
     xhr.send();
   }
 

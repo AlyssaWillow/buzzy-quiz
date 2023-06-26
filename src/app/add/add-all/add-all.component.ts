@@ -28,9 +28,11 @@ export class AddAllComponent implements OnInit {
     this.subscriptions = combineLatest(
       this.boardGameGeekService.lemanCollection$,
       this.boardGameGeekService.hendricksonCollection$,
-      this.boardGameGeekService.hendricksonOverflow$
+      this.boardGameGeekService.hendricksonOverflow$,
+      this.boardGameGeekService.unownedCollection$,
+
     ).subscribe(
-      ([lem, hen, henOver]) => {
+      ([lem, hen, henOver, unown]) => {
         lem?.item.forEach((game: BoardGame) => {
           if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
             game.owner = 'own-lem';
@@ -68,6 +70,12 @@ export class AddAllComponent implements OnInit {
             })
           }
         })
+
+        unown?.item.forEach((game: BoardGame) => {
+          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
+            this.bothCol?.push(game);
+          }
+        }); 
         
         this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
       });
