@@ -103,6 +103,7 @@ export class ListsComponent implements OnInit {
 
   getList = () => {
     let selected: listDb[] = this.lists.filter(f => f.listId == this.selectedList)
+    let previousYear: listDb | undefined = this.getPreviousYearList(this.selectedList)
     let playerIds: string[] = [];
     let order: number = 0;
     let ranks: number[] = [];
@@ -110,7 +111,6 @@ export class ListsComponent implements OnInit {
     let listContent: ListContent[] = [];
     let displayHeaders: displayHeader[] = [];
     if (selected.length == 1) {
-      console.log(selected[0])
 
       selected[0].lists.forEach(list => {
         if (!playerIds.includes(list.playerId)) {
@@ -151,16 +151,40 @@ export class ListsComponent implements OnInit {
           player: displayHeaders.find(f=> { return f.playerId === list.playerId}),
           gameId: list.gameId,
           notes: list.notes,
-          previous: 0
+          previous: this.getPreviousRank(list.gameId, list.playerId, previousYear)
         })
         listContent.find(f => f.rank == list.order)?.selections.sort((a, b) => (a > b) ? 1 : -1)
         listContent?.sort((a, b) => (a.rank > b.rank) ? 1 : -1)
-        console.log(listContent)
       });
       listContent.forEach(list => {
         list.selections.sort((a, b) => ((a.player ? a.player.order : 0) >= (b.player ? b.player.order : 0)) ? 1 : -1)
       })
+      console.log(listContent)
       this.displayList.content = listContent;
     }
+  }
+
+  getPreviousYearList = (previous: string): listDb | undefined => {
+    let previousArray: string[] = previous.split('-');
+    let previousYearId = (parseInt(previousArray[0]) - 1) + '-' + previousArray[1] + '-' + previousArray[2]
+
+    let previousYearList: listDb | undefined = this.lists.find(f => f.listId == previousYearId)
+
+    return previousYearList;
+  }
+
+  getPreviousRank = (gameId: string, playerId: string, previousYear: listDb | undefined): number => {
+    console.log(gameId, playerId, previousYear)
+    let previousRank: number = -1;
+    if (previousYear) {
+      let playersGames = previousYear.lists.filter(f => f.playerId === playerId)
+      console.log(playersGames)
+      let playersGame = playersGames.find(f => f.gameId === gameId)
+      console.log(playersGame)
+      if (playersGame) {
+        return playersGame?.order
+      }
+    }
+    return previousRank;
   }
 }

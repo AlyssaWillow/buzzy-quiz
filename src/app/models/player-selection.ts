@@ -13,6 +13,8 @@ export interface Players {
     firstName: string;
     lastName: string;
     id: string;
+    acctId: string;
+    color: string;
 }
 
 export interface DisplayPlayerSelection {

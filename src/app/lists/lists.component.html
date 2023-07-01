@@ -30,9 +30,9 @@
                     </div> 
                     <div class="section-right">
                         <div class="previous">
-                            <div class="dash" *ngIf="player.previous == 0">-</div>
-                            <div class="down-arrow" *ngIf="player.previous != 0 && player.previous < list.rank">^</div>
-                            <div class="up-arrow" *ngIf="player.previous != 0 && player.previous > list.rank">^</div>
+                            <div class="dash" *ngIf="player.gameId !== '' && player.previous === list.rank">-</div>
+                            <div class="down-arrow" *ngIf="player.gameId !== '' && (player.previous !== 0 && player.previous !== -1 && player.previous < list.rank)">^</div>
+                            <div class="up-arrow" *ngIf="player.previous === -1 || player.previous > list.rank">^</div>
                         </div>
                         <div *ngIf="!last" class="divider"></div>
                     </div>

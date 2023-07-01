@@ -1,0 +1,26 @@
+.player-profile {
+    display: flex;
+    flex-direction: column;
+    width: 100%
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: row;
+    width: 100%
+}
+
+.profile-left {
+    width: 50%;
+    height: 10rem;
+}
+
+.profile-right {
+    width: 50%;
+    height: 10rem;
+}
+
+.meeple {
+    height: 7rem;
+    width: 7rem;
+}

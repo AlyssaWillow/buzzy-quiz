@@ -14,6 +14,7 @@ import { PickHistoryComponent } from './pick-history/pick-history.component';
 import { PlayerStatsComponent } from './player-stats/player-stats.component';
 import { ToolsComponent } from './tools/tools.component';
 import { ListsComponent } from './lists/lists.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { 
@@ -54,6 +55,14 @@ const routes: Routes = [
     component: ListsComponent,
     data: {
       title: 'Lists'
+    }
+  },
+  {
+    path: 'profile/:id', 
+    pathMatch: 'full',  
+    component: ProfileComponent,
+    data: {
+      title: 'Profile'
     }
   },
   { 

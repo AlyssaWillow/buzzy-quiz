@@ -7,7 +7,7 @@
       </div>
       <div class="top-right">
         <div class="login">
-          <h3 class="player-name" *ngIf="authenticationService.userData | async">{{ (authenticationService.userData | async)?.email }}</h3>
+          <h3 class="player-name" *ngIf="authenticationService.userData | async"><a [routerLink]="['/profile', (authenticationService.userData | async)?.uid]">{{ (authenticationService.userData | async)?.email }}</a></h3>
           <button class="button" (click)="authenticationService.SignOut()" *ngIf="authenticationService.userData | async">Logout</button>
           <button class="button" (click)="login()" *ngIf="!(authenticationService.userData | async)">Login</button>
         </div>
