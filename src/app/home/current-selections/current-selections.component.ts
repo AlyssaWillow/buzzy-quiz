@@ -54,6 +54,7 @@ export class CurrentSelectionsComponent implements OnInit {
       this.boardGameGeekService.hendricksonOverflow$
     ).subscribe(
       ([lem, hen, henOver]) => {
+        console.log(this.afs.collection('tabletop-syndicate').doc('selection-data'))
         lem?.item.forEach((game: BoardGame) => {
           if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
             game.owner = 'own-lem';

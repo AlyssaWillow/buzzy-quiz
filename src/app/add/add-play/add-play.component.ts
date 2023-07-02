@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/compat/firestore';
 import { MatFormField } from '@angular/material/form-field';
 import { combineLatest, Observable } from 'rxjs';
 import { Players } from 'src/app/models/player-selection';
@@ -9,9 +9,12 @@ import { CustomName, GamePlayerFaction, PlayDb, PlayerFaction, PlayFaction, Scor
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { CycleDb, ScenarioDb, ScenarioDb2, ScenarioPlayDb } from 'src/app/models/scenario';
 import { UtilsService } from 'src/app/services/utils.service';
+import { UserUtilsService } from 'src/app/services/userUtils.service';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { factionDb2 } from 'src/app/models/faction';
 import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { GameGroups } from 'src/app/models/gameGroups';
 
 @Component({
   selector: 'app-add-play',
@@ -79,9 +82,18 @@ export class AddPlayComponent implements OnInit {
   addScenarioShow: boolean = false;
   overwritesEnabled: boolean = false;
 
+  selectedGameGroup: string = '';
   private gameTypeCol: AngularFirestoreCollection<nameId>;
 
   playDeleted: boolean = false;
+  user: Players = {
+    firstName: '',
+    lastName: '',
+    id: '',
+    acctId: '',
+    color: ''
+  };
+  gameGroups: GameGroups[] = []
   playDeletedName: PlayDb = {
     date: {
       seconds: '',
@@ -89,6 +101,7 @@ export class AddPlayComponent implements OnInit {
     },
     id: '',
     order: 0,
+    groupId: '',
     expansionsUsed: [],
     factions: [],
     customNames: [],
@@ -107,6 +120,8 @@ export class AddPlayComponent implements OnInit {
   
 
   constructor(public utils: UtilsService,
+    public userUtils: UserUtilsService,
+    public authenticationService: AuthenticationService,
     private firebaseDataService: FirebaseDataService,
     private boardGameGeekService: BoardGameGeekService,
     private afs: AngularFirestore) { 
@@ -121,9 +136,29 @@ export class AddPlayComponent implements OnInit {
       this.firebaseDataService.locations$,
       this.firebaseDataService.plays$,
       this.firebaseDataService.scenarios$,
-      this.firebaseDataService.factions$
+      this.firebaseDataService.factions$,
+      this.authenticationService.userData
     ).subscribe(
-      ([cyclez, playerz, locationz, playz, scenarioz, factionz]) => {
+      ([cyclez, playerz, locationz, playz, scenarioz, factionz, userData]) => {
+        if (userData) {
+          this.afs.collection('tabletop-syndicate').doc('player-data')
+          .collection<Players>('player-names', ref => ref.where('acctId', '==', userData.uid))
+          .valueChanges().subscribe(playerz=>{
+            this.user = playerz[0];
+            this.afs.collection<GameGroups>('game-groups', ref => ref.where('members', 'array-contains', this.user['id']))
+              .valueChanges().subscribe(groupz=>{
+            this.gameGroups = groupz;
+            
+            console.log('0',this.firebaseDataService.fetchPlayHistoryDataForGroup(groupz[0].id))
+            console.log('1',this.firebaseDataService.fetchPlayHistoryDataForGroup(groupz[1].id))
+            this.gameGroups.push({
+              id: this.user.id,
+              name: 'Solo',
+              members: [this.user.id]
+            })
+          })
+          })
+        }
       this.cycles = cyclez;
       this.players = playerz;
       this.locations = locationz;
@@ -329,6 +364,7 @@ export class AddPlayComponent implements OnInit {
         date: tmeStmp,
         order: this.selectedOrder,
         id: id,
+        groupId: this.selectedGameGroup,
         expansionsUsed: this.createExpansions(this.selectedExpansions),
         factions: (this.containsFactions ? this.createFactions(this.selectedPlayerFactionList) : []),
         gameId: gameId,
@@ -379,6 +415,8 @@ export class AddPlayComponent implements OnInit {
       this.addScenarioShow = false;
         console.info("Document successfully added!");
       this.overwritesEnabled = false;
+    }).then((doc: DocumentReference) => {
+      console.log(doc.id)
     }).catch((error) => {
         console.error("Error adding document: ", error);
     });
@@ -496,6 +534,9 @@ export class AddPlayComponent implements OnInit {
 
     // ORDER
     this.selectedOrder = play.order;
+
+    // GameGroup
+    this.selectedGameGroup = play.groupId
 
     // GAME
     this.bothCol.forEach(game => {

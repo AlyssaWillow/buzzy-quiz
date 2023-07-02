@@ -1,45 +1,57 @@
-<div id="player-profile">
-    <div id="profile-header">
-        <div id="profile-left">
+<div class="player-profile" *ngIf="player">
+    <div class="profile-header">
+        <div class="profile-left">
             <div *ngIf="player['color'] === 'RD'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-red.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-red.svg"/>
             </div>
             <div *ngIf="player['color']=== 'OG'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-orange.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-orange.svg"/>
             </div>
             <div *ngIf="player['color']=== 'YW'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-yellow.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-yellow.svg"/>
             </div>
             <div *ngIf="player['color']=== 'GR'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-green.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-green.svg"/>
             </div>
             <div *ngIf="player['color']=== 'BL'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-blue.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-blue.svg"/>
             </div>
             <div *ngIf="player['color']=== 'VI'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-purple.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-purple.svg"/>
             </div>
             <div *ngIf="player['color']=== 'PI'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-pink.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-pink.svg"/>
             </div>
             <div *ngIf="player['color']=== 'CY'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-cyan.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-cyan.svg"/>
             </div>
             <div *ngIf="player['color']=== 'RB'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-rainbow.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-rainbow.svg"/>
             </div>
             <div *ngIf="player['color']=== 'GY'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-gray.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-gray.svg"/>
             </div>
             <div *ngIf="player['color']=== 'BK'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-black.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-black.svg"/>
             </div>
             <div *ngIf="player['color']=== 'BR'" class="player-color-container">
-                <img class="player-color" src="../../assets/images/meeple-brown.svg"/>
+                <img class="meeple" src="../../assets/images/meeple-brown.svg"/>
             </div>
         </div>
-        <div id="profile-right">
-            {{player['firstName']}} {{player['lastName']}}
+        <div class="profile-right">
+            <div class="player-name">
+                {{player['firstName']}} {{player['lastName']}}
+            </div>
+        </div>
+    </div>
+    <div class="profile-body">
+        <div class="profile-body-left">
+            Associated Game Groups
+        </div>
+        <div class="profile-body-right">
+            <div *ngFor="let group of gameGroups" class="game-group-names">
+                {{group['name']}}
+            </div>
         </div>
     </div>
 </div>

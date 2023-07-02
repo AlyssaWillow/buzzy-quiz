@@ -46,6 +46,7 @@ import { RandomGameGeneratorModule } from './tools/random-game-generator/random-
 import { ToolsModule } from './tools/tools.module';
 import { ListsModule } from './lists/lists.module';
 import { ProfileModule } from './profile/profile.module';
+import { UserUtilsService } from './services/userUtils.service';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { ProfileModule } from './profile/profile.module';
     BoardGameGeekService,
     BotService,
     UtilsService,
+    UserUtilsService,
     AngularFireAuthModule
   ],
   bootstrap: [AppComponent]
