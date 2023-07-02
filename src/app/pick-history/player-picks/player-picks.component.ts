@@ -12,6 +12,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class PlayerPicksComponent implements OnInit {
 
   @Input('playerId') playerId: string = '';
+  @Input('playerColor') playerColor: string = '';
 
   playData: PlayDb[] = [];
   gameNames = new Map();

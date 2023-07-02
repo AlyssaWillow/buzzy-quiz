@@ -11,22 +11,41 @@
 }
 
 .pattern {
-    background-image: repeating-linear-gradient(11deg, rgba(0,0,0, 0.25), rgb(0, 0, 0) 1px, transparent 0px, transparent 4px);
+    background-image: repeating-linear-gradient(11deg, rgba(136, 135, 135, 0.25), rgb(145, 143, 143) 1px, transparent 0px, transparent 4px);
     background-size: 8px;
 }
 
-.p011 {
-    background-color: rgb(206, 26, 26);
-}
-.p012 {
-    background-color: rgb(13, 175, 27);
-}
-.p013 {
-    background-color: rgb(29, 26, 206);
-}
-.p014 {
-    background-color: rgb(95, 46, 185);
-}
-.rainbow {
-    
-}
+.RD {
+    background-color: #ff0000;
+  }
+  .BR {
+    background-color: #663300;
+  }
+  .BL {
+    background-color: #0000ff;
+  }
+  .CY {
+    background-color: #00ccff;
+  }
+  .GY {
+    background-color: #737373
+  }
+  .OG {
+    background-color: #ff6600
+  }
+  .GR {
+    background-color: #33cc33
+  }
+  .PI {
+    background-color: #ff3399
+  }
+  
+  .VI {
+    background-color: #6600cc
+  }
+  .YW {
+    background-color: #ffff00
+  }
+  .BK {
+    background-color: #000000
+  }

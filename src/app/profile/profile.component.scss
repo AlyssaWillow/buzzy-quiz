@@ -1,0 +1,65 @@
+.player-profile {
+    display: flex;
+    flex-direction: column;
+    width: 100%
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: row;
+    width: 100%
+}
+
+.profile-body {
+    display: flex;
+    flex-direction: row;
+    width: 100%
+}
+
+.profile-left {
+    width: 50%;
+    height: 10rem;
+    display: flex;
+    justify-content: right;
+    flex-direction: row;
+}
+
+.profile-right {
+    width: 50%;
+    height: 10rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.profile-body-left {
+    width: 50%;
+    height: 10rem;
+    display: flex;
+    justify-content: right;
+    flex-direction: row;
+    padding: 2rem 2rem 2rem 2rem;
+}
+
+.profile-body-right {
+    width: 50%;
+    height: 10rem;
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    padding: 2rem 2rem 2rem 2rem;
+}
+
+.meeple {
+    height: 10rem;
+    width: 10rem;
+}
+
+.player-name {
+    font-size: 3rem;
+}
+
+.game-group-names {
+    font-size: 1.5rem;
+    padding: .5rem 0;
+}

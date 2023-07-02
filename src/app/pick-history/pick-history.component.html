@@ -3,8 +3,8 @@
         <div class="all-picks-header header pattern rainbow">All Pick History</div>
     </div> -->
     <div *ngFor="let player of players"class="plays">
-        <div class="plays-header header pattern {{player.id}}">{{ utils.getPlayerName(player.id, players) }}'s Picks</div>
-        <tts-player-picks [playerId]="player.id"></tts-player-picks>
+        <div class="plays-header header pattern {{player.color}}">{{ utils.getPlayerName(player.id, players) }}'s Picks</div>
+        <tts-player-picks [playerId]="player.id" [playerColor]="player.color"></tts-player-picks>
     </div>
     <div class="all-picks">
         <div class="all-picks-header header pattern">Pick by Game</div>

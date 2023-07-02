@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument, DocumentChangeAction } from '@angular/fire/compat/firestore';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Players, Selection2 } from '../models/player-selection';
 import { factionDb2, factionTypeData } from '../models/faction';
 import { nameId, Override, Overrides } from '../models/generic';
@@ -36,6 +36,7 @@ export class FirebaseDataService {
   public selection$: Observable<Selection2[]>;
   public listGuides$: Observable<ListGuide[]>;
   public plays$: Observable<PlayDb[]>;
+  public plays2$: Observable<DocumentChangeAction<PlayDb>[]> | undefined
   public override$: Observable<Override[]>;
   public factions$: Observable<factionDb2[]>;
   public scenarios$: Observable<ScenarioDb2[]>;
@@ -104,9 +105,27 @@ export class FirebaseDataService {
     this.listGuides$ = this.listGuides.valueChanges();
   }
 
+
+  fetchPlayHistoryDataForGroup = (groupId: string) => { 
+    this.playsCol = this.afs.collection<PlayDb>('play-history');
+    this.plays2$  = this.playsCol.snapshotChanges();
+
+    this.plays2$.pipe(
+      map(changes => {
+        return changes.map(action => {
+          console.log('changes', action)
+          const data = action.payload.doc.data() as PlayDb;
+          const _id = action.payload.doc.id;
+          return { _id, ...data };
+         });
+      }))
+
+  }
+
   fetchPlayHistoryData = () => { 
     this.playsCol = this.afs.collection('play-history');
     this.plays$ = this.playsCol.valueChanges();
+
   }
 
   fetchFactionData = () => { 

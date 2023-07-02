@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { HeaderComponent } from './header.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -16,7 +17,8 @@ import { BrowserModule } from '@angular/platform-browser';
   imports: [
     CommonModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    RouterModule 
   ],
   exports: [
     HeaderComponent

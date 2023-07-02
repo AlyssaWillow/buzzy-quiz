@@ -13,6 +13,19 @@
                 </mat-form-field>
             </div>
         </div>
+
+        
+        <div class="select-game-dropdown">
+            <mat-form-field appearance="fill">
+                <mat-label>Select Game Group</mat-label>
+                <mat-select [(ngModel)]="selectedGameGroup" name="getFactionTypes">
+                    <mat-option *ngFor="let group of gameGroups" [value]="group.id">
+                        {{group.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    
     
         <div class="enable-deletes" *ngIf="selectedDate">
             <button (click)="enableDeletes()">

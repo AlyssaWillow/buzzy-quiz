@@ -6,6 +6,7 @@ import { ScenarioDb, ScenarioGame, ScenarioPlayDb } from "./scenario";
 
 export interface Play {
     date: Timestamp;
+    groupId: string;
     expansionsUsed: string[];
     factions: PlayFaction[];
     gameId: string;
@@ -17,8 +18,14 @@ export interface Play {
     scores: ScoreDb[];
 }
 
+export interface PlayDbId {
+    id: string;
+    play: PlayDb;
+}
+
 export interface PlayDb {
     id: string;
+    groupId: string;
     order: number,
     date: Timestamp;
     expansionsUsed: string[];

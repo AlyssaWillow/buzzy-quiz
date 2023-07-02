@@ -45,6 +45,8 @@ import { BotService } from './services/bot.service';
 import { RandomGameGeneratorModule } from './tools/random-game-generator/random-game-generator.module';
 import { ToolsModule } from './tools/tools.module';
 import { ListsModule } from './lists/lists.module';
+import { ProfileModule } from './profile/profile.module';
+import { UserUtilsService } from './services/userUtils.service';
 
 @NgModule({
   declarations: [
@@ -89,13 +91,15 @@ import { ListsModule } from './lists/lists.module';
     BrowserAnimationsModule,
     MatNativeDateModule,
     RandomGameGeneratorModule,
-    ListsModule
+    ListsModule,
+    ProfileModule
   ],
   providers: [
     AuthenticationService,
     BoardGameGeekService,
     BotService,
     UtilsService,
+    UserUtilsService,
     AngularFireAuthModule
   ],
   bootstrap: [AppComponent]

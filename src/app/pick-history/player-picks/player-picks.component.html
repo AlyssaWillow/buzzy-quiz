@@ -11,7 +11,7 @@
         </div>
     </div>
     <hr class="border">
-    <div *ngFor="let game of playData; let i = index" class="games-played {{playerId}}row{{i%2}}">
+    <div *ngFor="let game of playData; let i = index" class="games-played {{playerColor}}row{{i%2}}">
         <div class="date">
             {{utils.getDate(game.date)}}
         </div>
