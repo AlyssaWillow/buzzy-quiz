@@ -30,7 +30,7 @@ export class AddPlayComponent implements OnInit {
 
   numbers: number[] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
   gamePlayedOrder: number = 0;
-  selectedId: number = 0
+  selectedId: string = '';
   players: Players[] = [];
   locations: nameId[] = [];
   gameTypes: nameId[] = [];
@@ -148,9 +148,6 @@ export class AddPlayComponent implements OnInit {
             this.afs.collection<GameGroups>('game-groups', ref => ref.where('members', 'array-contains', this.user['id']))
               .valueChanges().subscribe(groupz=>{
             this.gameGroups = groupz;
-            
-            console.log('0',this.firebaseDataService.fetchPlayHistoryDataForGroup(groupz[0].id))
-            console.log('1',this.firebaseDataService.fetchPlayHistoryDataForGroup(groupz[1].id))
             this.gameGroups.push({
               id: this.user.id,
               name: 'Solo',
@@ -357,71 +354,145 @@ export class AddPlayComponent implements OnInit {
       nanoseconds: seconds.toString(),
       seconds: (seconds / 1000).toString(),
     }
-    let id: string = this.utils.getDateHyphenYYYYMMDD(this.selectedDate ) + '-'
-        + this.selectedId
+    // let id: string = this.utils.getDateHyphenYYYYMMDD(this.selectedDate ) + '-'
+    //     + this.selectedId
     if (gameId !== '' && typeId !== '' && locationId !== '' && pickId !== '' && seconds > 0) {
-      const docData: PlayDb = {
-        date: tmeStmp,
-        order: this.selectedOrder,
-        id: id,
-        groupId: this.selectedGameGroup,
-        expansionsUsed: this.createExpansions(this.selectedExpansions),
-        factions: (this.containsFactions ? this.createFactions(this.selectedPlayerFactionList) : []),
-        gameId: gameId,
-        customNames: (this.containsCustomNames ? this.selectedPlayerNameList : []),
-        gameType: typeId,
-        location: locationId,
-        pick: pickId,
-        gameNotes: (this.containsGameNotes ? this.gameNotesList.map(m => m.note) : []),
-        scenario: (this.containsScenario ? this.createScenario(this.selectedScenario.id, this.selectedScenario.win) : {id: '', win: false}),
-        winners: this.createWinners(this.selectedWinners),
-        scores: (this.containsScores ? this.selectedPlayerScoresList : [])
-      };
-      const pickRef = this.afs.collection('play-history');
-      await pickRef.doc(id).set(docData).then(() => {
-        this.selectedGame = undefined;
-        this.selectedExpansions = undefined;
-        this.selectedScenarioGame = '';
-        this.selectedGameType = {
-          id: '',
-          name: ''
+      if (this.selectedId != '') {
+        const docData: PlayDb = {
+          date: tmeStmp,
+          order: this.selectedOrder,
+          id: this.selectedId,
+          groupId: this.selectedGameGroup,
+          expansionsUsed: this.createExpansions(this.selectedExpansions),
+          factions: (this.containsFactions ? this.createFactions(this.selectedPlayerFactionList) : []),
+          gameId: gameId,
+          customNames: (this.containsCustomNames ? this.selectedPlayerNameList : []),
+          gameType: typeId,
+          location: locationId,
+          pick: pickId,
+          gameNotes: (this.containsGameNotes ? this.gameNotesList.map(m => m.note) : []),
+          scenario: (this.containsScenario ? this.createScenario(this.selectedScenario.id, this.selectedScenario.win) : {id: '', win: false}),
+          winners: this.createWinners(this.selectedWinners),
+          scores: (this.containsScores ? this.selectedPlayerScoresList : [])
         };
-        this.picker = undefined;
-        this.selectedLocation = undefined;
-        this.selectedPick = undefined;
-        this.selectedScenario = {
-          id: '',
-          win: false
-        }
-        this.gameNotesList = [];
-        this.selectedPlayerNameList = [];
-      this.selectedWinners = undefined;
-      this.selectedFactionGame = [];
-      this.selectedOrder = 0;
-      this.selectedPlayerFaction = {
-        gameId: '',
-        playerId: '',
-        factionId: '',
-        factionTypeId: ''
-      };
-      this.selectedPlayerFactionList = [];
-      this.selectedPlayerScoresList = [];
-      this.containsFactions = false;
-      this.containsGameNotes = false;
-      this.containsGameNotes = false;
-      this.containsScores = false;
-      this.containsScenario = false;
-      this.addFactionShow = false;
-      this.addScenarioShow = false;
-        console.info("Document successfully added!");
-      this.overwritesEnabled = false;
-    }).then((doc: DocumentReference) => {
-      console.log(doc.id)
-    }).catch((error) => {
+        const pickRef = this.afs.collection('play-history');
+        await pickRef.doc(this.selectedId).set(docData).then(() => {
+          this.selectedGame = undefined;
+          this.selectedExpansions = undefined;
+          this.selectedScenarioGame = '';
+          this.selectedGameType = {
+            id: '',
+            name: ''
+          };
+          this.picker = undefined;
+          this.selectedLocation = undefined;
+          this.selectedPick = undefined;
+          this.selectedScenario = {
+            id: '',
+            win: false
+          }
+          this.gameNotesList = [];
+          this.selectedPlayerNameList = [];
+        this.selectedWinners = undefined;
+        this.selectedFactionGame = [];
+        this.selectedOrder = 0;
+        this.selectedPlayerFaction = {
+          gameId: '',
+          playerId: '',
+          factionId: '',
+          factionTypeId: ''
+        };
+        this.selectedPlayerFactionList = [];
+        this.selectedPlayerScoresList = [];
+        this.containsFactions = false;
+        this.containsGameNotes = false;
+        this.containsGameNotes = false;
+        this.containsScores = false;
+        this.containsScenario = false;
+        this.addFactionShow = false;
+        this.addScenarioShow = false;
+        this.selectedId = ''
+          console.info("Document successfully added!");
+        this.overwritesEnabled = false;
+      }).catch((error) => {
         console.error("Error adding document: ", error);
-    });
+      });
+
+      } else {
+        const docData: PlayDb = {
+          date: tmeStmp,
+          order: this.selectedOrder,
+          id: '',
+          groupId: this.selectedGameGroup,
+          expansionsUsed: this.createExpansions(this.selectedExpansions),
+          factions: (this.containsFactions ? this.createFactions(this.selectedPlayerFactionList) : []),
+          gameId: gameId,
+          customNames: (this.containsCustomNames ? this.selectedPlayerNameList : []),
+          gameType: typeId,
+          location: locationId,
+          pick: pickId,
+          gameNotes: (this.containsGameNotes ? this.gameNotesList.map(m => m.note) : []),
+          scenario: (this.containsScenario ? this.createScenario(this.selectedScenario.id, this.selectedScenario.win) : {id: '', win: false}),
+          winners: this.createWinners(this.selectedWinners),
+          scores: (this.containsScores ? this.selectedPlayerScoresList : [])
+        };
+
+        const pickRef = this.afs.collection('play-history');
+        await pickRef.add(docData).then(() => {
+          console.info("Document successfully added!");
+        }).then((doc) => {
+          console.log('doc',doc)
+          this.afs.collection<GameGroups>('play-history', ref => ref.where('id', '==', ''))
+            .snapshotChanges().subscribe(groupz=>{
+              groupz.forEach(group => {
+                console.log('0',group.payload.doc.id)
+                docData.id = group.payload.doc.id;
+                pickRef.doc(group.payload.doc.id).set(docData).then(() => {
+                  this.selectedGame = undefined;
+                  this.selectedExpansions = undefined;
+                  this.selectedScenarioGame = '';
+                  this.selectedGameType = {
+                    id: '',
+                    name: ''
+                  };
+                  this.picker = undefined;
+                  this.selectedLocation = undefined;
+                  this.selectedPick = undefined;
+                  this.selectedScenario = {
+                    id: '',
+                    win: false
+                  }
+                  this.gameNotesList = [];
+                  this.selectedPlayerNameList = [];
+                this.selectedWinners = undefined;
+                this.selectedFactionGame = [];
+                this.selectedOrder = 0;
+                this.selectedPlayerFaction = {
+                  gameId: '',
+                  playerId: '',
+                  factionId: '',
+                  factionTypeId: ''
+                };
+                this.selectedPlayerFactionList = [];
+                this.selectedPlayerScoresList = [];
+                this.containsFactions = false;
+                this.containsGameNotes = false;
+                this.containsGameNotes = false;
+                this.containsScores = false;
+                this.containsScenario = false;
+                this.addFactionShow = false;
+                this.addScenarioShow = false;
+                this.selectedId = ''
+                  console.info("Document successfully added!");
+                this.overwritesEnabled = false;
+              }).catch((error) => {
+                console.error("Error adding document: ", error);
+              });
+          })
+        })
+      })
     }
-  }
+  }}
 
   createExpansions = (expansions: BoardGame[] | undefined): string[] => {
     let expansionIds: string[] = [];
@@ -484,9 +555,9 @@ export class AddPlayComponent implements OnInit {
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     this.selectedDate = event.value;
-    this.selectedId = (this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf()).length > 0 ?
-                      Math.max(...this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf())
-                                            .map(m => Number(m.id.split('-')[3]))) +1 : 1);
+    // this.selectedId = (this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf()).length > 0 ?
+    //                   Math.max(...this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf())
+    //                                         .map(m => Number(m.id.split('-')[3]))) +1 : 1);
 
     this.selectedOrder = (this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf()).length > 0 ?
                       Math.max(...this.plays.filter(f => Number(f.date.seconds)*1000 === this.selectedDate?.valueOf())
@@ -530,7 +601,7 @@ export class AddPlayComponent implements OnInit {
     })
 
     // ID
-    this.selectedId = Number(play.id.split('-')[3]);
+    this.selectedId = play.id;
 
     // ORDER
     this.selectedOrder = play.order;

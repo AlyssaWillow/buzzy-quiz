@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile.component';
 import { PlayerStatsModule } from '../player-stats/player-stats.module';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -11,7 +12,8 @@ import { PlayerStatsModule } from '../player-stats/player-stats.module';
   ],
   imports: [
     CommonModule,
-    PlayerStatsModule
+    PlayerStatsModule,
+    RouterModule
   ],
   exports: [
     ProfileComponent

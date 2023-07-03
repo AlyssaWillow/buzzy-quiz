@@ -50,7 +50,7 @@
         </div>
         <div class="profile-body-right">
             <div *ngFor="let group of gameGroups" class="game-group-names">
-                {{group['name']}}
+                <a [routerLink]="['/game-stats', group['id']]">{{group['name']}}</a>
             </div>
         </div>
     </div>

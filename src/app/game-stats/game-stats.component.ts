@@ -11,6 +11,8 @@ import { Cycle, CycleDb, DisplayScenario, ScenarioDb, ScenarioDb2, ScenarioGame,
 import { FirebaseDataService } from '../services/firebase-data.service';
 import { ListGuide } from '../models/list-guide';
 import { UtilsService } from '../services/utils.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { ActivatedRoute } from '@angular/router';
 
 interface CollectionGroups {
   value: string;
@@ -36,6 +38,7 @@ interface BaseToExpansion {
 })
 export class GameStatsComponent implements OnInit {
   collectionNum: number = 0;
+  gameGroupIdFromRoute: string | null = null;
   playData: GameInstance[] = [];
   bothCol: BoardGame[] = [];
   lemCol: BoardGame[] = [];
@@ -63,6 +66,7 @@ export class GameStatsComponent implements OnInit {
   plays: PlayDb[] = [];
   display: string[] = [];
   expansionIds: string[] = [];
+  gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
 
   types: CollectionGroups[] = [
     {viewValue: 'Details', value: 'typ-06D'},
@@ -81,9 +85,12 @@ export class GameStatsComponent implements OnInit {
   constructor(private boardGameGeekService: BoardGameGeekService,
               private firebaseDataService: FirebaseDataService,
               private utils: UtilsService,
-              public authenticationService: AuthenticationService) { }
+              private route: ActivatedRoute,
+              public authenticationService: AuthenticationService,
+              private afs: AngularFirestore) { }
 
   ngOnInit(): void {
+    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
     this.subscriptions = combineLatest(
       this.firebaseDataService.factionTypes$,
       this.firebaseDataService.players$,
@@ -91,8 +98,8 @@ export class GameStatsComponent implements OnInit {
       this.firebaseDataService.scenarios$,
       this.firebaseDataService.cycles$,
       this.firebaseDataService.factions$,
-      this.firebaseDataService.plays$,
-      this.firebaseDataService.overrides$
+      this.afs.collection<PlayDb>('play-history', ref => ref.where('groupId', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId))).valueChanges(),
+      this.firebaseDataService.overrides$,
     ).subscribe(
       ([
         factionTypes, 
