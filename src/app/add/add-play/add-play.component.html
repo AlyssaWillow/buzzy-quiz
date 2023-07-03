@@ -45,9 +45,6 @@
     
     <div *ngIf="selectedDate" class="show-plays">
         <div class="faction-row headers">
-            <div class="play-id">
-                ID
-            </div>
             <div class="fation-type-id">
                 Date
             </div>
@@ -73,9 +70,6 @@
         <hr>
         <div *ngFor="let play of plays; let i = index">
             <div *ngIf="dateMatch(play, selectedDate)" class="faction-row selectable row{{i % 2}}">
-                <div class="play-id">
-                    {{play.id}}
-                </div>
                 <div class="fation-type-id">
                     {{utils.getDate(play.date)}}
                 </div>

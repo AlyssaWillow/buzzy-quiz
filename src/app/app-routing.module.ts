@@ -42,6 +42,14 @@ const routes: Routes = [
     }
   },
   { 
+    path: 'game-stats/:id', 
+    pathMatch: 'full',  
+    component: GameStatsComponent,
+    data: {
+      title: 'Game Stats'
+    }
+  },
+  { 
     path: 'collection', 
     pathMatch: 'full',  
     component: CollectionComponent,
