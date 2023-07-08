@@ -22,7 +22,8 @@ export class UserUtilsService {
       lastName: '',
       id: '',
       acctId: '',
-      color: ''
+      color: '',
+      collection: []
     }
     return player
     }

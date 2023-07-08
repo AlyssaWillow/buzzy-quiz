@@ -5,8 +5,10 @@
     <div class="nav-list">
         <div class="nav" *ngFor="let navi of nav">
             <div *ngIf="!navi.restricted">
-                <div *ngIf="!navi.external" class="nav-link" href="#" [routerLink]="[navi.value]">{{navi.disp}}</div>
-                <div *ngIf="navi.external" class="nav-link"><a href="{{navi.value}}">{{navi.disp}}</a></div>
+                <div *ngIf="!navi.external && (!navi.collectionDependant ||
+                            navi.collectionDependant == hasCollections)" class="nav-link" href="#" [routerLink]="[navi.value]">{{navi.disp}}</div>
+                <div *ngIf="navi.external && (!navi.collectionDependant ||
+                            navi.collectionDependant == hasCollections)" class="nav-link"><a href="{{navi.value}}">{{navi.disp}}</a></div>
             </div>
             <div *ngIf="navi.restricted">
                 <div *ngIf="authenticationService.userData | async" class="nav-link" href="#" [routerLink]="[navi.value]">{{navi.disp}}</div>

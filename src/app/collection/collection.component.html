@@ -5,8 +5,8 @@
             <mat-form-field appearance="fill">
                 <mat-label>Collections to Display</mat-label>
                 <mat-select [(ngModel)]="display" name="collections">
-                    <mat-option *ngFor="let col of collections" [value]="col.value">
-                        {{col.viewValue}}
+                    <mat-option *ngFor="let col of playerCollections.collectionGroups" [value]="col.id">
+                        {{formatListOfNames(col.associatedPlayers)}}
                       </mat-option>
                 </mat-select>
                 </mat-form-field>
@@ -14,7 +14,7 @@
         <div class="selection">
             <mat-form-field appearance="fill">
                 <mat-label>Number of Players</mat-label>
-                <mat-select [(ngModel)]="players" name="players">
+                <mat-select [(ngModel)]="numPlayers" name="players">
                     <mat-option *ngFor="let i of playerCountList" [value]="i.value">
                         {{i.viewValue}} {{playerSuffix(i.value)}}
                       </mat-option>
@@ -32,10 +32,11 @@
                 </mat-form-field>
         </div>
     </div>
-    <div [hidden]="display !== 'ALL' && display !== 'LEM'" class="leman-games-section">
-        <app-leman-collection [player-count]="players" [time]="time"></app-leman-collection>
-    </div>
-    <div [hidden]="display !== 'ALL' && display !== 'HEN'"  class="hendrickson-games-section">
-        <app-hendrickson-collection [player-count]="players" [time]="time"></app-hendrickson-collection>
+    <div *ngFor="let collection of playerCollections.collectionGroups">
+        <div *ngIf="collection.id !== 'ALL'">
+            <div [hidden]="display !== 'ALL' && display !== collection.id" class="leman-games-section">
+                <app-leman-collection [collection]="collection.collection" [title]="collection.associatedPlayers" [player-count]="numPlayers" [time]="time"></app-leman-collection>
+            </div>
+        </div>
     </div>
 </div>
