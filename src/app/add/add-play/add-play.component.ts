@@ -91,7 +91,8 @@ export class AddPlayComponent implements OnInit {
     lastName: '',
     id: '',
     acctId: '',
-    color: ''
+    color: '',
+    collection: []
   };
   gameGroups: GameGroups[] = []
   playDeletedName: PlayDb = {

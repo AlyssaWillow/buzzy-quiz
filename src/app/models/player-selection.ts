@@ -13,6 +13,7 @@ export interface Players {
     firstName: string;
     lastName: string;
     id: string;
+    collection: string[];
     acctId: string;
     color: string;
 }

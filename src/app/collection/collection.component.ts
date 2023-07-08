@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-interface CollectionGroups {
-  value: string;
-  viewValue: string;
-}
-interface Players {
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { ActivatedRoute } from '@angular/router';
+import firebase from 'firebase/compat';
+import { CollectionGroups, GameGroups, IdsPlayerCollections, PlayerCollectionGroup } from '../models/gameGroups';
+import { Players } from '../models/player-selection';
+import { UtilsService } from '../services/utils.service';
+
+interface Playersdd {
   value: number;
   viewValue: string;
 }
@@ -11,16 +14,25 @@ interface Time {
   value: number;
   viewValue: string;
 }
+
 @Component({
   selector: 'app-collection',
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.scss']
 })
-export class CollectionComponent {
+export class CollectionComponent implements OnInit {
+
   display: string = 'ALL';
-  players: number = 0;
+  numPlayers: number = 0;
   time: number = 0;
-  playerCountList: Players[] = [
+  gameGroupPlayers: Players[] = [];
+  players: firebase.firestore.DocumentData[] = [];
+  playerCollections: IdsPlayerCollections = {
+    distinctCollections: [],
+    collectionGroups: []
+  }
+  gameGroupIdFromRoute: string | null = '';
+  playerCountList: Playersdd[] = [
     {value: 0, viewValue: 'Any'},
     {value: 1, viewValue: '1'},
     {value: 2, viewValue: '2'},
@@ -81,6 +93,114 @@ export class CollectionComponent {
     {value: 'LEM', viewValue: 'Leman'},
     {value: 'HEN', viewValue: 'Hendrickson'},
   ];
+  gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
+  gameGroup: GameGroups[] = []
+
+  constructor(public utils: UtilsService,
+              private route: ActivatedRoute,
+              private afs: AngularFirestore) { }
+
+  ngOnInit(): void {
+    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
+    this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
+    .valueChanges().subscribe(gameGroup =>{
+      if (this.gameGroup.sort().join(',') !== gameGroup.sort().join(',')) {
+        this.gameGroup = gameGroup
+        this.afs.collection('tabletop-syndicate').doc('player-data')
+        .collection<Players>('player-names', ref => ref.where('id', 'in', gameGroup[0].members))
+        .valueChanges().subscribe(playerz=>{
+          if (this.gameGroupPlayers.sort().join(',') !== playerz.sort().join(',')) {
+            this.gameGroupPlayers = playerz
+            this.playerCollections = this.getDistinctCollections(playerz)
+          }
+        })  
+      }
+    })
+  }
+
+  getDistinctCollections = (docList: Players[]): IdsPlayerCollections => {
+    let collectionGroupz: PlayerCollectionGroup[] = [];
+    let idsPlayerCollections: IdsPlayerCollections = {
+      distinctCollections: [],
+      collectionGroups: []
+    }
+    idsPlayerCollections.collectionGroups.push({
+      collection: [],
+      id: 'ALL',
+      associatedPlayers: ['All Collections']
+    })
+    docList.forEach(doc => {
+      doc.collection.forEach(collection => {
+        if (!idsPlayerCollections.distinctCollections.includes(collection)) {
+          idsPlayerCollections.distinctCollections.push(collection)
+          collectionGroupz.push({
+            collection: collection,
+            associatedPlayers: []
+          })
+        }
+      })
+      collectionGroupz.forEach(cgz => {
+        doc.collection.forEach(collection => {
+          if(cgz.collection === collection) {
+            cgz.associatedPlayers.push(doc.id)
+          }
+        })
+      })
+    })
+    collectionGroupz.forEach(cgz => {
+      let found = false;
+      if (idsPlayerCollections.collectionGroups.length === 0) {
+        found = true;
+        idsPlayerCollections.collectionGroups.push({
+          collection: [cgz.collection],
+          associatedPlayers: cgz.associatedPlayers,
+          id: ''
+        })
+      } else {
+        idsPlayerCollections.collectionGroups.forEach(ipc=>{
+          if (ipc.associatedPlayers.sort().join(',')=== cgz.associatedPlayers.sort().join(',')) {
+            found = true;
+            ipc.collection.push(cgz.collection)
+          }
+        })
+      }
+      if (!found) {
+        idsPlayerCollections.collectionGroups.push({
+          collection: [cgz.collection],
+          associatedPlayers: cgz.associatedPlayers,
+          id: ''
+        })
+      }
+    })
+    idsPlayerCollections.collectionGroups.forEach(cgz => {
+      if (cgz.id === '') {
+        cgz.id = cgz.associatedPlayers.join('')
+      }
+    });
+    console.log('PC', idsPlayerCollections)
+    return idsPlayerCollections
+  }
+
+  formatListOfNames = (players: string[]): string => {
+    let count = players.length - 1;
+    let rtnStr = ''
+    
+    if (players[0] === 'All Collections') {
+      return players[0]
+    }
+    players.forEach(player => {
+      count--
+      rtnStr += this.utils.getPlayerName(player, this.gameGroupPlayers)
+      if(count === 0) {
+        rtnStr += ' & '
+      } else if (count > 0) {
+        rtnStr += ', '
+      } else {
+        rtnStr += "'s Collection"
+      }
+    })
+    return rtnStr
+  }
 
   playerSuffix = (i: number) => {
     if (i === 0) {

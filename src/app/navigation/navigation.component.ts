@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { homedir } from 'os';
 import { AuthenticationService } from '../services/authentication.service';
+import { GameGroups, IdsPlayerCollections, PlayerCollectionGroup } from '../models/gameGroups';
+import { Players } from '../models/player-selection';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { ActivatedRoute } from '@angular/router';
+import firebase from 'firebase/compat';
+import { UtilsService } from '../services/utils.service';
 
 @Component({
   selector: 'tts-navigation',
@@ -15,67 +21,113 @@ export class NavigationComponent implements OnInit {
       external: false,
       value: '/home',
       disp: 'Home',
-      restricted: false
+      restricted: false,
+      collectionDependant: false
     },
     {
       external: false,
       value: '/game-stats',
       disp: 'Game Stats',
-      restricted: false
+      restricted: false,
+      collectionDependant: false
     }, 
     {
       external: false,
       value: '/analytics',
       disp: 'Analytics',
-      restricted: false
+      restricted: false,
+      collectionDependant: false
     }, 
     {
       external: false,
       value: '/tools',
       disp: 'Tools',
-      restricted: false
+      restricted: false,
+      collectionDependant: false
     }, 
     {
       external: false,
       value: '/collection',
       disp: 'Collection',
-      restricted: false
+      restricted: false,
+      collectionDependant: true
     }, 
     {
       external: false,
       value: '/pick-history',
       disp: 'Pick History',
-      restricted: false
+      restricted: false,
+      collectionDependant: false
     }, 
     {
       external: false,
       value: '/lists',
       disp: 'Lists',
-      restricted: false
+      restricted: false,
+      collectionDependant: false
     },
     {
       external: false,
       value: '/shirts',
       disp: 'Convention Shirt History',
-      restricted: true
+      restricted: true,
+      collectionDependant: false
     },
     {
       external: false,
       value: '/add',
       disp: 'Add / Edit',
-      restricted: true
+      restricted: true,
+      collectionDependant: false
     },
     {
       external: true,
       value: 'https://sites.google.com/view/tabletop-syndicate',
       disp: 'Old Site',
-      restricted: false
+      restricted: false,
+      collectionDependant: false
     }
   ]
+  hasCollections: boolean = false;
+  gameGroupPlayers: Players[] = [];
+  players: firebase.firestore.DocumentData[] = [];
+  playerCollections: IdsPlayerCollections = {
+    distinctCollections: [],
+    collectionGroups: []
+  }
+  gameGroupIdFromRoute: string | null = '';
+  
+  gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
+  gameGroup: GameGroups[] = []
 
-  constructor(public authenticationService: AuthenticationService) { }
+  constructor(public authenticationService: AuthenticationService,
+    public utils: UtilsService,
+              private route: ActivatedRoute,
+              private afs: AngularFirestore) { }
 
   ngOnInit(): void {
+    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
+    this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
+    .valueChanges().subscribe(gameGroup =>{
+      if (this.gameGroup.sort().join(',') !== gameGroup.sort().join(',')) {
+        this.gameGroup = gameGroup
+        this.afs.collection('tabletop-syndicate').doc('player-data')
+        .collection<Players>('player-names', ref => ref.where('id', 'in', gameGroup[0].members))
+        .valueChanges().subscribe(playerz=>{
+          if (this.gameGroupPlayers.sort().join(',') !== playerz.sort().join(',')) {
+            this.getDistinctCollections(playerz)
+          }
+        })  
+      }
+    })
+  }
+
+  getDistinctCollections = (docList: Players[]): void => {
+    docList.forEach(doc => {
+      doc.collection.forEach(collection => {
+       this.hasCollections = true
+      })
+    });
   }
 
 }

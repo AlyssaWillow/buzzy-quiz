@@ -1,9 +1,9 @@
 <div>
     <div class="section-heading">
-        <div class="heading-text">Jen & Alyssa's Collection</div>
+        <div *ngIf="title" class="heading-text">{{formatListOfNames(title)}}</div>
     </div>
-    <div *ngIf="collection$ | async as collectionLeman">
-        <div class="game-row{{i % 2}}" *ngFor="let game of collectionLeman.item | collectionFilter: players : time; let i = index">
+    <div *ngIf="genericCollection$ | async as genericCollection">
+        <div class="game-row{{i % 2}}" *ngFor="let game of genericCollection | collectionFilter: players : time; let i = index">
             <div class="game-section-left">
                 <img class="game-image" src="{{game.image}}"/>
             </div>

@@ -44,13 +44,26 @@
             </div>
         </div>
     </div>
+    <div class="separater {{player['color']}}"></div>
     <div class="profile-body">
-        <div class="profile-body-left">
-            Associated Game Groups
+        <div class="profile-section">
+            <div class="profile-body-left">
+                Associated Game Groups
+            </div>
+            <div class="profile-body-right">
+                <div *ngFor="let group of gameGroups" class="game-group-names">
+                    <a [routerLink]="['/game-stats', group['id']]">{{group['name']}}</a>
+                </div>
+            </div>
         </div>
-        <div class="profile-body-right">
-            <div *ngFor="let group of gameGroups" class="game-group-names">
-                <a [routerLink]="['/game-stats', group['id']]">{{group['name']}}</a>
+        <div class="profile-section">
+            <div class="profile-body-left">
+                BoardGameGeek Collection<span *ngIf="player['collection']?.length > 1">s</span>:
+            </div>
+            <div class="profile-body-right">
+                <div *ngFor="let collection of player['collection']" class="game-group-names">
+                    {{collection}}
+                </div>
             </div>
         </div>
     </div>
