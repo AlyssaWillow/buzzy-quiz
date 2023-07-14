@@ -13,13 +13,13 @@ export class CountdownComponent implements OnInit {
   //ORIJENS
   // June 21, 2023 8:00am
   //year,month,date[,hour,minute,second,millisecond ]
-  countDownTo: string = "Origins";
-  startTime: Date = new Date(2023,6,21);
+  countDownTo: string = "Pax Unplugged";
+  startTime: Date = new Date(2023,11,1);
 
   private subscription: Subscription = new Subscription;
 
   public dateNow = new Date();
-  public dDay = new Date('Jun 21 2023 08:00:00');
+  public dDay = new Date('Dec 1 2023 00:00:01');
   milliSecondsInASecond = 1000;
   hoursInADay = 24;
   minutesInAnHour = 60;
