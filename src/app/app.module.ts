@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+
+import { SlimHeaderModule } from './slim-header/slim-header.module';
 import { HeaderModule } from './header/header.module';
 import { HomeModule } from './home/home.module';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
@@ -58,6 +60,7 @@ import { UserUtilsService } from './services/userUtils.service';
     HttpClientModule,
     AppRoutingModule,
     HeaderModule,
+    SlimHeaderModule,
     FormsModule,
     HomeModule,
     CollectionModule,

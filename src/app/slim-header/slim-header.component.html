@@ -1,0 +1,18 @@
+<div class="slim-overall-header {{color}}">
+    <div class="slim-header-top">
+      <div class="slim-top-left">
+        <button class="slim-hamburger" (click)="inputSideNav.toggle()">
+          <img class="slim-hamburger-icon" src="../../assets/images/hamburger2.png">
+        </button>
+      </div>
+      <div class="slim-top-right">
+        <div class="slim-login">
+          <h3 class="slim-player-name" *ngIf="authenticationService.userData | async"><a [routerLink]="['/profile', (authenticationService.userData | async)?.uid]">{{ (authenticationService.userData | async)?.email }}</a></h3>
+          <div class="slim-player-name">
+            <button class="slim-button" (click)="authenticationService.SignOut()" *ngIf="authenticationService.userData | async">Logout</button>
+            <button class="slim-button" (click)="login()" *ngIf="!(authenticationService.userData | async)">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

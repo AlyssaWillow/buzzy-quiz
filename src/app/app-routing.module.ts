@@ -22,7 +22,7 @@ const routes: Routes = [
     pathMatch: 'full',  
     component: HomeComponent,
     data: {
-      title: 'Tabletop Syndicate'
+      title: 'home Tabletop Syndicate'
     }
   },
   { 
@@ -30,7 +30,15 @@ const routes: Routes = [
     pathMatch: 'full',  
     component: HomeComponent,
     data: {
-      title: 'Tabletop Syndicate'
+      title: 'home Tabletop Syndicate'
+    }
+  },
+  { 
+    path: 'home/:id', 
+    pathMatch: 'full',  
+    component: HomeComponent,
+    data: {
+      title: 'home Tabletop Syndicate'
     }
   },
   { 
@@ -58,7 +66,23 @@ const routes: Routes = [
     }
   },
   { 
+    path: 'collection/:id', 
+    pathMatch: 'full',  
+    component: CollectionComponent,
+    data: {
+      title: 'Collection'
+    }
+  },
+  { 
     path: 'lists', 
+    pathMatch: 'full',  
+    component: ListsComponent,
+    data: {
+      title: 'Lists'
+    }
+  },
+  { 
+    path: 'lists/:id', 
     pathMatch: 'full',  
     component: ListsComponent,
     data: {
@@ -82,7 +106,23 @@ const routes: Routes = [
     }
   },
   { 
+    path: 'pick-history/:id', 
+    pathMatch: 'full',  
+    component: PickHistoryComponent,
+    data: {
+      title: 'Play History'
+    }
+  },
+  { 
     path: 'analytics', 
+    pathMatch: 'full',  
+    component: PlayerStatsComponent,
+    data: {
+      title: 'Analytics'
+    }
+  },
+  { 
+    path: 'analytics/:id', 
     pathMatch: 'full',  
     component: PlayerStatsComponent,
     data: {
@@ -98,7 +138,23 @@ const routes: Routes = [
     }
   },
   { 
+    path: 'tools/:id', 
+    pathMatch: 'full',  
+    component: ToolsComponent,
+    data: {
+      title: 'Tools'
+    }
+  },
+  { 
     path: 'shirts', 
+    pathMatch: 'full',  
+    component: ConventionShirtsComponent,
+    data: {
+      title: 'Convention Shirt History'
+    }
+  },
+  { 
+    path: 'shirts/:id', 
     pathMatch: 'full',  
     component: ConventionShirtsComponent,
     data: {

@@ -5,6 +5,7 @@ import { CurrentSelectionsModule } from './current-selections/current-selections
 import { GamesPlayedModule } from './games-played/games-played.module';
 import { PrepareForGnModule } from './prepare-for-gn/prepare-for-gn.module';
 import { CountdownModule } from './countdown/countdown.module';
+import { HeaderModule } from '../header/header.module';
 
 
 
@@ -20,7 +21,8 @@ import { CountdownModule } from './countdown/countdown.module';
         CurrentSelectionsModule,
         GamesPlayedModule,
         PrepareForGnModule,
-        CountdownModule
+        CountdownModule,
+        HeaderModule
     ]
 })
 export class HomeModule { }

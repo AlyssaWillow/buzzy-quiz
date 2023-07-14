@@ -1,22 +1,14 @@
 <div class="overall-header">
     <div class="header-top">
       <div class="top-left">
-        <button class="hamburger" (click)="inputSideNav.toggle()">
-          <img class="hamburger-icon" src="../../assets/images/hamburger2.png">
-        </button>
       </div>
       <div class="top-right">
-        <div class="login">
-          <h3 class="player-name" *ngIf="authenticationService.userData | async"><a [routerLink]="['/profile', (authenticationService.userData | async)?.uid]">{{ (authenticationService.userData | async)?.email }}</a></h3>
-          <button class="button" (click)="authenticationService.SignOut()" *ngIf="authenticationService.userData | async">Logout</button>
-          <button class="button" (click)="login()" *ngIf="!(authenticationService.userData | async)">Login</button>
-        </div>
       </div>
     </div>
     <div class="header-image">
         <div class="header-content">
             <div class="header-wording">{{ pageName }}</div>
-            <div class="header-underline"></div>
+            <div class="header-underline {{color}}"></div>
         </div>
     </div>
 </div>
