@@ -6,7 +6,7 @@
         <div class="nav" *ngFor="let navi of nav">
             <div *ngIf="!navi.restricted">
                 <div *ngIf="!navi.external && (!navi.collectionDependant ||
-                            navi.collectionDependant == hasCollections)" class="nav-link" href="#" [routerLink]="[navi.value]">{{navi.disp}}</div>
+                            navi.collectionDependant == hasCollections)" class="nav-link" href="#" [routerLink]="[navi.value, (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)]">{{navi.disp}}</div>
                 <div *ngIf="navi.external && (!navi.collectionDependant ||
                             navi.collectionDependant == hasCollections)" class="nav-link"><a href="{{navi.value}}">{{navi.disp}}</a></div>
             </div>

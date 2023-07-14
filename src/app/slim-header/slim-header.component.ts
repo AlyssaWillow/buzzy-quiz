@@ -7,18 +7,18 @@ import { GameGroups } from '../models/gameGroups';
 import { Players } from '../models/player-selection';
 
 @Component({
-  selector: 'tts-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  selector: 'tts-slim-header',
+  templateUrl: './slim-header.component.html',
+  styleUrls: ['./slim-header.component.scss']
 })
-export class HeaderComponent implements OnInit {
-  @Input() page: string | null = null;
+export class SlimHeaderComponent implements OnInit {
+  @Input() inputSideNav!: MatDrawer;
   
-  gameGroup: GameGroups[] = [];
-  pageName: string | null= 'Welcome!';
-  gameGroupIdFromRoute: string | null = '';
   gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
-  color: string | null = 'RD';
+  gameGroup: GameGroups[] = [];
+  groupId: string | null = null;
+  pageName: string = 'Welcome!';
+  color: string | null = 'GY';
 
   constructor(public authenticationService: AuthenticationService,
     public router: Router,
@@ -27,17 +27,11 @@ export class HeaderComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    if (this.page === 'home') {
-      this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
-      this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
-      .valueChanges().subscribe(gameGroup =>{
-          console.log('jhjkhkj', gameGroup[0].name)
-          this.pageName = gameGroup[0].name
-      })
-
-    } else {
-      this.pageName = this.page
-    }
+    this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.groupId ? this.groupId : this.gameGroupId)))
+    .valueChanges().subscribe(gameGroup =>{
+      this.gameGroup = gameGroup 
+      this.pageName = gameGroup[0].name;
+    })
 
     this.authenticationService.userData.subscribe(user => {
       this.afs.collection('tabletop-syndicate').doc('player-data')
@@ -46,5 +40,9 @@ export class HeaderComponent implements OnInit {
             this.color = playerz[0].color;
       })
     })
+  }
+
+  login = () => {
+    this.router.navigate(['/login']);
   }
 }
