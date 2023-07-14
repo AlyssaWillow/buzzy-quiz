@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   pageName: string | null= 'Welcome!';
   gameGroupIdFromRoute: string | null = '';
   gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
-  color: string | null = 'GY';
+  color: string | null = 'RD';
 
   constructor(public authenticationService: AuthenticationService,
     public router: Router,
