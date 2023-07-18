@@ -1,4 +1,4 @@
-<div class="countdown-section">
+<div class="countdown-section" *ngIf="countDownTo !== ''">
     <div class="countdown-title">Count down to {{countDownTo}}!!</div>
     <div class="start-time">Event start: {{startTime.getMonth() + 1}}/{{startTime.getDate()}}/{{startTime.getFullYear()}}</div>
     <div class="timer">

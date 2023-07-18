@@ -95,4 +95,17 @@
         <app-add-list *ngIf="bothCol.length > 0" [bothCol]="bothCol"></app-add-list>
       </div>
     </cdk-accordion-item>
+    <cdk-accordion-item #accordionItem9="cdkAccordionItem" class="example-accordion-item" role="button" tabindex="0"
+      [attr.id]="'accordion-header-9'" [attr.aria-expanded]="accordionItem9.expanded" [attr.aria-controls]="'accordion-body-8'">
+      <div class="example-accordion-item-header" (click)="accordionItem9.toggle()"><span class="accordion-title">Add/Edit Events</span>
+        <span class="example-accordion-item-description">
+          Click to {{ accordionItem9.expanded ? 'collapse' : 'expand' }}
+        </span>
+      </div>
+      <div class="example-accordion-item-body" role="region"
+        [style.display]="accordionItem9.expanded ? '' : 'none'"
+        [attr.id]="'accordion-body-9'" [attr.aria-labelledby]="'accordion-header-9'">
+        <app-add-countdown></app-add-countdown>
+      </div>
+    </cdk-accordion-item>
   </cdk-accordion>
