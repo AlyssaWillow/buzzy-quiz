@@ -1,0 +1,108 @@
+<div class="page">
+    <div class="add-event-header">
+        Add / Edit / Delete Countdown
+    </div>
+    
+        <div class="top-inputs">
+            
+            <div class="enable-deletes">
+                <button (click)="enableDeletes()">
+                    <span *ngIf="!deletesEnabled">Enable Delete</span>
+                    <span *ngIf="deletesEnabled">Disable Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="selectedGameGroup" class="show-events">
+        <div class="event-row headers">
+            <div class="event-name">
+                Name
+            </div>
+            <div class="event-date">
+                Start Date
+            </div>
+            <div class="event-date">
+                End Date
+            </div>
+            <div class="delete">
+                Edit
+            </div>
+            <div *ngIf="deletesEnabled" class="delete">
+                Delete
+            </div>
+        </div>
+        <hr>
+        <div *ngFor="let event of events; let i = index">
+            <div class="event-row row{{i % 2}}">
+                <div class="event-name">
+                    {{event.eventName}}
+                </div>
+                <div class="event-date">
+                    {{utils.getDate(event.startDate)}}
+                </div>
+                <div class="game-date">
+                    {{utils.getDate(event.endDate)}}
+                </div>
+                <div class="delete">
+                    <button (click)="editEventData(event)">Edit</button>
+                </div>
+                <div *ngIf="deletesEnabled" class="delete">
+                    <button (click)="deleteSelectedEvent(event)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="add-event">
+        <div class="inputs">
+            
+            <div class="row date-selectors">
+                <div class="date">
+                    <div class="date-picker">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Choose a start date</mat-label>
+                            <input matInput [matDatepicker]="picker" (dateInput)="addStart('input', $event)" (dateChange)="addStart('change', $event)" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="date">
+                    <div class="date-picker">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Choose an end date</mat-label>
+                            <input matInput [matDatepicker]="picker2" (dateInput)="addEnd('input', $event)" (dateChange)="addEnd('change', $event)" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="select-game-dropdown">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Select Game Group</mat-label>
+                        <mat-select [(ngModel)]="selectedGameGroup" name="getFactionTypes" (selectionChange)="getEventsForGroup(selectedGameGroup)">
+                            <mat-option *ngFor="let group of gameGroups" [value]="group.id">
+                                {{group.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        
+        
+        <div class="row inputs">
+            <div class="select-game-">
+                <mat-form-field class="input-full input-line" appearance="fill">
+                    <mat-label>event Name</mat-label>
+                    <input matInput placeholder="Ex: Pax Unplugged" [(ngModel)]="eventName">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="submit">
+            <button (click)="submit()" 
+                [attr.disabled]="eventName && selectedStartDate && selectedEndDate && gameGroups? null : ''">Submit</button>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,17 @@
+import { Timestamp } from "./play";
+
 export interface GameGroups {
     id: string;
     name: string;
     members: string[];
+}
+
+export interface GameGroupEvent {
+  id: string;
+  groupId: string;
+  eventName: string;
+  startDate: Timestamp;
+  endDate: Timestamp;
 }
 
 export interface IdsPlayerCollections {

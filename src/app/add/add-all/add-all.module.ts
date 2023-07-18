@@ -9,6 +9,7 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
 import { AddFactionTypeModule } from '../add-faction-type/add-faction-type.module';
 import { AddVideoModule } from '../add-video/add-video.module';
 import { AddListModule } from '../add-list/add-list.module';
+import { AddCountdownModule } from '../add-countdown/add-countdown.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { AddListModule } from '../add-list/add-list.module';
     AddScenarioModule,
     CdkAccordionModule,
     AddFactionTypeModule,
+    AddCountdownModule,
     AddListModule
   ],
   exports: [
