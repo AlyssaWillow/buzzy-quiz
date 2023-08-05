@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router, ActivatedRoute } from '@angular/router';
 import { interval, Subscription, timestamp, Timestamp } from 'rxjs';
@@ -11,14 +11,14 @@ import { GameGroupEvent, GameGroups } from 'src/app/models/gameGroups';
 })
 export class CountdownComponent implements OnInit {
 
+  @Input() groupId: string | null = '';
+
   constructor(public router: Router,
-    private route: ActivatedRoute,
               private afs: AngularFirestore) { }
 
   //ORIJENS
   // June 21, 2023 8:00am
   //year,month,date[,hour,minute,second,millisecond ]
-  gameGroupIdFromRoute: string | null = '';
   countDownTo: string = "Pax Unplugged";
   startTime: Date = new Date(2023,11,1);
 
@@ -37,10 +37,6 @@ export class CountdownComponent implements OnInit {
   public hoursToDday: any;
   public daysToDday: any;
 
-  
-  gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
-
-
   getTimeDifference = (): void => {
     this.timeDifference = this.dDay.getTime() - new  Date().getTime();
     this.allocateTimeUnits(this.timeDifference);
@@ -54,10 +50,8 @@ export class CountdownComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
-          this.afs.collection<GameGroupEvent>('game-group-events', ref => ref.where('groupId', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
+          this.afs.collection<GameGroupEvent>('game-group-events', ref => ref.where('groupId', '==', this.groupId))
             .valueChanges().subscribe(gameGroupEvent =>{
-            console.log('jhjkhkj', gameGroupEvent)
             
             let dateNow = new Date().getSeconds();
             gameGroupEvent.forEach(evnt => {
@@ -65,7 +59,7 @@ export class CountdownComponent implements OnInit {
                 this.deleteEvent(evnt)
               }
             })
-            this.countDownTo = gameGroupEvent.sort((a, b) => (a.startDate.seconds > b.startDate.seconds) ? 1 : -1)[0].eventName
+            this.countDownTo = (gameGroupEvent.length > 0 ? gameGroupEvent?.sort((a, b) => (a.startDate.seconds > b.startDate.seconds) ? 1 : -1)[0]?.eventName : '')
       })
   
     this.getTimeDifference();

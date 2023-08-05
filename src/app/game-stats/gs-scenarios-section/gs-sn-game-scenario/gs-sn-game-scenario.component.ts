@@ -36,11 +36,11 @@ export class GsSnGameScenarioComponent implements OnInit {
       ([cyclez, scenarioz]) => {
       this.newCycles = cyclez;
       this.newScenarios = scenarioz;
-      this.getCycleist(this.scenarioGame.gameId, cyclez);
+      this.getCycleList(this.scenarioGame.gameId, cyclez);
       });
   }
 
-  getCycleist = (gameId: string, cycles: CycleDb[]): void => {
+  getCycleList = (gameId: string, cycles: CycleDb[]): void => {
     this.cycleListForGame = cycles.filter(ref => ref.gameId === gameId);
     this.cycleListForGame.sort((a, b) => (a.order > b.order) ? 1 : -1);
   }

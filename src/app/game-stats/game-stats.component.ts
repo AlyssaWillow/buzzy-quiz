@@ -120,8 +120,8 @@ export class GameStatsComponent implements OnInit {
         this.newFactions = factionz;
         this.collectionOverrides = overrides;
         this.bothCol = [];
-        if (this.playData.length === 0) {
-          this.bothCol = this.utils.getAggregateCollections();
+        if (this.bothCol.length === 0 && this.playData.length === 0) {
+          this.bothCol = this.utils.getAggregateCollections().filter((item, i, arr) => arr.findIndex((t) => t.objectid=== item.objectid) === i);
           this.bothCol.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
           this.getAllGameCollection(this.bothCol);
         }
@@ -257,12 +257,12 @@ export class GameStatsComponent implements OnInit {
     return gamePlay;
   }
    
-  collectGameData = (bothCol: BaseToGame[], plays: PlayDb[]): GameInstance[] => {
+  collectGameData = (bothCols: BaseToGame[], plays: PlayDb[]): GameInstance[] => {
     let games: GameInstance[] = [];
     let gameInstance: GameInstance;
     let gamePlay: PlayInstance;
       
-      bothCol.forEach(game => {
+      bothCols.forEach(game => {
         if (game && game.baseId) {
           gameInstance = this.getGameAttributes(game.baseId);
           gameInstance.gameDetails = this.getGameDetails(game)
@@ -303,13 +303,13 @@ export class GameStatsComponent implements OnInit {
     return games;
   }
 
-  getExpansionsUsed = (ids: string[], bothCol: BaseToExpansion[]): Expansion[] => {
+  getExpansionsUsed = (ids: string[], bothColz: BaseToExpansion[]): Expansion[] => {
     let expansionList: Expansion[] = [];
     let expansion: Expansion = {
       gameId: '',
       gameName: ''
     }
-    bothCol.forEach(expansions => {
+    bothColz.forEach(expansions => {
       if (ids.includes(expansions.expansionId.toString())) {
         expansionList.push({gameId: expansions.expansion.id, gameName: this.utils.getGameName(expansions.expansion.id, this.bothCol)})
       }

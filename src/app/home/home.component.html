@@ -1,10 +1,10 @@
 <div class="home-page">
   <tts-header class="sticky-header" [page]="gameGroup"></tts-header>
     <div class="selections">
-        <tts-countdown></tts-countdown>
+        <tts-countdown [groupId]="gameGroupIdFromRoute"></tts-countdown>
     </div>
     <div class="selections">
-        <tts-current-selections></tts-current-selections>
+        <tts-current-selections [groupId]="gameGroupIdFromRoute"></tts-current-selections>
     </div>
     <div class="video">
         <div class="video-header header pattern">{{ prepare }}</div>
