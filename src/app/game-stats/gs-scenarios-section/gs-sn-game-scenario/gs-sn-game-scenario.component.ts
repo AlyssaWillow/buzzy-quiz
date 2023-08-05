@@ -32,7 +32,6 @@ export class GsSnGameScenarioComponent implements OnInit {
     private afs: AngularFirestore) { }
 
   ngOnInit(): void {
-    console.log('1', this.scenarioGame,this.bothCol, this.last)
     combineLatest(this.firebaseDataService.cycles$, this.firebaseDataService.scenarios$).subscribe(
       ([cyclez, scenarioz]) => {
       this.newCycles = cyclez;
