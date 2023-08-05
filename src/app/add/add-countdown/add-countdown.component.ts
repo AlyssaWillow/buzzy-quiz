@@ -83,7 +83,6 @@ export class AddCountdownComponent implements OnInit {
   }
 
   getEventsForGroup = (selectedGameGroup: string) => {
-    console.log('asdjflkajsdfj',selectedGameGroup)
     this.afs.collection<GameGroupEvent>('game-group-events', ref => ref.where('groupId', '==', (selectedGameGroup)))
     .valueChanges().subscribe(gameGroupEvent =>{
     this.events = gameGroupEvent
@@ -123,7 +122,6 @@ export class AddCountdownComponent implements OnInit {
           startDate: startDateTs,
           endDate: endDateTs
         };
-        console.log(docData)
         const pickRef = this.afs.collection('game-group-events');
         await pickRef.doc(this.eventId).set(docData).then(() => {
           this.eventId = '';

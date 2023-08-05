@@ -1,15 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { DisplayPlayerSelection, Players, Selection2 } from '../../models/player-selection';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AngularFirestore, 
   AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 import { BoardGame } from 'src/app/models/collection';
 import { UtilsService } from 'src/app/services/utils.service';
 import { BotService } from 'src/app/services/bot.service';
+import { XMLParser } from 'fast-xml-parser';
+
+const options = {
+  ignoreAttributes : false,
+  attributeNamePrefix : "",
+  parseTagValue: true,
+  alwaysCreateTextNode: false,
+  trimValues: true,
+  textNodeName: "text"
+};
 
 @Component({
   selector: 'tts-current-selections',
@@ -17,10 +27,17 @@ import { BotService } from 'src/app/services/bot.service';
   styleUrls: ['./current-selections.component.scss']
 })
 export class CurrentSelectionsComponent implements OnInit {
+  
+  @Input() groupId: string | null = '';
+  
   private selectionCol: AngularFirestoreCollection<Selection2>;
+  private playersCol: AngularFirestoreCollection<Players>;
   selection$: Observable<Selection2[]>;
+  players$: Observable<Players[]>;
+
   selectionData: DisplayPlayerSelection[] = [];
   selectionData2: DisplayPlayerSelection[] = [];
+  user: string = '';
   p011: string = '';
   p012: string = '';
   p013: string = '';
@@ -30,6 +47,15 @@ export class CurrentSelectionsComponent implements OnInit {
   bothCol: BoardGame[] = [];
   players: Players[] = [];
   postIt: boolean = true;
+  distinctCollections:string[] = [];
+
+  baseUrl1: string = 'https://boardgamegeek.com/xmlapi/collection/';
+  suffix1: string = '?own=1';
+
+  genericCollection: BoardGame[] = [];
+
+  private _genericCollection: BehaviorSubject<BoardGame[]> = new BehaviorSubject(this.genericCollection);
+  public readonly genericCollection$: Observable<BoardGame[]> = this._genericCollection.asObservable();
 
   constructor(private afs: AngularFirestore,
       private firebaseDataService: FirebaseDataService,
@@ -37,64 +63,70 @@ export class CurrentSelectionsComponent implements OnInit {
       public utils: UtilsService,
       private bot: BotService,
       public authenticationService: AuthenticationService) {
-    this.selectionCol = afs.collection('tabletop-syndicate').doc('selection-data').collection('current-picks');
+        console.log('asdfasdfadsf', this.groupId)
+    this.selectionCol = this.afs.collection('tabletop-syndicate')
+                           .doc('selection-data')
+                           .collection('current-picks', ref => ref.where('groupId', '==', this.groupId));
     this.selection$ = this.selectionCol.valueChanges();
-    this.firebaseDataService.players$.subscribe(players => {
+
+    this.playersCol = this.afs.collection('tabletop-syndicate')
+                              .doc('player-data')
+                              .collection('player-names', ref => ref.where('groupId', '==', this.groupId));
+    this.players$ = this.playersCol.valueChanges();
+
+    this.players$.subscribe(players => {
       this.players = players;
       this.selection$.subscribe(select => {
-      this.selectionData = this.createSelectionData(select, players);
-      this.selectionData2 = this.createSelectionData(select, players);
-    });
+        this.selectionData = this.createSelectionData(select, players);
+        this.selectionData2 = this.createSelectionData(select, players);
+      });
     });
   }
   ngOnInit(): void {
-    combineLatest(
-      this.boardGameGeekService.lemanCollection$,
-      this.boardGameGeekService.hendricksonCollection$,
-      this.boardGameGeekService.hendricksonOverflow$
-    ).subscribe(
-      ([lem, hen, henOver]) => {
-        console.log(this.afs.collection('tabletop-syndicate').doc('selection-data'))
-        lem?.item.forEach((game: BoardGame) => {
-          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
-            game.owner = 'own-lem';
-            this.bothCol?.push(game);
-          } else {
-            this.bothCol?.filter(e => { 
-              if(e.objectid === game.objectid) {
-                game.owner = 'own-bot'
-              }
-            })
-          }
-        }); 
-        hen?.item.forEach((game: BoardGame) => {
-          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
-            game.owner = 'own-hen';
-            this.bothCol.push(game);
-          } else {
-            this.bothCol?.filter(e => { 
-              if(e.objectid === game.objectid) {
-                game.owner = 'own-bot'
-              }
-            })
-          }
-        });
-        
-        henOver?.item.forEach((game: BoardGame) => {
-          if (!this.bothCol?.find(e => e.objectid === game.objectid)) {
-            game.owner = 'own-hen';
-            this.bothCol.push(game);
-          } else {
-            this.bothCol?.filter(e => { 
-              if(e.objectid === game.objectid && game.owner !== 'own-hen') {
-                game.owner = 'own-bot'
-              }
-            })
-          }
-        });
-
-        this.bothCol?.sort((a, b) => (a.name.text > b.name.text) ? 1 : -1)
+    this.playersCol = this.afs.collection('tabletop-syndicate')
+                              .doc('player-data')
+                              .collection('player-names', ref => ref.where('groupId', '==', this.groupId));
+    this.players$ = this.playersCol.valueChanges();
+           
+    this.players$.subscribe(players => {
+      this.players = players;
+      this.selection$.subscribe(select => {
+        this.selectionData = this.createSelectionData(select, players);
+        this.selectionData2 = this.createSelectionData(select, players);
       });
+    });
+    
+    this.selectionCol = this.afs.collection('tabletop-syndicate')
+    .doc('selection-data')
+    .collection('current-picks', ref => ref.where('groupId', '==', this.groupId));
+    this.selection$ = this.selectionCol.valueChanges();
+    this.firebaseDataService.players$.subscribe(players => {
+      this.players = players;
+      players.forEach(plyr => {
+        plyr.collection.forEach(coll => {
+        if (!this.distinctCollections.includes(coll)) {
+          this.distinctCollections.push(coll)
+        }
+      })
+      })
+      this.authenticationService.userData.subscribe(user => {
+        if (user) {
+          this.players.forEach(playr => {
+            if (playr.acctId === user.uid) {
+              this.user = playr.id
+            }
+          });
+        }
+      });
+      this.selection$.subscribe(select => {
+        this.selectionData = this.createSelectionData(select, players);
+        this.selectionData2 = this.createSelectionData(select, players);
+      });
+    });
+
+    this.getSpecificCollections(this.distinctCollections)
+
+   
   }
 
   createSelectionData = (selections: Selection2[], players: Players[]): DisplayPlayerSelection[]  => {
@@ -112,6 +144,7 @@ export class CurrentSelectionsComponent implements OnInit {
         disp = {
           order: selection.order,
           playerId: selection.player,
+          id: selection.id,
           player: name,
           pick: selection.pick
         }
@@ -125,13 +158,46 @@ export class CurrentSelectionsComponent implements OnInit {
     return dispList;
   }
 
+  getSpecificCollections = (bggIds: string[]) => {
+    bggIds.forEach(id => {
+      this._genericCollection.next(this.getCollectionGames(id));
+    })
+  }
+
+  
+  getCollectionGames(id: string): any {
+    let xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            const parser = new XMLParser(options);
+            if (this._genericCollection?.getValue()) { 
+              this._genericCollection.next(this._genericCollection.getValue()
+                                                                  .concat(parser.parse(xhr.response).items.item)
+                                                                  .sort((a, b) => (a.name.text > b.name.text) ? 1 : -1));
+            } else {
+              
+              this._genericCollection.next(parser.parse(xhr.response).items.item);
+            }
+            return parser.parse(xhr.response).items.item;
+          } else {
+              console.error('error', xhr.response);
+              return undefined;
+          }
+      }
+    }
+    xhr.open("GET", this.baseUrl1 + id + this.suffix1, true);
+    xhr.send();
+  }
+
   updatePicks = async (index: number): Promise<void> => {
     if (this.selectionData[index].playerId === this.selectionData2[index].playerId 
       && this.selectionData[index].pick !== this.selectionData2[index].pick) {
       const pickRef = this.afs.collection('tabletop-syndicate')
                               .doc('selection-data')
                               .collection('current-picks')
-                              .doc(this.selectionData[index].playerId);
+                              .doc(this.selectionData[index].id);
       await pickRef.update({ "pick": this.selectionData[index].pick }).then(() => {
         if(this.postIt) {
           this.bot.makeBotTalkGameUpdate(this.selectionData[index].playerId, 
@@ -142,7 +208,6 @@ export class CurrentSelectionsComponent implements OnInit {
         
     this.disableEdit();
   }
-  
 
   resetOrder = async (): Promise<void> => {
     let postOnce: boolean = true;
@@ -150,7 +215,7 @@ export class CurrentSelectionsComponent implements OnInit {
       const pickRef = this.afs.collection('tabletop-syndicate')
                               .doc('selection-data')
                               .collection('current-picks')
-                              .doc(order2.playerId);
+                              .doc(order2.id);
       await pickRef.update({ 
         "order": (index+1),
         "pick": []

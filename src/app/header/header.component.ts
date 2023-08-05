@@ -31,7 +31,6 @@ export class HeaderComponent implements OnInit {
       this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
       this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
       .valueChanges().subscribe(gameGroup =>{
-          console.log('jhjkhkj', gameGroup[0].name)
           this.pageName = gameGroup[0].name
       })
 

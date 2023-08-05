@@ -27,22 +27,21 @@
   <h2 class="edit-heading">Edit Picks</h2>
   <div *ngFor="let pick of selectionData; let i = index">
     <div class="row">
-      <div class="players">
-        <div class="number"> {{ pick.order }} </div>
-        <div class="player"> {{ pick.player }} </div>
+      <div *ngIf="pick.id === user" class="players">
+        <div class="player"> {{ pick.player }}</div>
       </div>
-      <form class="selection-input">
+      <form *ngIf="pick.id === user" class="selection-input">
         <mat-form-field class="select-faction-dropdown" appearance="fill">
                 <mat-label>Select Game</mat-label>
                 <mat-select [(ngModel)]="pick.pick" multiple name="bothCol">
-                    <mat-option *ngFor="let col of bothCol" [value]="col.objectid">
+                    <mat-option *ngFor="let col of genericCollection$ | async" [value]="col.objectid">
                         {{col?.name?.text | replaceText}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
       </form>
-    <mat-checkbox class="edit-button" [(ngModel)]="postIt">Post to Group</mat-checkbox>
-    <button *ngIf="edit" class="button" (click)="updatePicks(i)">Save</button>
+    <mat-checkbox *ngIf="user === pick.id" class="edit-button" [(ngModel)]="postIt">Post to Group</mat-checkbox>
+    <button *ngIf="edit && user === pick.id" class="button" (click)="updatePicks(i)">Save</button>
     </div>
   </div>
   <div class="edit-buttons" *ngIf="authenticationService.userData | async">

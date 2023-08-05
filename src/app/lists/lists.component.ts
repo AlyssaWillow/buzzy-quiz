@@ -159,7 +159,6 @@ export class ListsComponent implements OnInit {
       listContent.forEach(list => {
         list.selections.sort((a, b) => ((a.player ? a.player.order : 0) >= (b.player ? b.player.order : 0)) ? 1 : -1)
       })
-      console.log(listContent)
       this.displayList.content = listContent;
     }
   }
@@ -174,13 +173,10 @@ export class ListsComponent implements OnInit {
   }
 
   getPreviousRank = (gameId: string, playerId: string, previousYear: listDb | undefined): number => {
-    console.log(gameId, playerId, previousYear)
     let previousRank: number = -1;
     if (previousYear) {
       let playersGames = previousYear.lists.filter(f => f.playerId === playerId)
-      console.log(playersGames)
       let playersGame = playersGames.find(f => f.gameId === gameId)
-      console.log(playersGame)
       if (playersGame) {
         return playersGame?.order
       }

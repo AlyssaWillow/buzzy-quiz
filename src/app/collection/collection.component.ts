@@ -177,7 +177,6 @@ export class CollectionComponent implements OnInit {
         cgz.id = cgz.associatedPlayers.join('')
       }
     });
-    console.log('PC', idsPlayerCollections)
     return idsPlayerCollections
   }
 

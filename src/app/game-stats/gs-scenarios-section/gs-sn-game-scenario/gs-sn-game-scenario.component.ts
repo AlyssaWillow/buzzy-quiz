@@ -32,15 +32,16 @@ export class GsSnGameScenarioComponent implements OnInit {
     private afs: AngularFirestore) { }
 
   ngOnInit(): void {
+    console.log('1', this.scenarioGame,this.bothCol, this.last)
     combineLatest(this.firebaseDataService.cycles$, this.firebaseDataService.scenarios$).subscribe(
       ([cyclez, scenarioz]) => {
       this.newCycles = cyclez;
       this.newScenarios = scenarioz;
-      this.getCycleist(this.scenarioGame.gameId, cyclez);
+      this.getCycleList(this.scenarioGame.gameId, cyclez);
       });
   }
 
-  getCycleist = (gameId: string, cycles: CycleDb[]): void => {
+  getCycleList = (gameId: string, cycles: CycleDb[]): void => {
     this.cycleListForGame = cycles.filter(ref => ref.gameId === gameId);
     this.cycleListForGame.sort((a, b) => (a.order > b.order) ? 1 : -1);
   }
