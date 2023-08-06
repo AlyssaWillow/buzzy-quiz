@@ -16,17 +16,19 @@
 .games-played {
     display: flex;
     flex-direction: row;
-    height: 1.2rem;
+    min-height: 1.2rem;
     padding-left: 2rem;
 }
 
 .pick {
     min-width: 10%;
+    font-size: 1rem;
     display: flex;
     justify-content: center;
 }
 
 .game {
+    font-size: 1rem;
     min-width: 50%
 }
 
