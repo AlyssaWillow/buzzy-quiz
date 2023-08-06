@@ -79,13 +79,6 @@ export class NavigationComponent implements OnInit {
       disp: 'Add / Edit',
       restricted: true,
       collectionDependant: false
-    },
-    {
-      external: true,
-      value: 'https://sites.google.com/view/tabletop-syndicate',
-      disp: 'Old Site',
-      restricted: false,
-      collectionDependant: false
     }
   ]
   hasCollections: boolean = false;
