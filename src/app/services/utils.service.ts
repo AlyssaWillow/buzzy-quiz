@@ -56,15 +56,9 @@ export class UtilsService {
     return name;
   }
 
-  getGameName = (id: string, gameCollection: BoardGame[]): string => {
-    for(let game of gameCollection) {
-      if (game?.objectid === id) {
-        return game.name.text;
-      } else if (id === "349998") {
-        return "Tapestry: Arts & Architecture";
-      }
-    }
-    return '';
+getGameName = (id: string, gameCollection: BoardGame[]): string => {
+  let name = gameCollection?.find(game => game?.objectid === id);
+  return (name?.name?.text ? name?.name?.text : '')
 }
 
 getScenarioName = (id: string, scenariosFromDb: ScenarioDb2[]): string => {

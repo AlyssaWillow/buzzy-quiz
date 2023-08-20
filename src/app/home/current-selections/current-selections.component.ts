@@ -11,6 +11,7 @@ import { BoardGame } from 'src/app/models/collection';
 import { UtilsService } from 'src/app/services/utils.service';
 import { BotService } from 'src/app/services/bot.service';
 import { XMLParser } from 'fast-xml-parser';
+import { GameGroups } from 'src/app/models/gameGroups';
 
 const options = {
   ignoreAttributes : false,
@@ -47,6 +48,7 @@ export class CurrentSelectionsComponent implements OnInit {
   bothCol: BoardGame[] = [];
   players: Players[] = [];
   postIt: boolean = true;
+  gameGroup: GameGroups[] = [];
   distinctCollections:string[] = [];
 
   baseUrl1: string = 'https://boardgamegeek.com/xmlapi/collection/';
@@ -83,6 +85,22 @@ export class CurrentSelectionsComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', this.groupId))
+    .valueChanges().subscribe(gameGroup =>{
+      if (this.gameGroup.sort().join(',') !== gameGroup.sort().join(',')) {
+        this.gameGroup = gameGroup
+        this.afs.collection('tabletop-syndicate').doc('player-data')
+        .collection<Players>('player-names', ref => ref.where('id', 'in', gameGroup[0].members))
+        .valueChanges().subscribe(playerz=>{
+          this.players = playerz;
+          this.selection$.subscribe(select => {
+            this.selectionData = this.createSelectionData(select, playerz);
+            this.selectionData2 = this.createSelectionData(select, playerz);
+          });
+        })  
+      }
+    })
+
     this.playersCol = this.afs.collection('tabletop-syndicate')
                               .doc('player-data')
                               .collection('player-names', ref => ref.where('groupId', '==', this.groupId));
@@ -97,8 +115,8 @@ export class CurrentSelectionsComponent implements OnInit {
     });
     
     this.selectionCol = this.afs.collection('tabletop-syndicate')
-    .doc('selection-data')
-    .collection('current-picks', ref => ref.where('groupId', '==', this.groupId));
+                                .doc('selection-data')
+                                .collection('current-picks', ref => ref.where('groupId', '==', this.groupId));
     this.selection$ = this.selectionCol.valueChanges();
     this.firebaseDataService.players$.subscribe(players => {
       this.players = players;
@@ -109,6 +127,8 @@ export class CurrentSelectionsComponent implements OnInit {
         }
       })
       })
+      
+    this.getSpecificCollections(this.distinctCollections)
       this.authenticationService.userData.subscribe(user => {
         if (user) {
           this.players.forEach(playr => {
@@ -161,6 +181,9 @@ export class CurrentSelectionsComponent implements OnInit {
   getSpecificCollections = (bggIds: string[]) => {
     bggIds.forEach(id => {
       this._genericCollection.next(this.getCollectionGames(id));
+    })
+    this.genericCollection$.subscribe(col => {
+      this.bothCol = col
     })
   }
 
