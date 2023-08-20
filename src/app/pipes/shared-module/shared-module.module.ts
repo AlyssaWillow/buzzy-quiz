@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CollectionFilterPipe, OrderByPipe } from '../collection-filter.pipe';
 import { ReplaceTextPipe } from '../replace-text.pipe';
 import { basePipe, expansionPipe, factionTypesPipe, selectedGamePipe, specificExpansionsPipe } from '../selected-game.pipe';
+import { gameWinsByPlayer } from '../game-wins-by-player.pipe';
 
 
 
@@ -15,7 +16,8 @@ import { basePipe, expansionPipe, factionTypesPipe, selectedGamePipe, specificEx
     expansionPipe,
     specificExpansionsPipe,
     factionTypesPipe,
-    OrderByPipe
+    OrderByPipe,
+    gameWinsByPlayer
   ],
   imports: [
     CommonModule
@@ -28,7 +30,8 @@ import { basePipe, expansionPipe, factionTypesPipe, selectedGamePipe, specificEx
     basePipe,
     specificExpansionsPipe,
     factionTypesPipe,
-    OrderByPipe
+    OrderByPipe,
+    gameWinsByPlayer
   ]
 })
 export class SharedModuleModule { }
