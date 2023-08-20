@@ -8,11 +8,7 @@ import { FirebaseDataService } from '../services/firebase-data.service';
 import { UtilsService } from '../services/utils.service';
 import { BoardGame } from '../models/collection';
 import { CycleDb, ScenarioDb, ScenarioDb2 } from '../models/scenario';
-
-interface playerWin {
-  playerId: string;
-  wins: number;
-}
+import { GameWin, playerWin, playerWinDisplay } from '../models/analytics';
 
 @Component({
   selector: 'app-player-stats',
@@ -25,6 +21,8 @@ export class PlayerStatsComponent implements OnInit {
   startDate: Date | null = new Date(0);
   endDate: Date | null = new Date();
   playerWinCount = new Map();
+  playerWinGames: playerWin[] = [];
+  playerWinGamesDisplay: playerWinDisplay[] = [];
   players: Players[] = [];
   totalGames: number = 0;
   competitiveGames: number = 0;
@@ -108,6 +106,8 @@ export class PlayerStatsComponent implements OnInit {
   }
 
   getPlayerWins = (plays: PlayDb[]): void => {
+    this.playerWinGames = []
+    this.playerWinGamesDisplay = []
     let filteredPlays = plays.filter(ref => {
       let date: Date = new Date(parseInt(ref.date.nanoseconds));  
       if (this.startDate && this.endDate) {
@@ -122,8 +122,27 @@ export class PlayerStatsComponent implements OnInit {
     this.coopGames = filteredPlays.filter(ref => ref.gameType === 'gam-002').length;
     this.semiCoopGames = filteredPlays.filter(ref => ref.gameType === 'gam-003').length;
     this.players.forEach(player => {
-      this.playerWinCount.set(player.id, 
-        filteredPlays.filter(play => play.winners.includes(player.id)).length);
+      this.playerWinCount.set(player.id, filteredPlays.filter(play => play.winners.includes(player.id)).length);
+      this.playerWinGames.push({playerId: player.id, games: filteredPlays.filter(play => play.winners.includes(player.id))})
+    })
+    this.playerWinGames.forEach(playerGame1 => {
+      let pgd: playerWinDisplay = {playerId: playerGame1.playerId, games: []};
+      let foundGames: string[] = [];
+
+      playerGame1.games.forEach(game=> {
+        if (!foundGames.includes(game.gameId)) {
+          let newGame: GameWin = {
+            gameId: game.gameId,
+            wins: 1
+          }
+          pgd.games.push(newGame)
+          foundGames.push(game.gameId)
+        } else {
+          pgd.games.filter(f=> f.gameId === game.gameId)[0].wins += 1
+        }
+      })
+      pgd.games.sort((a, b) => (a.wins > b.wins) ? -1 : 1)
+      this.playerWinGamesDisplay.push(pgd)
     })
   }
 

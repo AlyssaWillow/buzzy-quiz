@@ -79,6 +79,17 @@
                 <div class="player-percent">
                     {{(playerWinCount.get(player.id)/totalGames) * 100 | number : '1.0-2' }}%
                 </div>
+                <hr style="width: 98%; height: 1px">
+                <div class="player-wins-game-list">
+                    <div *ngFor="let player of playerWinGamesDisplay | gameWinsByPlayer: player.id" class="stats-row-player ">
+                        <div class="individual-game-wins-image">
+                            <img class="game-image" src="{{utils.getGameImage(player.gameId, bothCol)}}"/>
+                        </div>
+                        <div class="individual-game-wins-number">
+                            {{player.wins}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -241,6 +252,7 @@
             
         </div>
     </div>
+    
     <div class="stats-column">
         <div class="header">Games Played For The First Time</div>
         <div class="sub-header">Total: {{newGames.length}}</div>
