@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { combineLatest } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { videoDb } from 'src/app/models/video';
 import { Selection2 } from 'src/app/models/player-selection'
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { Timestamp } from 'src/app/models/play';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'tts-prepare-for-gn',
@@ -13,20 +14,35 @@ import { Timestamp } from 'src/app/models/play';
 })
 export class PrepareForGnComponent implements OnInit {
 
+  @Input() groupId: string | null = '';
+
+  private selectionCol: AngularFirestoreCollection<Selection2>;
+  selection$: Observable<Selection2[]>;
+  
   videosForGame: videoDb[] = [];
   videosFromDb: videoDb[] = [];
   showViddies: boolean = false;
   constructor(private firebaseDataService: FirebaseDataService,
-    public sanitizer: DomSanitizer) {
+              private afs: AngularFirestore,
+              public sanitizer: DomSanitizer) {
+      this.selectionCol = this.afs.collection('tabletop-syndicate')
+                           .doc('selection-data')
+                           .collection('current-picks', ref => ref.where('groupId', '==', this.groupId));
+    this.selection$ = this.selectionCol.valueChanges();
   }
 
   ngOnInit(): void {
+    this.selectionCol = this.afs.collection('tabletop-syndicate')
+                                .doc('selection-data')
+                                .collection('current-picks', ref => ref.where('groupId', '==', this.groupId));
+    this.selection$ = this.selectionCol.valueChanges();
     combineLatest(
-      this.firebaseDataService.selection$,
+      this.selection$,
       this.firebaseDataService.videos$,
       this.firebaseDataService.plays$
     ).subscribe(
       ([selections, videos, plays]) => {
+        console.log('groupId', this.groupId, selections)
       this.videosFromDb = videos;
       let idList: string[] = [];
 

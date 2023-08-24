@@ -52,7 +52,7 @@
             </div>
             <div class="profile-body-right">
                 <div *ngFor="let group of gameGroups" class="game-group-names">
-                    <a [routerLink]="['/game-stats', group['id']]">{{group['name']}}</a>
+                    <a (click)="switchGameGroup(group['id'])">{{group['name']}}</a>
                 </div>
             </div>
         </div>

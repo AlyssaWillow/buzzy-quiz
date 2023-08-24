@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import firebase from 'firebase/compat';
 import { GameGroups } from '../models/gameGroups';
 import { PlayDb } from '../models/play';
+import { Router } from '@angular/router';
+import { GameGroupService } from '../services/game-group.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,6 +20,8 @@ export class ProfileComponent implements OnInit {
   gameGroups!: GameGroups[];
   id: string | null = '';
   constructor(private afs: AngularFirestore,
+    private gameGroupService: GameGroupService,
+    private router: Router,
     private route: ActivatedRoute) {
   }
 
@@ -34,5 +38,10 @@ export class ProfileComponent implements OnInit {
           })
 
          })
+  }
+
+  switchGameGroup = (id: string) => {
+    this.gameGroupService.setGameGroup(id);
+    this.router.navigate(['/home']);
   }
 }

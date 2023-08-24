@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { ActivatedRoute } from '@angular/router';
 import firebase from 'firebase/compat';
 import { CollectionGroups, GameGroups, IdsPlayerCollections, PlayerCollectionGroup } from '../models/gameGroups';
 import { Players } from '../models/player-selection';
 import { UtilsService } from '../services/utils.service';
+import { GameGroupService } from '../services/game-group.service';
 
 interface Playersdd {
   value: number;
@@ -93,16 +93,17 @@ export class CollectionComponent implements OnInit {
     {value: 'LEM', viewValue: 'Leman'},
     {value: 'HEN', viewValue: 'Hendrickson'},
   ];
-  gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
   gameGroup: GameGroups[] = []
 
   constructor(public utils: UtilsService,
-              private route: ActivatedRoute,
+              public defaultGameGroupId: GameGroupService,
               private afs: AngularFirestore) { }
 
   ngOnInit(): void {
-    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
-    this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
+    this.defaultGameGroupId.selectedGameGroup$.subscribe(id => {
+      this.gameGroupIdFromRoute = id;
+    })
+    this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', this.gameGroupIdFromRoute))
     .valueChanges().subscribe(gameGroup =>{
       if (this.gameGroup.sort().join(',') !== gameGroup.sort().join(',')) {
         this.gameGroup = gameGroup

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { PlayDb } from 'src/app/models/play';
 import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
@@ -19,12 +20,16 @@ interface GamesPlayedByPlayer {
   styleUrls: ['./games-played.component.scss']
 })
 export class GamesPlayedComponent implements OnInit {
+
+  @Input() groupId: string | null = '';
+  
   gameNames = new Map();
 
   gamesPlayed: GamesPlayedByPlayer[] = [];
 
   constructor(private firebaseDataService: FirebaseDataService,
-    private boardGameGeekService: BoardGameGeekService) { 
+              private afs: AngularFirestore,
+              private boardGameGeekService: BoardGameGeekService) { 
       this.boardGameGeekService.lemanCollection$.subscribe(lem => {
         lem?.item?.forEach(game => {
           this.gameNames.set(game.objectid, game.name.text)
@@ -42,14 +47,39 @@ export class GamesPlayedComponent implements OnInit {
           this.gameNames.set(game.objectid, game.name.text)
         })
       });
-    this.firebaseDataService.plays$.subscribe(plays => {
+      this.afs.collection<PlayDb>('play-history', ref => ref.where('groupId', '==', this.groupId))
+              .valueChanges()
+              .subscribe(plays => {
+                console.log('plays', plays)
       this.gamesPlayed = this.collectPlayData(plays);
     });
     
   }
 
   ngOnInit(): void {
+    this.boardGameGeekService.lemanCollection$.subscribe(lem => {
+      lem?.item?.forEach(game => {
+        this.gameNames.set(game.objectid, game.name.text)
+      })
+    });
 
+    this.boardGameGeekService.hendricksonCollection$.subscribe(hen => {
+      hen?.item?.forEach(game => {
+        this.gameNames.set(game.objectid, game.name.text)
+      })
+    });
+
+    this.boardGameGeekService.hendricksonOverflow$.subscribe(hen => {
+      hen?.item?.forEach(game => {
+        this.gameNames.set(game.objectid, game.name.text)
+      })
+    });
+    this.afs.collection<PlayDb>('play-history', ref => ref.where('groupId', '==', this.groupId))
+            .valueChanges()
+            .subscribe(plays => {
+              console.log('plays', plays)
+    this.gamesPlayed = this.collectPlayData(plays);
+   })
   }
 
   collectPlayData = (plays: PlayDb[]): GamesPlayedByPlayer[] => {
@@ -110,7 +140,7 @@ export class GamesPlayedComponent implements OnInit {
   addToPlayerPicks = (playerId: string, id: string, plays: number): number => {
     if (playerId == id) { 
       return (plays + 1);
-    }else{
+    } else {
       return plays;
     }
   }
@@ -118,5 +148,4 @@ export class GamesPlayedComponent implements OnInit {
   getName = (gameId: string) => {
     return this.gameNames.get(gameId);
   }
-
 }

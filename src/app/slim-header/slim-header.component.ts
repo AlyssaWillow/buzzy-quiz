@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { GameGroups } from '../models/gameGroups';
@@ -21,10 +21,8 @@ export class SlimHeaderComponent implements OnInit {
   color: string | null = 'GY';
 
   constructor(public authenticationService: AuthenticationService,
-    public router: Router,
-    private route: ActivatedRoute,
-              private afs: AngularFirestore) {
-    }
+              public router: Router,
+              private afs: AngularFirestore) { }
 
   ngOnInit(): void {
     this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.groupId ? this.groupId : this.gameGroupId)))

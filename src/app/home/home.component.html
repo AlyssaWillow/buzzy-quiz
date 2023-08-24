@@ -1,19 +1,27 @@
 <div class="home-page">
   <tts-header class="sticky-header" [page]="gameGroup"></tts-header>
     <div class="selections">
-        <tts-countdown [groupId]="gameGroupIdFromRoute"></tts-countdown>
+        <tts-countdown 
+            [groupId]="(gameGroupIdFromRoute ? gameGroupIdFromRoute : gameGroupId)">
+        </tts-countdown>
     </div>
     <div class="selections">
-        <tts-current-selections [groupId]="gameGroupIdFromRoute"></tts-current-selections>
+        <tts-current-selections 
+            [groupId]="(gameGroupIdFromRoute ? gameGroupIdFromRoute : gameGroupId)">
+        </tts-current-selections>
     </div>
     <div class="video">
         <div class="video-header header pattern">{{ prepare }}</div>
         <div class="coming-soon">
-            <tts-prepare-for-gn></tts-prepare-for-gn>
+            <tts-prepare-for-gn 
+                [groupId]="(gameGroupIdFromRoute ? gameGroupIdFromRoute : gameGroupId)">
+            </tts-prepare-for-gn>
         </div>
     </div>
     <div class="plays">
         <div class="plays-header header pattern">{{ gamesPlayed }}</div>
-        <tts-games-played></tts-games-played>
+        <tts-games-played
+            [groupId]="(gameGroupIdFromRoute ? gameGroupIdFromRoute : gameGroupId)">
+        </tts-games-played>
     </div>
 </div> 

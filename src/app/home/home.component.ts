@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { GameGroups } from '../models/gameGroups';
-import { BoardGameGeekService } from '../services/board-game-geek.service';
-import { FirebaseDataService } from '../services/firebase-data.service';
-import { UtilsService } from '../services/utils.service';
-import { ActivatedRoute } from '@angular/router';
+import { GameGroupService } from '../services/game-group.service';
 
 @Component({
   selector: 'tts-home',
@@ -16,11 +11,12 @@ export class HomeComponent implements OnInit {
   gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
   gameGroup: string|null = 'home';
 
-  constructor(public route: ActivatedRoute,
-    private afs: AngularFirestore) { }
+  constructor(public defaultGameGroupId: GameGroupService) { }
 
   ngOnInit(): void {
-    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
+    this.defaultGameGroupId.selectedGameGroup$.subscribe(id => {
+      this.gameGroupIdFromRoute = id;
+    })
   }
   
   prepare = 'Prepare for next game night'

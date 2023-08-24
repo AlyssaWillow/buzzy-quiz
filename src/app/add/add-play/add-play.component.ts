@@ -446,7 +446,6 @@ export class AddPlayComponent implements OnInit {
           this.afs.collection<GameGroups>('play-history', ref => ref.where('id', '==', ''))
             .snapshotChanges().subscribe(groupz=>{
               groupz.forEach(group => {
-                console.log('0',group.payload.doc.id)
                 docData.id = group.payload.doc.id;
                 pickRef.doc(group.payload.doc.id).set(docData).then(() => {
                   this.selectedGame = undefined;
