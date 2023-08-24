@@ -12,7 +12,7 @@ import { FirebaseDataService } from '../services/firebase-data.service';
 import { ListGuide } from '../models/list-guide';
 import { UtilsService } from '../services/utils.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { ActivatedRoute } from '@angular/router';
+import { GameGroupService } from '../services/game-group.service';
 
 interface CollectionGroups {
   value: string;
@@ -85,12 +85,14 @@ export class GameStatsComponent implements OnInit {
   constructor(private boardGameGeekService: BoardGameGeekService,
               private firebaseDataService: FirebaseDataService,
               private utils: UtilsService,
-              private route: ActivatedRoute,
+              public defaultGameGroupId: GameGroupService,
               public authenticationService: AuthenticationService,
               private afs: AngularFirestore) { }
 
   ngOnInit(): void {
-    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
+    this.defaultGameGroupId.selectedGameGroup$.subscribe(id => {
+      this.gameGroupIdFromRoute = id;
+    })
     this.subscriptions = combineLatest(
       this.firebaseDataService.factionTypes$,
       this.firebaseDataService.players$,

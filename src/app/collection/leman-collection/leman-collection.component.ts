@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { ActivatedRoute } from '@angular/router';
 import { XMLParser } from 'fast-xml-parser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BoardGame } from 'src/app/models/collection';
 import { GameGroups } from 'src/app/models/gameGroups';
 import { Players } from 'src/app/models/player-selection';
 import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
+import { GameGroupService } from 'src/app/services/game-group.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 const options = {
@@ -46,7 +46,7 @@ export class LemanCollectionComponent implements OnInit {
 
   constructor(private boardGameGeekService: BoardGameGeekService,
     public utils: UtilsService,
-              private route: ActivatedRoute,
+              public defaultGameGroupId: GameGroupService,
               private afs: AngularFirestore) { 
     if (this.collections) {
     this.getSpecificCollections(this.collections);
@@ -58,7 +58,9 @@ export class LemanCollectionComponent implements OnInit {
     if (this.collections) {
       this.getSpecificCollections(this.collections);
     }
-    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
+    this.defaultGameGroupId.selectedGameGroup$.subscribe(id => {
+      this.gameGroupIdFromRoute = id;
+    })
     this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
     .valueChanges().subscribe(gameGroup =>{
       this.afs.collection('tabletop-syndicate').doc('player-data')

@@ -50,6 +50,7 @@ export class CurrentSelectionsComponent implements OnInit {
   postIt: boolean = true;
   gameGroup: GameGroups[] = [];
   distinctCollections:string[] = [];
+  gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
 
   baseUrl1: string = 'https://boardgamegeek.com/xmlapi/collection/';
   suffix1: string = '?own=1';
@@ -65,7 +66,6 @@ export class CurrentSelectionsComponent implements OnInit {
       public utils: UtilsService,
       private bot: BotService,
       public authenticationService: AuthenticationService) {
-        console.log('asdfasdfadsf', this.groupId)
     this.selectionCol = this.afs.collection('tabletop-syndicate')
                            .doc('selection-data')
                            .collection('current-picks', ref => ref.where('groupId', '==', this.groupId));

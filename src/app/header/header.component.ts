@@ -1,10 +1,11 @@
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { GameGroups } from '../models/gameGroups';
 import { Players } from '../models/player-selection';
+import { GameGroupService } from '../services/game-group.service';
 
 @Component({
   selector: 'tts-header',
@@ -22,14 +23,16 @@ export class HeaderComponent implements OnInit {
 
   constructor(public authenticationService: AuthenticationService,
     public router: Router,
-    private route: ActivatedRoute,
+    public defaultGameGroupId: GameGroupService,
               private afs: AngularFirestore) {
     }
 
   ngOnInit(): void {
     if (this.page === 'home') {
-      this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
-      this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
+      this.defaultGameGroupId.selectedGameGroup$.subscribe(id => {
+        this.gameGroupIdFromRoute = id;
+      })
+      this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute)))
       .valueChanges().subscribe(gameGroup =>{
           this.pageName = gameGroup[0].name
       })

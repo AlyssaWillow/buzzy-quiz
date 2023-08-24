@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { interval, Subscription, timestamp, Timestamp } from 'rxjs';
 import { GameGroupEvent, GameGroups } from 'src/app/models/gameGroups';
 

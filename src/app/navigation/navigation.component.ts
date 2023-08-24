@@ -5,9 +5,9 @@ import { AuthenticationService } from '../services/authentication.service';
 import { GameGroups, IdsPlayerCollections, PlayerCollectionGroup } from '../models/gameGroups';
 import { Players } from '../models/player-selection';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { ActivatedRoute } from '@angular/router';
 import firebase from 'firebase/compat';
 import { UtilsService } from '../services/utils.service';
+import { GameGroupService } from '../services/game-group.service';
 
 @Component({
   selector: 'tts-navigation',
@@ -94,13 +94,15 @@ export class NavigationComponent implements OnInit {
   gameGroup: GameGroups[] = []
 
   constructor(public authenticationService: AuthenticationService,
-    public utils: UtilsService,
-              private route: ActivatedRoute,
+              public utils: UtilsService,
+              public defaultGameGroupId: GameGroupService,
               private afs: AngularFirestore) { }
 
   ngOnInit(): void {
-    this.gameGroupIdFromRoute = this.route.snapshot.paramMap.get('id')
-    this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute ? this.gameGroupIdFromRoute : this.gameGroupId)))
+    this.defaultGameGroupId.selectedGameGroup$.subscribe(id => {
+      this.gameGroupIdFromRoute = id;
+    })
+    this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', (this.gameGroupIdFromRoute)))
     .valueChanges().subscribe(gameGroup =>{
       if (this.gameGroup.sort().join(',') !== gameGroup.sort().join(',')) {
         this.gameGroup = gameGroup

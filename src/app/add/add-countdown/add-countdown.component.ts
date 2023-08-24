@@ -153,7 +153,6 @@ export class AddCountdownComponent implements OnInit {
                                                                          .where('id', '==', ''))
                   .snapshotChanges().subscribe(eventz=>{
                     eventz.forEach(event => {
-                console.log('0',event.payload.doc.id)
                 docData.id = event.payload.doc.id;
                 pickRef.doc(event.payload.doc.id).set(docData).then(() => {
                   this.eventId = '';
