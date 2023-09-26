@@ -44,6 +44,17 @@
                 </mat-form-field>
         </div>
 
+        <div class="select-factions-game">
+            <mat-form-field appearance="fill">
+                <mat-label>Order</mat-label>
+                <mat-select [(ngModel)]="displayOrder" name="collections" (selectionChange)="sortgames()">
+                    <mat-option *ngFor="let col of gameOrder" [value]="col.value">
+                        {{col.viewValue}}
+                      </mat-option>
+                </mat-select>
+                </mat-form-field>
+        </div>
+
         <div class="select-expansions">
             <mat-form-field class="select-faction-dropdown" appearance="fill">
                 <mat-label>Select Games</mat-label>

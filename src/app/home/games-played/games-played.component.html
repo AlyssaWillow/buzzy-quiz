@@ -6,17 +6,8 @@
         <div class="header pick">
             Plays
         </div>
-        <div class="header pick">
-            Picked By Matt
-        </div>
-        <div class="header pick">
-            Picked By Kelly
-        </div>
-        <div class="header pick">
-            Picked By Jen
-        </div>
-        <div class="header pick">
-            Picked By Alyssa
+        <div *ngFor="let player of players" class="header pick">
+            Picked By {{player.firstName}}
         </div>
     </div>
     <hr class="border">
@@ -25,22 +16,13 @@
             {{game.gameName}}
         </div>
         <div class="game" *ngIf="!game.gameName || game.gameName ===''">
-            {{game.gameId}}: Please add <a href="https://boardgamegeek.com/boardgame/{{game.gameId}}">THIS GAME</a> to a BGG collection
+            <a href="https://boardgamegeek.com/boardgame/{{game.gameId}}">{{game.gameId}}</a> Game name error.
         </div>
         <div class="pick"  [ngClass]="{'has-played': game.totalPlays > 0, 'not-played': game.totalPlays === 0}">
             {{game.totalPlays}}
         </div>
-        <div class="pick" [ngClass]="{'has-played': game.mattPlays > 0, 'not-played': game.mattPlays === 0}">
-            {{game.mattPlays}}
-        </div>
-        <div class="pick" [ngClass]="{'has-played': game.kellyPlays > 0, 'not-played': game.kellyPlays === 0}">
-            {{game.kellyPlays}}
-        </div>
-        <div class="pick" [ngClass]="{'has-played': game.jenPlays > 0, 'not-played': game.jenPlays === 0}">
-            {{game.jenPlays}}
-        </div>
-        <div class="pick" [ngClass]="{'has-played': game.alyssaPlays > 0, 'not-played': game.alyssaPlays === 0}">
-            {{game.alyssaPlays}}
+        <div *ngFor="let playerGame of game.playerGames" class="pick" [ngClass]="{'has-played': playerGame.picks > 0, 'not-played': playerGame.picks === 0}">
+            {{playerGame.picks}}
         </div>
     </div>
 </div>

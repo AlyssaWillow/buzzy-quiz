@@ -37,17 +37,9 @@ export interface FactionGame {
     factions: Faction[];
 }
 
-export interface factionDb {
-    order: number;
+export interface factionDb3 {
     typeId: string;
-    id: string;
-    name: string;
-}
-
-export interface factionDb2 {
-    order: number;
-    typeId: string;
-    gameId: string;
+    gameId: string[];
     id: string;
     name: string;
 }

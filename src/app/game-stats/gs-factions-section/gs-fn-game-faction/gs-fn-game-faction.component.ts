@@ -1,11 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Players } from 'src/app/models/player-selection';
 import { BoardGame } from 'src/app/models/collection';
-import { Faction, factionDb, factionDb2, FactionGame } from 'src/app/models/faction';
+import { Faction, factionDb3, FactionGame } from 'src/app/models/faction';
 import { nameId } from 'src/app/models/generic';
 import { UtilsService } from 'src/app/services/utils.service';
-import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 
 @Component({
   selector: 'app-gs-fn-game-faction',
@@ -23,10 +21,10 @@ export class GsFnGameFactionComponent implements OnInit {
   };
   @Input('bothCol') bothCol: BoardGame[] = [];
   @Input('players') players: Players[] = [];
-  @Input('factions') factions: factionDb2[] = [];
+  @Input('factions') factions: factionDb3[] = [];
   @Input('last') last: boolean = false;
 
-  factionListForGame: factionDb[] = [];
+  factionListForGame: factionDb3[] = [];
   constructor(public utils: UtilsService) { }
 
   ngOnInit(): void {
@@ -34,12 +32,11 @@ export class GsFnGameFactionComponent implements OnInit {
   }
 
   getFactionList = (gameId: string, factionTypeId: string): void => {
-    this.factionListForGame = this.factions.filter(ref => ref.gameId === gameId && ref.typeId === factionTypeId);
+    this.factionListForGame = this.factions.filter(ref => ref.gameId.includes(gameId) && ref.typeId === factionTypeId);
     this.addZeros(this.factionGame, this.factionListForGame);
-    this.factionListForGame.sort((a, b) => (a.order > b.order) ? 1 : -1)
   }
 
-  addZeros = (factionGame: FactionGame, factionListForGame: factionDb[]) => {
+  addZeros = (factionGame: FactionGame, factionListForGame: factionDb3[]) => {
     let found = false;
     factionListForGame.forEach(allFaction => {
       found = false;

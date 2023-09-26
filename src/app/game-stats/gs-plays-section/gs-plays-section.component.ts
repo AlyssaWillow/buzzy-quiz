@@ -7,7 +7,7 @@ import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { CycleDb, ScenarioDb2 } from 'src/app/models/scenario';
 import { nameId } from 'src/app/models/generic';
-import { factionDb2 } from 'src/app/models/faction';
+import { factionDb3 } from 'src/app/models/faction';
 
 @Component({
   selector: 'app-gs-plays-section',

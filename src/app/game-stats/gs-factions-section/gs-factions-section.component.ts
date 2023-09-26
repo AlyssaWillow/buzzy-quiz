@@ -2,9 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { Players } from 'src/app/models/player-selection';
-import { BoardGame, GameCollection } from 'src/app/models/collection';
-import { DisplayFactions, Faction, FactionCollection, factionDb, factionDb2, factionTypeData } from 'src/app/models/faction';
-import { PlayDb } from 'src/app/models/play';
+import { BoardGame } from 'src/app/models/collection';
+import { DisplayFactions, factionDb3, factionTypeData } from 'src/app/models/faction';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -17,7 +16,7 @@ export class GsFactionsSectionComponent implements OnInit {
 
   @Input() bothCol: BoardGame[] = [];
   @Input() factions: DisplayFactions[] = [];
-  @Input() allFactions: factionDb2[] = [];
+  @Input() allFactions: factionDb3[] = [];
 
   factionTypeData: factionTypeData[];
   players: Players[];

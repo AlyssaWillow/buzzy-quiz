@@ -1,0 +1,172 @@
+<div class="page">
+    <div class="add-play-header">
+        Add / Edit Factions<span *ngIf="selectedGame">: {{selectedGame.name.text}}</span>
+    </div>
+    
+    <div class="select-game">
+        <div class="select-game-message">
+            Select a game or a faction type to filter factions
+        </div>
+        <div class="top-inputs">
+            <div class="select-game-dropdown">
+                <mat-form-field appearance="fill">
+                    <mat-label>Select Game</mat-label>
+                    <mat-select [(ngModel)]="selectedGameIds" multiple name="getGames" (selectionChange)="getFactions2()">
+                        <mat-option *ngFor="let col of bothCol" [value]="col.objectid">
+                            {{col?.name?.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="select-type">
+                <mat-form-field appearance="fill">
+                    <mat-label>Select Faction Type</mat-label>
+                    <mat-select [(ngModel)]="selectedGameTypeIds" multiple name="getFactionTypes" (selectionChange)="getFactions2()">
+                        <mat-option *ngFor="let col of factionTypes" [value]="col.id">
+                            {{col.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <!-- <div class="enable-deletes" *ngIf="selectedGameType.id !== '' && selectedGame">
+                <button (click)="enableDeletes()">
+                    <span *ngIf="!deletesEnabled">Enable Delete</span>
+                    <span *ngIf="deletesEnabled">Disable Delete</span>
+                </button>
+            </div> -->
+        </div>
+    </div>
+
+
+    <div class="show-factions">
+        <div class="faction-row headers">
+            <div class="fation-order">
+                Order
+            </div>
+            <div class="fation-type-name">
+                Game Name
+            </div>
+            <div class="fation-type-name">
+                Type Name
+            </div>
+            <div class="game-faction-id">
+                Faction Id
+            </div>
+            <div class="faction-name">
+                Faction Name
+            </div>
+            <div class="delete">
+                move
+            </div>
+        </div>
+        <hr>
+        <div *ngFor="let faction of seletedNewFactionList2; let i = index">
+            <div *ngIf="!newIds.includes(faction.id)" class="faction-row row{{i % 2}}">
+                <div class="fation-type-name">
+                    <div *ngFor="let game of faction.gameId">
+                        {{utils.getGameName(game, bothCol)}}
+                    </div>
+                </div>
+                <div class="fation-type-name">
+                    {{faction.typeId}}
+                </div>
+                <div class="game-faction-id">
+                    {{faction.id}}
+                </div>
+                <div class="faction-name">
+                    {{faction.name}}
+                </div>
+                <div *ngIf="newIds.includes(faction.id+faction.typeId+faction.gameId+faction.name)">
+                    <span style="color:green">!!!!!</span>
+                </div>
+                <div>
+                    <button (click)="viewUpdate(faction)">view</button>
+                </div>
+                <div>
+                    <button (click)="commitUpdate(faction)">move</button>
+                </div>
+            </div>
+        </div>
+
+_____________________________________________________________________________________
+
+<div *ngFor="let play of selectedPlays; let i = index">
+    <div class="faction-row row{{i % 2}}">
+        <div class="fation-type-name">
+                {{utils.getGameName(play.gameId, bothCol)}}
+        </div>
+        <div class="faction-name">
+            <div *ngFor="let faction of play.factions">
+                {{faction.typeId}}
+                <br>
+                <div *ngFor="let fact of faction.factions">
+                    {{fact.factionId}}
+                </div>
+            </div>
+        </div>
+        <div>
+            <button (click)="viewPlayUpdate(play)">view</button>
+        </div>
+        <div>
+            <button (click)="commitPlayUpdate(play)">move</button>
+        </div>
+    </div>
+</div>
+
+<div *ngFor="let play of selectedPlays; let i = index">
+    <div class="faction-row row{{i % 2}}">
+        <div class="fation-type-name">
+                {{utils.getGameName(play.gameId, bothCol)}}
+        </div>
+        <div class="faction-name">
+            <div *ngFor="let faction of play.factions">
+                {{faction.typeId}}
+                <br>
+                <div *ngFor="let fact of faction.factions">
+                    {{fact.factionId}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <div class="add-faction">
+        <div class="inputs">
+            <div class="select-game-dropdown">
+                <mat-form-field appearance="fill">
+                    <mat-label>Select Game</mat-label>
+                    <mat-select [(ngModel)]="selectedGame" Multiple name="getGames" (selectionChange)="getFactions($event.value.objectid, '')">
+                        <mat-option *ngFor="let col of bothCol" [value]="col">
+                            {{col?.name?.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="select-type">
+                <mat-form-field appearance="fill">
+                    <mat-label>Select Faction Type</mat-label>
+                    <mat-select [(ngModel)]="selectedGameType" name="getFactionTypes" (selectionChange)="getFactions('', $event.value)">
+                        <mat-option *ngFor="let col of factionTypes" [value]="col">
+                            {{col.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="select-game-dropdown">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Faction Id</mat-label>
+                    <input matInput placeholder="Ex: 01 or 01B" [(ngModel)]="factionId">
+                </mat-form-field>
+            </div>
+        
+            <div class="select-game-dropdown">
+                <mat-form-field class="input-full" appearance="fill">
+                    <mat-label>Faction Name</mat-label>
+                    <input matInput placeholder="Ex: Eyrie Dynasty" [(ngModel)]="factionName">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>

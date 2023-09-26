@@ -10,6 +10,7 @@ export interface GameCollection {
 
 export interface BoardGame {
     objecttype: string | null;
+    bggRank: number;
     objectid: string | null;
     subtype: string | null;
     collid: string;
@@ -77,7 +78,7 @@ interface Name {
   sortorder: number
 }
 
-interface Name2 {
+export interface Name2 {
   type: string;
   sortindex: number;
   value: string;
@@ -96,6 +97,7 @@ export interface AllBoardGames {
 export interface AllBoardGame {
   id: string;
   image: string;
+  bggRank: number;
   description: string; 
   link: Link[];
   maxplayers: Value; 
@@ -109,6 +111,32 @@ export interface AllBoardGame {
   thumbnail: string;
   type: string;
   yearpublished: Value;
+  statistics: Statistics;
+}
+
+interface Ratings {
+  usersrated: Value;
+  average: Value;
+  bayesaverage: Value;
+  ranks: RankHolder;
+  stddev: Value;
+  median: Value;
+  owned: Value;
+  trading: Value;
+  wanting: Value;
+  wishing: Value;
+  numcomments: Value;
+  numweights: Value;
+  averageweight: Value;
+}
+
+interface RankHolder {
+  rank: Rank[];
+}
+
+interface Statistics {
+  page: string;
+  ratings: Ratings
 }
 
 interface Value {

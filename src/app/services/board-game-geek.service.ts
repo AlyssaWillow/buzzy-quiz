@@ -1,10 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
-import * as xml2js from 'xml2js';
-import { Observable, tap, catchError, retry, throwError, map, BehaviorSubject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { GameCollection, BoardGame, AllBoardGames, AllBoardGame } from '../models/collection'; 
+import { XMLParser } from 'fast-xml-parser';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { GameCollection, AllBoardGames, AllBoardGame } from '../models/collection'; 
+import { SearchBoardGame } from '../models/searchReults';
 
 const options = {
   ignoreAttributes : false,
@@ -22,6 +20,8 @@ export class BoardGameGeekService implements OnInit {
   baseUrl1: string = 'https://boardgamegeek.com/xmlapi/collection/';
   baseUrl2: string = 'https://boardgamegeek.com/xmlapi2/thing?id=';
   //baseUrl3: string = 'https://boardgamegeek.com/xmlapi/boardgame/';
+  bggApiv1: string = 'https://boardgamegeek.com/xmlapi';
+  bggApiv2: string = 'https://boardgamegeek.com/xmlapi2';
   leman: string = 'Bluexeclipse';
   hendrickson: string = 'sammysandwich';
   hendricksonOverflow: string = 'sammysandwich2';
@@ -62,6 +62,8 @@ export class BoardGameGeekService implements OnInit {
     item: []
   };
 
+  searchResult: SearchBoardGame[] = []
+
   listOfExpansion: AllBoardGame[] = [];
 
   private _lemanCollection: BehaviorSubject<GameCollection> = new BehaviorSubject(this.lemanCollection);
@@ -78,6 +80,9 @@ export class BoardGameGeekService implements OnInit {
 
   private _listOfCollection: BehaviorSubject<AllBoardGames> = new BehaviorSubject(this.listOfCollection);
   public readonly listOfCollection$: Observable<AllBoardGames> = this._listOfCollection.asObservable();
+
+  private _search: BehaviorSubject<SearchBoardGame[]> = new BehaviorSubject(this.searchResult);
+  public readonly search$: Observable<SearchBoardGame[]> = this._search.asObservable();
 
   private _listOfExpansions: BehaviorSubject<AllBoardGame[]> = new BehaviorSubject(this.listOfExpansion);
   public readonly listOfExpansions$: Observable<AllBoardGame[]> = this._listOfExpansions.asObservable();
@@ -186,7 +191,28 @@ export class BoardGameGeekService implements OnInit {
           }
       }
     }
-    let url = this.baseUrl2 + strList.join(",")
+    let url = this.baseUrl2 + strList.join(",") + "&stats=1"
+    xhr.open("GET", url, true);
+    xhr.send();
+  }
+
+  searchGames(searchString: string): any {
+    let xhr = new XMLHttpRequest();
+    
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            const parser = new XMLParser(options);
+            console.log('respmse',parser.parse(xhr.response).items.item[0].id)
+              this._search.next(parser.parse(xhr.response).items.item);
+              return parser.parse(xhr.response);
+          } else {
+              console.error('error', xhr.response);
+              return undefined;
+          }
+      }
+    }
+    let url = this.bggApiv2 + '/search?query=' + searchString.replace(' ', '+') + '&type=boardgame'
     xhr.open("GET", url, true);
     xhr.send();
   }

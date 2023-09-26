@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
     this.firebaseData.fetchPlayHistoryData();
     this.firebaseData.fetchExpansionOverrideData();
     this.firebaseData.fetchFactionData();
+    this.firebaseData.fetchFaction2Data();
     this.firebaseData.fetchScenarioData();
     this.firebaseData.fetchCycleData();
     this.firebaseData.fetchVideoData();

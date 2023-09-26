@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument, DocumentChangeAction } from '@angular/fire/compat/firestore';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Players, Selection2 } from '../models/player-selection';
-import { factionDb2, factionTypeData } from '../models/faction';
+import { factionDb3, factionTypeData } from '../models/faction';
 import { nameId, Override, Overrides } from '../models/generic';
 import { ListGuide } from '../models/list-guide';
 import { Locations } from '../models/locations';
@@ -23,7 +23,8 @@ export class FirebaseDataService {
   private listGuides: AngularFirestoreCollection<ListGuide>;
   private playsCol: AngularFirestoreCollection<PlayDb>;
   private overrideCol: AngularFirestoreCollection<Override>;
-  private factionsCol: AngularFirestoreCollection<factionDb2>;
+  private factionsCol: AngularFirestoreCollection<factionDb3>;
+  private factions2Col: AngularFirestoreCollection<factionDb3>;
   private scenarioCol: AngularFirestoreCollection<ScenarioDb2>;
   private cycleCol: AngularFirestoreCollection<CycleDb>;
   private videoCol: AngularFirestoreCollection<videoDb>;
@@ -38,7 +39,8 @@ export class FirebaseDataService {
   public plays$: Observable<PlayDb[]>;
   public plays2$: Observable<DocumentChangeAction<PlayDb>[]> | undefined
   public override$: Observable<Override[]>;
-  public factions$: Observable<factionDb2[]>;
+  public factions$: Observable<factionDb3[]>;
+  public factions2$: Observable<factionDb3[]>;
   public scenarios$: Observable<ScenarioDb2[]>;
   public cycles$: Observable<CycleDb[]>;
   public videos$: Observable<videoDb[]>;
@@ -58,7 +60,8 @@ export class FirebaseDataService {
     this.listGuides = this.afs.collection('list-guides');
     this.playsCol = afs.collection('play-history');
     this.overrideCol = afs.collection('overrides');
-    this.factionsCol = afs.collection('factions');
+    this.factionsCol = afs.collection('faction2');
+    this.factions2Col = afs.collection('faction2');
     this.scenarioCol = afs.collection('scenarios');
     this.cycleCol = afs.collection('cycles');
     this.videoCol = afs.collection('videos');
@@ -73,6 +76,7 @@ export class FirebaseDataService {
     this.plays$ = this.playsCol.valueChanges();
     this.override$ = this.overrideCol.valueChanges();
     this.factions$ = this.factionsCol.valueChanges();
+    this.factions2$ = this.factions2Col.valueChanges();
     this.scenarios$ = this.scenarioCol.valueChanges();
     this.cycles$ = this.cycleCol.valueChanges();
     this.videos$ = this.videoCol.valueChanges();
@@ -129,8 +133,13 @@ export class FirebaseDataService {
   }
 
   fetchFactionData = () => { 
-    this.factionsCol = this.afs.collection('factions');
+    this.factionsCol = this.afs.collection('faction2');
     this.factions$ = this.factionsCol.valueChanges();
+  }
+
+  fetchFaction2Data = () => { 
+    this.factions2Col = this.afs.collection('faction2');
+    this.factions2$ = this.factions2Col.valueChanges();
   }
 
   fetchScenarioData = () => { 

@@ -10,11 +10,11 @@
     padding: 2rem 14rem;
 }
 
-.bottom-inputs{
+.inputs{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     background-color: white;
-    padding: 2rem 4rem;
+    padding: 2rem 10rem;
 }
 
 .top-inputs{
@@ -68,17 +68,8 @@
     padding-right: 20rem;
 }
 
-.select-games {
-    width: 50%;
-}
-
-.additional-games {
-    display: flex;
-    flex-direction: row;
-}
-
 .show-factions {
-    padding: 2rem 4rem;
+    padding: 2rem 10rem;
 }
 
 hr {
@@ -95,28 +86,18 @@ hr {
 }
 
 .fation-type-name {
-    width: 13%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 15%;
 }
 
-.game-name {
-    width: 27%;
+.game-faction-id {
+    width: 10%
 }
 
 .faction-name {
-    width: 48%;
-    margin-left: 2%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 40%
 }
 .delete{
-    width:5%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width:5%
 }
 
 .headers {

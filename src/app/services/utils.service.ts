@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Players } from '../models/player-selection';
-import { BoardGame, GameCollection, Link, ListType, textId } from '../models/collection';
-import { cycle, nameId } from '../models/generic';
+import { BoardGame, GameCollection, Link, ListType, Name2, Rank, textId } from '../models/collection';
+import { nameId } from '../models/generic';
 import { Timestamp } from '../models/play';
 import { CycleDb, ScenarioDb2 } from '../models/scenario';
-import { factionDb2 } from '../models/faction';
 import { BoardGameGeekService } from './board-game-geek.service';
 
 @Injectable({
@@ -215,6 +214,26 @@ getGameYear = (id: string, gameCollection: BoardGame[]): string | null => {
     } else {
       let list: Link[] = [];
       list.push(typeList);
+      return list;
+    }
+  }
+
+  castName2ObjectToList = (typeList: any): Name2[] => {
+    if (typeList.length !== undefined && typeList.length > 0) {
+      return typeList;
+    } else {
+      let list: Name2[] = [];
+      list.push(typeList);
+      return list;
+    }
+  }
+
+  castRankObjectToList = (rankList: any): Rank[] => {
+    if (rankList.length !== undefined && rankList.length > 0) {
+      return rankList;
+    } else {
+      let list: Rank[] = [];
+      list.push(rankList);
       return list;
     }
   }
