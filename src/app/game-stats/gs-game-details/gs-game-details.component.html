@@ -4,6 +4,8 @@
     </div>  
     <div class="game-details">
         <div class="detail-row section-row">
+            
+            <div>BGG Overall Rank: {{deets.bggRank}}</div>
             <div>Id: {{deets.id}}</div>
             <div *ngIf="deets.minPlayers !== deets.maxPlayers">Players: {{deets.minPlayers}} - {{deets.maxPlayers}}</div>
             <div *ngIf="deets.minPlayers === deets.maxPlayers">Players: {{deets.minPlayers}}</div>

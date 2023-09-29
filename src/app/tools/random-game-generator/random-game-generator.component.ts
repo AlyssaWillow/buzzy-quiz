@@ -49,6 +49,7 @@ export class RandomGameGeneratorComponent implements OnInit {
   }
   selectedGame: BoardGame = {
     objecttype: null,
+    bggRank: 0,
     objectid: null,
     subtype: null,
     collid: '',

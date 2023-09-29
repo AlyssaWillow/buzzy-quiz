@@ -234,6 +234,7 @@ export class CurrentSelectionsComponent implements OnInit {
 
   resetOrder = async (): Promise<void> => {
     let postOnce: boolean = true;
+    console.log(this.selectionData2)
     this.selectionData2.forEach(async (order2, index) => {
       const pickRef = this.afs.collection('tabletop-syndicate')
                               .doc('selection-data')
@@ -256,8 +257,6 @@ export class CurrentSelectionsComponent implements OnInit {
     
     this.disableEdit();
   }
-  
-   
   enableEdit = () => {
     this.edit = true;
   }
@@ -268,7 +267,6 @@ export class CurrentSelectionsComponent implements OnInit {
   enableResetOrder = () => {
     this.reset = true;
   }
-
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.selectionData2, event.previousIndex, event.currentIndex);
   }

@@ -14,9 +14,10 @@ export class GsVideosComponent implements OnInit {
 
   @Input() game: GameInstance = {
     gameId: '',
+    bggRank: 0,
     gameName: '',
     gameDetails: {id: '', description: '', yearPublished: 0, minPlayers: 0, maxPlayers: 0, minTime: 0,
-    maxTime: 0, boardGameCategory: [], artist: [], designer: []},
+    maxTime: 0, boardGameCategory: [], artist: [], designer: [], bggRank: 0},
     plays: [],
     playerWins: [],
     scenarios: [],

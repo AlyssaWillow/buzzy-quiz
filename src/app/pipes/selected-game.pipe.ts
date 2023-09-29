@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { BoardGame } from '../models/collection';
-import { factionDb2, factionTypeData } from '../models/faction';
+import { factionDb3, factionTypeData } from '../models/faction';
 import { nameId } from '../models/generic';
 
 @Pipe({
@@ -98,7 +98,7 @@ export class factionTypesPipe implements PipeTransform {
             return true;
           } else {
             return args[0][0]
-              .filter((f: factionDb2) => f.gameId === args[0][1])
+              .filter((f: factionDb3) => f.gameId.includes(args[0][1]))
               .map((m: any)=>m.typeId)
               .filter((value: any, index: any, self: string | any[]) => self.indexOf(value) === index)
               .includes(v.id);

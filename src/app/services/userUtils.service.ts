@@ -23,7 +23,8 @@ export class UserUtilsService {
       id: '',
       acctId: '',
       color: '',
-      collection: []
+      collection: [],
+      permissions: []
     }
     return player
     }

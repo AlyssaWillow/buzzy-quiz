@@ -18,6 +18,7 @@ export interface Players {
     collection: string[];
     acctId: string;
     color: string;
+    permissions: string[];
 }
 
 export interface DisplayPlayerSelection {

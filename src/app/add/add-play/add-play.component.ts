@@ -11,7 +11,7 @@ import { CycleDb, ScenarioDb, ScenarioDb2, ScenarioPlayDb } from 'src/app/models
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserUtilsService } from 'src/app/services/userUtils.service';
 import { FirebaseDataService } from 'src/app/services/firebase-data.service';
-import { factionDb2 } from 'src/app/models/faction';
+import { factionDb3 } from 'src/app/models/faction';
 import { BoardGameGeekService } from 'src/app/services/board-game-geek.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { GameGroups } from 'src/app/models/gameGroups';
@@ -35,7 +35,7 @@ export class AddPlayComponent implements OnInit {
   locations: nameId[] = [];
   gameTypes: nameId[] = [];
   plays: PlayDb[] = [];
-  factions: factionDb2[] = [];
+  factions: factionDb3[] = [];
   factionTypes: nameId[] = [];
   dateMatchIds: string[] = [];
   existingIds: string[] = [];
@@ -92,7 +92,8 @@ export class AddPlayComponent implements OnInit {
     id: '',
     acctId: '',
     color: '',
-    collection: []
+    collection: [],
+    permissions: []
   };
   gameGroups: GameGroups[] = []
   playDeletedName: PlayDb = {
@@ -253,7 +254,7 @@ export class AddPlayComponent implements OnInit {
     } else if (factionTypeId !== '') {
       ftId = factionTypeId;
     }
-    this.factionList[i] = this.factions.filter(ref => ref.gameId === gId && ref.typeId === ftId);
+    this.factionList[i] = this.factions.filter(ref => ref.gameId.includes(gId) && ref.typeId === ftId);
   }
 
   getScenarios = (gameId: string): void => {

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { BoardGame } from '../models/collection';
-import { factionDb2, factionTypeData } from '../models/faction';
+import { factionDb3, factionTypeData } from '../models/faction';
 import { nameId } from '../models/generic';
 import { GameWin, playerWinDisplay } from '../models/analytics';
 

@@ -32,7 +32,8 @@ export class AddCountdownComponent implements OnInit {
     id: '',
     acctId: '',
     color: '',
-    collection: []
+    collection: [],
+    permissions: []
   };
   subscriptions: any;
   overwritesEnabled: boolean =  false;

@@ -10,6 +10,7 @@ import { AddFactionTypeModule } from '../add-faction-type/add-faction-type.modul
 import { AddVideoModule } from '../add-video/add-video.module';
 import { AddListModule } from '../add-list/add-list.module';
 import { AddCountdownModule } from '../add-countdown/add-countdown.module';
+import { EditAllFactionModule } from '../edit-all-faction/edit-all-faction.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { AddCountdownModule } from '../add-countdown/add-countdown.module';
     CdkAccordionModule,
     AddFactionTypeModule,
     AddCountdownModule,
-    AddListModule
+    AddListModule,
+    EditAllFactionModule
   ],
   exports: [
     AddAllComponent

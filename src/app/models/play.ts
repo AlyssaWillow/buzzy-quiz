@@ -89,6 +89,7 @@ export interface Scenario {
 
 export interface GameInstance {
     gameId: string;
+    bggRank: number;
     gameName: string;
     gameDetails: GameDetails;
     plays: PlayInstance[];
@@ -115,6 +116,7 @@ export interface ownedAndUnownedExpansions {
 
 export interface GameDetails {
     id: string;
+    bggRank: number;
     description: string;
     yearPublished: number;
     minPlayers: number;
