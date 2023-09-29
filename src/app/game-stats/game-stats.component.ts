@@ -101,6 +101,8 @@ export class GameStatsComponent implements OnInit {
         if (this.bothCol.length === 0 && this.playData.length === 0) {
           this.bothCol = this.utils.getAggregateCollections()
                                    .filter((item, i, arr) => arr.findIndex((t) => t.objectid=== item.objectid) === i)
+                                   .sort((a, b) => (a.name.text > b.name.text ? 1 : -1))
+
           this.sortgames();
           this.getAllGameCollection(this.bothCol);
         }
@@ -115,7 +117,6 @@ export class GameStatsComponent implements OnInit {
   }, [] as any[])
 
   sortgames = () => {
-    console.log('order', this.displayOrder)
       if (this.displayOrder === 'ord-01a') {
         this.playData.sort((a, b) => (a.gameName > b.gameName ? 1 : -1))
       } else if (this.displayOrder === 'ord-02b') {
@@ -564,14 +565,15 @@ export class GameStatsComponent implements OnInit {
     ids.push(...game.expansions.map(m => ""+m.expansionId));
     factions = this.newFactions.filter(ref => ids.some(r=> ref.gameId.includes(r)))
 
-    let typeGameMap = new Map();
+    let typeGameMap = new Map<string, string[]>();
 
     factions.forEach(faction => {
       if(!typeGameMap.has(faction.typeId)) {
-        typeGameMap.set(faction.typeId, new Set().add(faction.gameId))
+        typeGameMap.set(faction.typeId, [...faction.gameId])
       } else {
-        typeGameMap.get(faction.typeId).add(faction.gameId)
+          typeGameMap?.get(faction.typeId)?.push(...faction.gameId)
       }
+
       if (!typeIds.includes(faction.typeId)) {
         typeIds.push(faction.typeId)
       }
@@ -585,9 +587,7 @@ export class GameStatsComponent implements OnInit {
 
     gameIds.forEach(gameId => {
       displayFactions.forEach(displayFaction => {
-        if (typeGameMap.get(displayFaction.factionTypeId).has(gameId)) {
-
-        
+        if (typeGameMap.get(displayFaction.factionTypeId)?.includes(gameId)) {
           if (!combIds.includes(displayFaction.factionTypeId + '-' + gameId)) {
             combIds.push(displayFaction.factionTypeId + '-' + gameId)
             this.addNewFactionGame(displayFaction, gameId);   

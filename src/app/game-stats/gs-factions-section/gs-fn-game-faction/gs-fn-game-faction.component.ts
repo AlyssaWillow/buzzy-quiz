@@ -28,12 +28,14 @@ export class GsFnGameFactionComponent implements OnInit {
   constructor(public utils: UtilsService) { }
 
   ngOnInit(): void {
+    this.players.sort((a, b) => (a.firstName > b.firstName) ? 1 : -1)
     this.getFactionList(this.factionGame.gameId, this.factionTypeId.id)
   }
 
   getFactionList = (gameId: string, factionTypeId: string): void => {
-    this.factionListForGame = this.factions.filter(ref => ref.gameId.includes(gameId) && ref.typeId === factionTypeId);
-    this.addZeros(this.factionGame, this.factionListForGame);
+      this.factionListForGame = this.factions.filter(ref => ref.gameId.includes(gameId) && ref.typeId === factionTypeId)
+                                             .sort((a, b) => (a.name > b.name) ? 1 : -1)
+      this.addZeros(this.factionGame, this.factionListForGame);
   }
 
   addZeros = (factionGame: FactionGame, factionListForGame: factionDb3[]) => {
@@ -48,7 +50,7 @@ export class GsFnGameFactionComponent implements OnInit {
       if (!found) {
         let newFaction: Faction = {
           factionId: allFaction.id,
-          name: '',
+          name: allFaction.name,
           playerCount: []
         }
         this.players.forEach(player => {

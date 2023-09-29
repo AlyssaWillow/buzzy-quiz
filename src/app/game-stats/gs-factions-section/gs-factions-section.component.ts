@@ -38,7 +38,7 @@ export class GsFactionsSectionComponent implements OnInit {
     });
 
     this.playersSubscription = this.firebaseDataService.players$.subscribe(players => {
-      this.players = players;
+      this.players = players.sort((a, b) => (a.firstName > b.firstName) ? 1 : -1);
     });
   }
 
