@@ -7,6 +7,7 @@ import { switchMap } from 'rxjs/operators';
 import { GameCollection, BoardGame, AllBoardGames, AllBoardGame } from '../models/collection'; 
 import { UtilsService } from './utils.service';
 import { DisplayPlayerSelection, Players } from '../models/player-selection';
+import { videoDb } from '../models/video';
 
 const botId: string = 'c474e678c86fa0c4ab1eb996b6';
 const groupId: string = '40449537';
@@ -41,7 +42,8 @@ export class BotService {
 
 
 
-  makeBotTalkGameUpdate = (user: string, gameIds: string[], bothCol: BoardGame[], players: Players[]): any => {
+  makeBotTalkGameUpdate = (user: string, gameIds: string[], bothCol: BoardGame[], players: Players[], videoz: videoDb[]): any => {
+    let videos = videoz.filter(f=> gameIds.includes(f.gameId));
     let words: string = "A syndicate member has made their pick! " + this.utils.getPlayerName(user, players) + " has picked"
     gameIds.forEach((ref, index) => {
       words += " " + this.utils.getGameName(ref, bothCol);
@@ -54,8 +56,24 @@ export class BotService {
       }
     
     })
+    let body: any;
+    if (videos.length > 0) {
+      words += '. Please refer to the following video' + (videos.length > 1 ? 's ' : ' ') + 'to learn how to play. '
+      body = {
+        "text" : words,  
+        "bot_id" : this.botId,
+      }
+      videos.forEach(video => {
+        body.text += " https://www.youtube.com/watch?v=" + video.id
+      })
+    } else  {
+      body = {
+        "text" : words,  
+        "bot_id" : this.botId
+      } 
+    }
     this.postData.text = words;
-    return this.http.post<PostData>(this.url, {"text" : words, "bot_id" : this.botId}).subscribe(ref => {
+    return this.http.post<PostData>(this.url, JSON.stringify(body)).subscribe(ref => {
       console.log('The Bot has spoken', ref)
     })
 

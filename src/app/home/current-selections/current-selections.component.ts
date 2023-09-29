@@ -12,6 +12,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { BotService } from 'src/app/services/bot.service';
 import { XMLParser } from 'fast-xml-parser';
 import { GameGroups } from 'src/app/models/gameGroups';
+import { videoDb } from 'src/app/models/video';
 
 const options = {
   ignoreAttributes : false,
@@ -50,6 +51,7 @@ export class CurrentSelectionsComponent implements OnInit {
   postIt: boolean = true;
   gameGroup: GameGroups[] = [];
   distinctCollections:string[] = [];
+  videos: videoDb[] = [];
   gameGroupId: string = 'KG0dTTTS4HLIR8q9QWsG';
 
   baseUrl1: string = 'https://boardgamegeek.com/xmlapi/collection/';
@@ -85,6 +87,10 @@ export class CurrentSelectionsComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.firebaseDataService.fetchVideoData();
+    this.firebaseDataService.videos$.subscribe(videoz => {
+      this.videos = videoz;
+    })
     this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', this.groupId))
     .valueChanges().subscribe(gameGroup =>{
       if (this.gameGroup.sort().join(',') !== gameGroup.sort().join(',')) {
@@ -224,7 +230,7 @@ export class CurrentSelectionsComponent implements OnInit {
       await pickRef.update({ "pick": this.selectionData[index].pick }).then(() => {
         if(this.postIt) {
           this.bot.makeBotTalkGameUpdate(this.selectionData[index].playerId, 
-            this.selectionData[index].pick, this.bothCol, this.players)
+            this.selectionData[index].pick, this.bothCol, this.players, this.videos)
         }
       })
     }
