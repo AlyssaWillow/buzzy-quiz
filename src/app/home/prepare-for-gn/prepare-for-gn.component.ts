@@ -42,7 +42,6 @@ export class PrepareForGnComponent implements OnInit {
       this.firebaseDataService.plays$
     ).subscribe(
       ([selections, videos, plays]) => {
-        console.log('groupId', this.groupId, selections)
       this.videosFromDb = videos;
       let idList: string[] = [];
 

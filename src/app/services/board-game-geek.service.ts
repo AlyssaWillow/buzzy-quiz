@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { XMLParser } from 'fast-xml-parser';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { GameCollection, AllBoardGames, AllBoardGame } from '../models/collection'; 
+import { GameCollection, AllBoardGames, AllBoardGame, personalCollection, PersonalGameCollection } from '../models/collection'; 
 import { SearchBoardGame } from '../models/searchReults';
 
 const options = {
@@ -44,6 +44,11 @@ export class BoardGameGeekService implements OnInit {
     item: []
   };
 
+  allCollection: PersonalGameCollection = {
+    gameCollection: [],
+    owners: []
+  }
+
   hendricksonCollection: GameCollection = {
     totalitems: 0,
     termsofuse: '',
@@ -71,6 +76,9 @@ export class BoardGameGeekService implements OnInit {
 
   private _hendricksonCollection: BehaviorSubject<GameCollection> = new BehaviorSubject(this.hendricksonCollection);
   public readonly hendricksonCollection$: Observable<GameCollection> = this._hendricksonCollection.asObservable();
+
+  private _allCollectionGames: BehaviorSubject<PersonalGameCollection> = new BehaviorSubject(this.allCollection);
+  public readonly allCollectionGames$: Observable<PersonalGameCollection> = this._allCollectionGames.asObservable();
 
   private _hendricksonOverflow: BehaviorSubject<GameCollection> = new BehaviorSubject(this.hendricksonCollectionO);
   public readonly hendricksonOverflow$: Observable<GameCollection> = this._hendricksonOverflow.asObservable();
@@ -135,6 +143,30 @@ export class BoardGameGeekService implements OnInit {
       }
     }
     xhr.open("GET", this.baseUrl1 + this.hendrickson + this.suffix1, true);
+    xhr.send();
+  }
+
+  getAllCollectionGames(collections: personalCollection[]) {
+    collections.forEach(col => {
+      this.getACollectionGames(col);
+    })
+  }
+  getACollectionGames(collection: personalCollection): any {
+    let xhr = new XMLHttpRequest();
+    
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            const parser = new XMLParser(options);
+            this._allCollectionGames.next({owners: collection.owner, gameCollection: parser.parse(xhr.response).items});
+            return parser.parse(xhr.response);
+          } else {
+              console.error('error', xhr.response);
+              return undefined;
+          }
+      }
+    }
+    xhr.open("GET", this.baseUrl1 + collection.collectionName + this.suffix1, true);
     xhr.send();
   }
 

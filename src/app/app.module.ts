@@ -49,6 +49,8 @@ import { ToolsModule } from './tools/tools.module';
 import { ListsModule } from './lists/lists.module';
 import { ProfileModule } from './profile/profile.module';
 import { UserUtilsService } from './services/userUtils.service';
+import { QuizModule } from './quiz/quiz.module';
+import { QuizControllerModule } from './quiz-controller/quiz-controller.module';
 
 @NgModule({
   declarations: [
@@ -95,7 +97,9 @@ import { UserUtilsService } from './services/userUtils.service';
     MatNativeDateModule,
     RandomGameGeneratorModule,
     ListsModule,
-    ProfileModule
+    ProfileModule,
+    QuizModule,
+    QuizControllerModule
   ],
   providers: [
     AuthenticationService,

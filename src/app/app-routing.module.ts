@@ -15,6 +15,8 @@ import { PlayerStatsComponent } from './player-stats/player-stats.component';
 import { ToolsComponent } from './tools/tools.component';
 import { ListsComponent } from './lists/lists.component';
 import { ProfileComponent } from './profile/profile.component';
+import { QuizComponent } from './quiz/quiz.component';
+import { QuizControllerComponent } from './quiz-controller/quiz-controller.component';
 
 const routes: Routes = [
   { 
@@ -199,6 +201,22 @@ const routes: Routes = [
     component: AddCycleComponent,
     data: {
       title: 'Add Cycle'
+    }
+  },
+  { 
+    path: 'quiz', 
+    pathMatch: 'full',  
+    component: QuizComponent,
+    data: {
+      title: 'quiz'
+    }
+  },
+  { 
+    path: 'controller', 
+    pathMatch: 'full',  
+    component: QuizControllerComponent,
+    data: {
+      title: 'quiz controller'
     }
   },
   { 

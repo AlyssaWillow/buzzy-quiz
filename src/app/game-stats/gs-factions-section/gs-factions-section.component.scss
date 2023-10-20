@@ -40,6 +40,7 @@
     display:flex;
     flex-direction: row;
     min-width: 64.5%;
+    justify-content: space-between;
   }
 
   .factions-list{
@@ -130,6 +131,11 @@
 
 .end-buffer {
   min-width: 3.8rem;
+}
+
+.title-end {
+  display:flex;
+  justify-self: flex-end;
 }
 
 .title-row {

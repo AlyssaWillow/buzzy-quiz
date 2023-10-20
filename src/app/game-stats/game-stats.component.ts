@@ -14,6 +14,8 @@ import { ListGuide } from '../models/list-guide';
 import { UtilsService } from '../services/utils.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { GameGroupService } from '../services/game-group.service';
+import { GameGroups } from '../models/gameGroups';
+import { videoDb } from '../models/video';
 
 @Component({
   selector: 'app-game-stats',
@@ -24,6 +26,7 @@ export class GameStatsComponent implements OnInit {
   gameGroupIdFromRoute: string | null = null;
   playData: GameInstance[] = [];
   bothCol: BoardGame[] = [];
+  videos: videoDb[] = [];
   newFactions: factionDb3[] = [];
   allFactionTypes: factionTypeData[] = [];
   allCol: AllBoardGame[] = [];
@@ -73,31 +76,42 @@ export class GameStatsComponent implements OnInit {
               private utils: UtilsService,
               public defaultGameGroupId: GameGroupService,
               public authenticationService: AuthenticationService,
-              private afs: AngularFirestore) { }
+              private afs: AngularFirestore) {
+                this.players = [];
+               }
 
   ngOnInit(): void {
     this.defaultGameGroupId.selectedGameGroup$.subscribe(id => {
       this.gameGroupIdFromRoute = id;
     })
+    
     this.subscriptions = combineLatest(
       this.firebaseDataService.factionTypes$,
-      this.firebaseDataService.players$,
       this.firebaseDataService.listGuides$,
       this.firebaseDataService.scenarios$,
       this.firebaseDataService.cycles$,
       this.firebaseDataService.factions$,
-      this.afs.collection<PlayDb>('play-history', ref => ref.where('groupId', '==', this.gameGroupIdFromRoute)).valueChanges(),
       this.firebaseDataService.overrides$,
+      this.firebaseDataService.videos$,
+      this.afs.collection<PlayDb>('play-history', ref => ref.where('groupId', '==', this.gameGroupIdFromRoute)).valueChanges(),
+      this.afs.collection<GameGroups>('game-groups', ref => ref.where('id', '==', this.gameGroupIdFromRoute)).valueChanges()
     ).subscribe(
-      ([factionTypes, players, listGuides, scenarioz, cyclez, factionz, plays, overrides]) => {
+      ([factionTypes, listGuides, scenarioz, cyclez, factionz, overrides, videoz, plays, gameGroup]) => {
         this.plays = plays;
         this.allFactionTypes = factionTypes;
-        this.players = players;
+        this.videos = videoz;
         this.listGuides = listGuides;
         this.newScenarios = scenarioz;
         this.newCycles = cyclez;
         this.newFactions = factionz;
         this.collectionOverrides = overrides;
+        this.afs.collection('tabletop-syndicate')
+                .doc('player-data')
+                .collection<Players>('player-names', ref => ref.where('id', 'in', gameGroup[0].members))
+                .valueChanges().subscribe(playerz=>{
+                  this.players = playerz;
+                 
+        console.log(this.players)
         if (this.bothCol.length === 0 && this.playData.length === 0) {
           this.bothCol = this.utils.getAggregateCollections()
                                    .filter((item, i, arr) => arr.findIndex((t) => t.objectid=== item.objectid) === i)
@@ -106,21 +120,72 @@ export class GameStatsComponent implements OnInit {
           this.sortgames();
           this.getAllGameCollection(this.bothCol);
         }
-        this.deDup(this.bothCol)
         
       })
+    }) 
+    
+    this.playData = this.deDupPlays(this.playData)
+    this.bothCol = this.deDupBoardGame(this.bothCol)
+
   };
 
-  deDup = (arr: any[]) => arr.reduce((acc, current) => {
-    if(!acc.includes(current)) acc.push(current)
-    return acc
-  }, [] as any[])
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+    this.playData = [];
+    this.bothCol = [];
+    this.gameGroupIdFromRoute = null;
+    this.videos = [];
+    this.newFactions= [];
+    this.allFactionTypes = [];
+    this.allCol = [];
+    this.nonExpansion = [];
+    this.players = [];
+    this.listGuides = [];
+    this.subscriptions = undefined;
+    this.newScenarios = [];
+    this.newCycles = [];
+    this.selectedGames = [];
+    this.mechanics = [];
+    this.artists = [];
+    this.designers = [];
+    this.mechanicIds = [];
+    this.artistIds = [];
+    this.designerIds = [];
+    this.displayCategory = [];
+    this.displayArtists = [];
+    this.displayDesigners = [];
+    this.displayOrder = "";
+    this.plays = [];
+    this.display= [];
+    this.expansionIds = [];
+  }
+
+  deDupPlays = (a: GameInstance[]): GameInstance[] => {
+    let ids: string[] = [];
+    return a.filter((value, index, array) => {
+      let bool: boolean = !ids.includes(value.gameId)
+      ids.push(value.gameId);
+      return bool;
+    })
+  }
+
+  deDupBoardGame = (a: BoardGame[]): BoardGame[] => {
+    a = a.filter((value, index, array) => 
+     !array.filter((v, i) => value.objectid == v.objectid && i < index).length);
+    return a
+  }
+
+  deDupLink = (a: Link[]):Link[] => {
+    a = a.filter((value, index, array) => 
+     !array.filter((v, i) => value.id == v.id && i < index).length);
+    return a
+  }
 
   sortgames = () => {
       if (this.displayOrder === 'ord-01a') {
         this.playData.sort((a, b) => (a.gameName > b.gameName ? 1 : -1))
       } else if (this.displayOrder === 'ord-02b') {
-        this.playData.sort((a, b) => ((a.bggRank.toString() == 'Not Ranked'? 0: a.bggRank) - (b.bggRank.toString() == 'Not Ranked'? 0: b.bggRank)))
+        this.playData.sort((a, b) => ((a.bggRank.toString() == 'Not Ranked'? 99999999999: a.bggRank) - (b.bggRank.toString() == 'Not Ranked'? 0: b.bggRank)))
       } else if (this.displayOrder === 'ord-03y') {
         this.playData.sort((a, b) => ((a.gameDetails.yearPublished? a.gameDetails.yearPublished: 0) > (b.gameDetails.yearPublished? b.gameDetails.yearPublished: 0) ? 1 : -1))
       } else {
@@ -131,7 +196,7 @@ export class GameStatsComponent implements OnInit {
 
   getAllGameCollection = (both: BoardGame[]) => {
     let idCol: string[] = both.filter(f => f?.objectid != null && f?.objectid !== undefined).map(m => m?.objectid || '')
-    this.boardGameGeekService.getlistOfGames(idCol)
+    this.boardGameGeekService.getlistOfGames(idCol);
     this.expansionIds = [];
     this.boardGameGeekService.listOfCollection$.subscribe(allCollection => {
       this.allCol = [];
@@ -154,88 +219,86 @@ export class GameStatsComponent implements OnInit {
         }
       })
         
-        let baseGame: BaseToGame;
-        this.allCol?.forEach(game => {
-          this.collectMechanics(game);
-          this.collectArtists(game);
-          this.collectDesigner(game);
-         if ((this.collectionOverrides.bases.includes(game.id) || !this.expansionIds.includes(game.id)) && 
-              !this.collectionOverrides.expansions.includes(game.id)) {
-          baseGame = {
-            baseId: game.id,
-            base: game,
-            expansions: []
-          }
-          if (game.link.filter(ref => ref.type == 'boardgameexpansion').length > 0 ) {
-            baseGame.expansions.push(...game.link.filter(ref =>  ref.type == 'boardgameexpansion')
-                                                  .map(expansion => {
-                                                    return {
-                                                      expansionId: expansion.id,
-                                                      expansion: {
-                                                        id: "",
-                                                        bggRank: 0,
-                                                        image: "",
-                                                        description: "",
-                                                        link: [],
-                                                        maxplayers: {value: 0},
-                                                        maxplaytime: {value: 0},
-                                                        minage: {value: 0},
-                                                        minplayers: {value: 0},
-                                                        minplaytime: {value: 0},
-                                                        name: [],
-                                                        playingtime: 0,
-                                                        poll: [],
-                                                        thumbnail: "",
-                                                        type: "",
-                                                        yearpublished: {value: 0},
-                                                        statistics: {
-                                                          page:'',
-                                                          ratings: {
-                                                            usersrated: {value:0},
-                                                            average: {value:0},
-                                                            bayesaverage: {value:0},
-                                                            ranks: {
-                                                              rank: []
-                                                            },
-                                                            stddev: {value:0},
-                                                            median: {value:0},
-                                                            owned: {value:0},
-                                                            trading: {value:0},
-                                                            wanting: {value:0},
-                                                            wishing: {value:0},
-                                                            numcomments: {value:0},
-                                                            numweights: {value:0},
-                                                            averageweight: {value:0},
-                                                          }
+      let baseGame: BaseToGame;
+      this.allCol?.forEach(game => {
+        this.collectMechanics(game);
+        this.collectArtists(game);
+        this.collectDesigner(game);
+        if ((this.collectionOverrides.bases.includes(game.id) || !this.expansionIds.includes(game.id)) && 
+            !this.collectionOverrides.expansions.includes(game.id)) {
+        baseGame = {
+          baseId: game.id,
+          base: game,
+          expansions: []
+        }
+        if (game.link.filter(ref => ref.type == 'boardgameexpansion').length > 0 ) {
+          baseGame.expansions.push(...game.link.filter(ref =>  ref.type == 'boardgameexpansion')
+                                                .map(expansion => {
+                                                  return {
+                                                    expansionId: expansion.id,
+                                                    expansion: {
+                                                      id: "",
+                                                      bggRank: 0,
+                                                      image: "",
+                                                      description: "",
+                                                      link: [],
+                                                      maxplayers: {value: 0},
+                                                      maxplaytime: {value: 0},
+                                                      minage: {value: 0},
+                                                      minplayers: {value: 0},
+                                                      minplaytime: {value: 0},
+                                                      name: [],
+                                                      playingtime: 0,
+                                                      poll: [],
+                                                      thumbnail: "",
+                                                      type: "",
+                                                      yearpublished: {value: 0},
+                                                      statistics: {
+                                                        page:'',
+                                                        ratings: {
+                                                          usersrated: {value:0},
+                                                          average: {value:0},
+                                                          bayesaverage: {value:0},
+                                                          ranks: {
+                                                            rank: []
+                                                          },
+                                                          stddev: {value:0},
+                                                          median: {value:0},
+                                                          owned: {value:0},
+                                                          trading: {value:0},
+                                                          wanting: {value:0},
+                                                          wishing: {value:0},
+                                                          numcomments: {value:0},
+                                                          numweights: {value:0},
+                                                          averageweight: {value:0},
                                                         }
                                                       }
                                                     }
-                                                  }))
-          }
-          this.nonExpansion.push(baseGame)
-         }
-        })
+                                                  }
+                                                }))
+        }
+        this.nonExpansion.push(baseGame)
+        }
+      })
   
-        this.allCol?.forEach(game => {
-          if (this.expansionIds.includes(game.id)) {
-           this.nonExpansion.forEach(base => {
+      this.allCol?.forEach(game => {
+        if (this.expansionIds.includes(game.id)) {
+          this.nonExpansion.forEach(base => {
             base.expansions.forEach(expansion => {
               if (("" + expansion.expansionId) === game.id) {
                 expansion.expansion = game;
               }
             })
-           })
-          }
-         });
-        this.playData = [];
-        this.playData = this.collectGameData(this.nonExpansion, this.plays);
-        this.playData.sort((a, b) => a.gameName > b.gameName ? 1 : -1)
-        this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId));
-      })
-  }
+          })
+        }
+      });
 
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+      this.playData = [];
+      this.playData = this.collectGameData(this.nonExpansion, this.plays);
+      this.playData = this.deDupPlays(this.playData)
+      this.playData.sort((a, b) => a.gameName > b.gameName ? 1 : -1)
+      this.nonExpansion = this.nonExpansion.filter(a => !this.collectionOverrides.expansions.includes(a.baseId));
+    })
   }
 
   getGameIdList = (plays: PlayDb[]) => {
@@ -276,7 +339,8 @@ export class GameStatsComponent implements OnInit {
           gameInstance.gameDetails = this.getGameDetails(game)
           gameInstance.winners = this.createEmptyWinners();
           gameInstance.factions = this.createEmptyFactions(game);
-          gameInstance.bggRank = this.getRank(game),
+          gameInstance.gameDetails.bggRank = this.getRank(game);
+          gameInstance.bggRank = this.getRank(game);
           gameInstance.scenarios = this.createEmptyScenarios(game, this.listGuides);
           gameInstance.expansions = this.getDisplayExpansions(game)
           playsForGame = plays.filter(f => (game.baseId === f.gameId))
@@ -328,14 +392,17 @@ export class GameStatsComponent implements OnInit {
   }
 
   getRank = (game: BaseToGame): number => {
-    let rank: number = -1;
+    console.log('rank',game, game.base.bggRank, game.base.statistics.ratings.ranks.rank)
+    let rank: number = 99999;
     let gameRankList: Rank[] = this.utils.castRankObjectToList(game.base.statistics.ratings.ranks.rank)
+    console.log('rank2', gameRankList)
     
     let bggRank: Rank | undefined = gameRankList?.find(f => f.name === 'boardgame')
-
+console.log('rank3', bggRank)
     if (bggRank !== undefined) {
       rank = bggRank.value
     }
+    console.log('rank4', rank)
     return rank
 
   }
@@ -409,18 +476,19 @@ export class GameStatsComponent implements OnInit {
   }
 
   createWinners = (winners: Wins[], play: PlayDb): Wins[] => {
-
-    if (winners.length < 4) {
+    if (winners.length < this.players.length) {
       let win: Wins;
       for (let player of this.players) {
-        win = {
-          playerId: '',
-          playerName: '',
-          winCount: 0
+        if (!winners.find(f=> f.playerId === player.id)) {
+          win = {
+            playerId: '',
+            playerName: '',
+            winCount: 0
+          }
+          win.playerId = player.id;
+          win.playerName = player.firstName;
+          winners.push(win);
         }
-        win.playerId = player.id;
-        win.playerName = player.firstName;
-        winners.push(win);
       }
     }
 
@@ -547,6 +615,7 @@ export class GameStatsComponent implements OnInit {
         })
       }
     });
+
     displayScenarios.forEach(displayScenario => {
       displayScenario.cycles = this.addEmptyCycles(displayScenario, displayScenario.gameId);   
     });
@@ -696,11 +765,9 @@ export class GameStatsComponent implements OnInit {
         name: '',
         playerCount: this.addAllPlayersToFaction()
       }
-      factionNames.forEach(names => {
-        if (names.id === newFaction.factionId) {
-          createdFaction.name = names.name;
-        }
-      })
+
+      let theName: string | undefined = factionNames.find(f=>f.id === newFaction.factionId)?.name;
+      createdFaction.name = (theName ? theName : '');
       factions.push(createdFaction);
     }
     factions.forEach(faction => {
@@ -734,33 +801,21 @@ export class GameStatsComponent implements OnInit {
 
 
   collectMechanics(game: AllBoardGame) {
-    game.link.filter(ref => ref.type === 'boardgamecategory').forEach(cat => {
-      if (!this.mechanicIds.includes(cat.id)) {
-        this.mechanicIds.push(cat.id)
-        this.mechanics.push(cat);
-        this.mechanics.sort((a, b) => (a.value > b.value) ? 1 : -1)
-      }
-    })
+    this.mechanics.push(...game.link.filter(ref => ref.type === 'boardgamecategory'));
+    this.mechanics = this.deDupLink(this.mechanics);
+    this.mechanics.sort((a, b) => (a.value > b.value) ? 1 : -1)
   }
 
   collectArtists(game: AllBoardGame) {
-    game.link.filter(ref => ref.type === 'boardgameartist').forEach(cat => {
-      if (!this.artistIds.includes(cat.id)) {
-        this.artistIds.push(cat.id)
-        this.artists.push(cat);
-        this.artists.sort((a, b) => (a.value > b.value) ? 1 : -1)
-      }
-    })
+    this.artists.push(...game.link.filter(ref => ref.type === 'boardgameartist'));
+    this.artists = this.deDupLink(this.artists);
+    this.artists.sort((a, b) => (a.value > b.value) ? 1 : -1)
   }
 
   collectDesigner(game: AllBoardGame) {
-    game.link.filter(ref => ref.type === 'boardgamedesigner').forEach(cat => {
-      if (!this.designerIds.includes(cat.id)) {
-        this.designerIds.push(cat.id)
-        this.designers.push(cat);
-        this.designers.sort((a, b) => (a.value > b.value) ? 1 : -1)
-      }
-    })
+    this.designers.push(...game.link.filter(ref => ref.type === 'boardgamedesigner'));
+    this.designers = this.deDupLink(this.designers);
+    this.designers.sort((a, b) => (a.value > b.value) ? 1 : -1)
   }
 
   checkMechanics = (links: Link[]): boolean => {

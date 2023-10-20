@@ -107,25 +107,50 @@
             </div>
         </div>
 
-        <app-gs-game-details *ngIf="display.length === 0 || display.includes('typ-06D')" [deets]="game.gameDetails"></app-gs-game-details >
+        <app-gs-game-details *ngIf="display.length === 0 || display.includes('typ-06D')" 
+            [deets]="game.gameDetails">
+        </app-gs-game-details >
 
         <div *ngIf="game.expansions && ((game.expansions.owned && game.expansions.owned.length > 0) ||
             (game.expansions.unowned && game.expansions.unowned.length > 0))">
             <tts-gs-expansions *ngIf="display.length === 0 || display.includes('typ-07E')"  
-                [expansions]="game.expansions" [bothCol]="bothCol"></tts-gs-expansions>
+                [expansions]="game.expansions" 
+                [bothCol]="bothCol">
+            </tts-gs-expansions>
         </div>
 
-        <app-gs-wins-section *ngIf="display.length === 0 || display.includes('typ-02W')" [winners]="game.winners"></app-gs-wins-section>
+        <app-gs-wins-section *ngIf="display.length === 0 || display.includes('typ-02W')" 
+            [winners]="game.winners">
+        </app-gs-wins-section>
 
-        <app-gs-plays-section *ngIf="display.length === 0 || display.includes('typ-05P')" [plays]="game.plays"></app-gs-plays-section>
+        <app-gs-plays-section *ngIf="display.length === 0 || display.includes('typ-05P')" 
+            [plays]="game.plays"
+            [factionTypes]="allFactionTypes"
+            [players]="players"
+            [cycles]="newCycles"
+            [scenarios]="newScenarios">
+        </app-gs-plays-section>
 
         <app-gs-factions-section *ngIf="display.length === 0 || display.includes('typ-03F')" 
-            [factions]="game.factions" [bothCol]="bothCol" [allFactions]="newFactions"></app-gs-factions-section>
+            [factions]="game.factions" 
+            [bothCol]="bothCol" 
+            [allFactions]="newFactions"
+            [factionTypeData]="allFactionTypes"
+            [players]="players">
+        </app-gs-factions-section>
         
         <div *ngIf="game.scenarios && game.scenarios.length > 0">
-            <app-gs-scenarios-section *ngIf="display.length === 0 || display.includes('typ-04S')" [scenarios]="game.scenarios" [bothCol]="bothCol"></app-gs-scenarios-section>
+            <app-gs-scenarios-section *ngIf="display.length === 0 || display.includes('typ-04S')" 
+                [scenarios]="game.scenarios" 
+                [bothCol]="bothCol"
+                [cycles]="newCycles"
+                [scenarioDb]="newScenarios">
+            </app-gs-scenarios-section>
         </div>
-        <app-gs-videos *ngIf="display.length === 0 || display.includes('typ-08V')" [game]="game"></app-gs-videos>
+        <app-gs-videos *ngIf="display.length === 0 || display.includes('typ-08V')" 
+            [game]="game"
+            [videos]="videos">
+        </app-gs-videos>
         
     </div>
 </div>
