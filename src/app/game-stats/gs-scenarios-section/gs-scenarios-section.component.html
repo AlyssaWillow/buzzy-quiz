@@ -25,7 +25,9 @@
             <app-gs-sn-game-scenario
                     [scenarioGame]="scenario"
                     [bothCol]="bothCol"
-                    [last]="((i+1) === scenarios.length)">
+                    [cycles]="cycles"
+                    [last]="((i+1) === scenarios.length)"
+                    [scenarios]="scenarioDb">
                 </app-gs-sn-game-scenario>
             </div>
         </div> 

@@ -14,7 +14,6 @@ export class UserUtilsService {
     this.afs.collection('tabletop-syndicate').doc('player-data')
     .collection<Players>('player-names', ref => ref.where('acctId', '==', id))
     .valueChanges().subscribe(playerz=>{
-      console.log(playerz)
       return playerz[0];
     })
     let player: Players = {

@@ -1,0 +1,28 @@
+<div *ngIf="gameId === undefined || gameId === ''" class="page">
+
+    <div class="select-game-">
+        <mat-form-field class="input-full input-line" appearance="fill">
+            <mat-label>Enter Game Code</mat-label>
+            <input matInput placeholder="Ex: Pax Unplugged" [(ngModel)]="inputGameCode">
+        </mat-form-field>
+    </div>
+
+    <div class="select-game-">
+        <mat-form-field class="input-full input-line" appearance="fill">
+            <mat-label>Enter Name</mat-label>
+            <input matInput placeholder="Ex: Pax Unplugged" [(ngModel)]="inputName">
+        </mat-form-field>
+    </div>
+
+    <div class="add-play-header">
+        <button (click)="enterGame()">Enter Game</button>
+    </div>
+</div>
+
+<div *ngIf="gameId !== undefined && gameId !== ''" class="page">
+    game id: {{gameId}}
+    player Name: {{inputName}}
+    <div class="add-play-header">
+        <button (click)="buzzIn()">Buzz In!</button>
+    </div>
+</div>

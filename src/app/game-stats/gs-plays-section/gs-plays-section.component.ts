@@ -7,7 +7,7 @@ import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { CycleDb, ScenarioDb2 } from 'src/app/models/scenario';
 import { nameId } from 'src/app/models/generic';
-import { factionDb3 } from 'src/app/models/faction';
+import { factionDb3, factionTypeData } from 'src/app/models/faction';
 
 @Component({
   selector: 'app-gs-plays-section',
@@ -17,36 +17,18 @@ import { factionDb3 } from 'src/app/models/faction';
 export class GsPlaysSectionComponent implements OnInit {
 
   @Input() plays: PlayInstance[] = [];
-
-  players: Players[];
-  cycles: CycleDb[] = [];
-  expanded: boolean[] = [];
-  factionTypes: nameId[] = [];
-  factions: nameId[] = [];
-  scenarios: ScenarioDb2[] = [];
+  @Input() factionTypes: factionTypeData[] = [];
+  @Input() cycles: CycleDb[] = [];
+  @Input() players: Players[] = [];
+  @Input() factions: factionDb3[] = [];
+  @Input() scenarios: ScenarioDb2[] = [];
   
-  constructor(private firebaseDataService: FirebaseDataService,
-    public utils: UtilsService) {
-    this.players = []
-  }
+  expanded: boolean[] = [];
+  
+  constructor(public utils: UtilsService) { }
 
   ngOnInit(): void {
     this.plays.sort((a, b) => (a.date > b.date) ? 1 : -1);
-    this.firebaseDataService.players$.subscribe((players: Players[]) => {
-      this.players = players;
-    })
-    this.firebaseDataService.cycles$.subscribe((cycles: CycleDb[]) => {
-      this.cycles = cycles;
-    })
-    this.firebaseDataService.factionTypes$.subscribe((factionType: nameId[]) => {
-      this.factionTypes = factionType;
-    })
-    this.firebaseDataService.factions$.subscribe((factions: nameId[]) => {
-      this.factions = factions;
-    })
-    this.firebaseDataService.scenarios$.subscribe((scenarios: ScenarioDb2[]) => {
-      this.scenarios = scenarios;
-    })
   }
 
   openPlay = (i: number): void => {

@@ -1,6 +1,10 @@
 import { TextFieldModule } from "@angular/cdk/text-field";
 import { stringLength } from "@firebase/util";
 
+export interface PersonalGameCollection {
+  gameCollection: BoardGame[];
+  owners: string[];
+}
 export interface GameCollection {
     totalitems: number;
     termsofuse: string | null;
@@ -197,3 +201,8 @@ export interface ListType {
 }
 
 interface Inbound {text: string, objectid: string, inbound: string}
+
+export interface personalCollection {
+  collectionName: string;
+  owner: string[];
+}

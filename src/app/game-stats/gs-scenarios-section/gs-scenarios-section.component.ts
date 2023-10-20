@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Players } from 'src/app/models/player-selection';
 import { BoardGame } from 'src/app/models/collection';
 import { Scenario } from 'src/app/models/play';
-import { ScenarioGame } from 'src/app/models/scenario';
+import { CycleDb, ScenarioDb2, ScenarioGame } from 'src/app/models/scenario';
 
 @Component({
   selector: 'app-gs-scenarios-section',
@@ -13,6 +13,8 @@ export class GsScenariosSectionComponent implements OnInit {
 
   @Input() scenarios: ScenarioGame[] = [];
   @Input() bothCol: BoardGame[] = [];
+  @Input() cycles: CycleDb[] = [];
+  @Input('scenarioDb') scenarioDb: ScenarioDb2[] = [];
   
   constructor() { }
 

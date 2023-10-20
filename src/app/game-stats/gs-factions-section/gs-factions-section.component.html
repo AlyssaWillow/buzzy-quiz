@@ -9,10 +9,12 @@
                     <div class="title factions-name">
                         Name
                     </div>
-                    <div *ngFor="let player of players" class="title factions-player2">
-                        <span>{{player.firstName}}</span>
+                    <div class="title-end">
+                        <div *ngFor="let player of players" class="title factions-player2">
+                            <span>{{player.firstName}}</span>
+                        </div>
+                        <div class="end-buffer"></div>
                     </div>
-                    <div class="end-buffer"></div>
                 </div>
             </div>
             <div class="game-divider">

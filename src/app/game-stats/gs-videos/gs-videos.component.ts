@@ -1,9 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { BoardGame } from 'src/app/models/collection';
 import { GameInstance } from 'src/app/models/play';
 import { videoDb } from 'src/app/models/video';
-import { FirebaseDataService } from 'src/app/services/firebase-data.service';
 
 @Component({
   selector: 'app-gs-videos',
@@ -11,7 +9,7 @@ import { FirebaseDataService } from 'src/app/services/firebase-data.service';
   styleUrls: ['./gs-videos.component.scss']
 })
 export class GsVideosComponent implements OnInit {
-
+  @Input('videos') videosFromDb: videoDb[] = [];
   @Input() game: GameInstance = {
     gameId: '',
     bggRank: 0,
@@ -30,22 +28,18 @@ export class GsVideosComponent implements OnInit {
     winners: []
   };
   videosForGame: videoDb[] = [];
-  videosFromDb: videoDb[] = [];
   showViddies: boolean = false;
-  constructor(private firebaseDataService: FirebaseDataService,
-    public sanitizer: DomSanitizer) {
+
+  constructor(public sanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
-    this.firebaseDataService.videos$.subscribe(ref => {
-      this.videosFromDb = ref;
-      let idList: string[] = [];
+    let idList: string[] = [];
     idList.push(this.game.gameId);
     this.game.expansions.owned.forEach(exp => {
       idList.push(exp.id)
     })
     this.getVideoList(idList)
-    })
   }
 
   getVideoList = (idList: string[]): void => {

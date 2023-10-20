@@ -20,24 +20,17 @@ export class GsSnGameScenarioComponent implements OnInit {
     cycles: []
   };
   @Input('bothCol') bothCol: BoardGame[] = [];
+  @Input('cycles') newCycles: CycleDb[] = [];
   @Input('last') last: boolean = true;
+  @Input('scenarios') newScenarios: ScenarioDb2[] = [];
 
   scenarioListForGame: ScenarioDb2[] = [];
-  newScenarios: ScenarioDb2[] = [];
-  newCycles: CycleDb[] = [];
   cycleListForGame: CycleDb[] = [];
 
-  constructor(public utils: UtilsService,
-    private firebaseDataService: FirebaseDataService,
-    private afs: AngularFirestore) { }
+  constructor(public utils: UtilsService) { }
 
   ngOnInit(): void {
-    combineLatest(this.firebaseDataService.cycles$, this.firebaseDataService.scenarios$).subscribe(
-      ([cyclez, scenarioz]) => {
-      this.newCycles = cyclez;
-      this.newScenarios = scenarioz;
-      this.getCycleList(this.scenarioGame.gameId, cyclez);
-      });
+    this.getCycleList(this.scenarioGame.gameId, this.newCycles);
   }
 
   getCycleList = (gameId: string, cycles: CycleDb[]): void => {
@@ -47,6 +40,6 @@ export class GsSnGameScenarioComponent implements OnInit {
 
   getScenarioList = (cycleId: string): ScenarioDb2[] => {
     return this.newScenarios.filter(ref => ref.gameId === this.scenarioGame.gameId && ref.cycle === cycleId)
-    .sort((a, b) => (a.order > b.order) ? 1 : -1)
+                            .sort((a, b) => (a.order > b.order) ? 1 : -1)
   }
 }

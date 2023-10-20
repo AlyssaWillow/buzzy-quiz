@@ -14,6 +14,7 @@ export class GsGameDetailsComponent implements OnInit {
   constructor(public utils: UtilsService) { }
 
   ngOnInit(): void {
+    console.log('deets', this.deets)
   }
 
 }

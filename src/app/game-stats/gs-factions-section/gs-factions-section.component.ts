@@ -17,33 +17,13 @@ export class GsFactionsSectionComponent implements OnInit {
   @Input() bothCol: BoardGame[] = [];
   @Input() factions: DisplayFactions[] = [];
   @Input() allFactions: factionDb3[] = [];
+  @Input() players: Players[] = [];
+  @Input() factionTypeData: factionTypeData[] = [];
 
-  factionTypeData: factionTypeData[];
-  players: Players[];
-  factionTypesSubscription: any;
-  playersSubscription: any;
-
-  constructor(public utils: UtilsService,
-    private firebaseDataService: FirebaseDataService) {
-  
-
-    this.factionTypeData = [];
-    this.players = [];
-  }
+  constructor(public utils: UtilsService) { }
 
   ngOnInit(): void {
-    this.factionTypesSubscription = this.firebaseDataService.factionTypes$.subscribe(factionTypeData => {
-      this.factionTypeData = factionTypeData;
-      this.factionTypeData.sort((a, b) => (a.order > b.order) ? 1 : -1)
-    });
-
-    this.playersSubscription = this.firebaseDataService.players$.subscribe(players => {
-      this.players = players.sort((a, b) => (a.firstName > b.firstName) ? 1 : -1);
-    });
-  }
-
-  ngOnDestroy() {
-    this.factionTypesSubscription.unsubscribe();
-    this.playersSubscription.unsubscribe();
+    this.factionTypeData.sort((a, b) => (a.order > b.order) ? 1 : -1)
+    this.players.sort((a, b) => (a.firstName > b.firstName) ? 1 : -1);
   }
 }
