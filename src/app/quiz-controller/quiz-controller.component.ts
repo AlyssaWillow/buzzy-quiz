@@ -2,11 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { QuizController, buzzIn } from '../models/quiz';
 import { activeQuestion, question } from '../models/question';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-quiz-controller',
   templateUrl: './quiz-controller.component.html',
-  styleUrls: ['./quiz-controller.component.scss']
+  styleUrls: ['./quiz-controller.component.scss'],
+  imports: [
+    CommonModule,
+    MatSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule, 
+    FormsModule,
+  ]
 })
 export class QuizControllerComponent implements OnInit {
 
