@@ -26,8 +26,8 @@ export class CurrentSelectionsComponent {
   edit = false;
   constructor(private afs: AngularFirestore,
               public authenticationService: AuthenticationService) {
-   this.playerCol = afs.collection('tabletop-syndicate').doc('player-data').collection('player-names');
-    this.selectionCol = afs.collection('tabletop-syndicate').doc('selection-data').collection('current-picks');
+   this.playerCol = afs.collection('buzzy-quiz').doc('player-data').collection('player-names');
+    this.selectionCol = afs.collection('buzzy-quiz').doc('selection-data').collection('current-picks');
     this.players$ = this.playerCol.valueChanges();
     this.selection$ = this.selectionCol.valueChanges();
     this.players$.subscribe(players => {
@@ -70,7 +70,7 @@ export class CurrentSelectionsComponent {
     this.selectionData.forEach(async pick => {
         this.selectionData2.forEach(async pick2 => {
           if (pick.playerId === pick2.playerId && pick.pick !== pick2.pick) {
-            const pickRef = this.afs.collection('tabletop-syndicate')
+            const pickRef = this.afs.collection('buzzy-quiz')
                                     .doc('selection-data')
                                     .collection('current-picks')
                                     .doc(pick.playerId);
@@ -80,7 +80,7 @@ export class CurrentSelectionsComponent {
     });
 
     this.selectionData2.forEach(async (order2, index) => {
-      const pickRef = this.afs.collection('tabletop-syndicate')
+      const pickRef = this.afs.collection('buzzy-quiz')
                               .doc('selection-data')
                               .collection('current-picks')
                               .doc(order2.playerId);

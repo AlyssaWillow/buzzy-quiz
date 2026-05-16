@@ -1,0 +1,16 @@
+<div class="slim-overall-header {{color}}">
+    <div class="slim-header-top">
+      <div class="slim-top-left">
+      </div>
+      <div class="slim-top-right">
+        <div class="slim-login">
+          <h3 class="slim-player-name" *ngIf="authenticationService.userData | async"><a [routerLink]="['/profile', (authenticationService.userData | async)?.uid]">{{ (authenticationService.userData | async)?.email }}</a></h3>
+          <div class="log-in-buttons">
+            <button class="slim-button" (click)="authenticationService.SignOut()" *ngIf="authenticationService.userData | async">Logout</button>
+            <button class="slim-button" (click)="login()" *ngIf="!(authenticationService.userData | async)">Login</button>
+            <button class="slim-button" (click)="signUp()" *ngIf="!(authenticationService.userData | async)">Sign Up</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

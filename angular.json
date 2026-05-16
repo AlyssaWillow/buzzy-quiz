@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "TabletopSyndicate": {
+    "BuzzyQuiz": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/tabletop-syndicate",
+            "outputPath": "dist/buzzy-quiz",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -41,7 +41,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "TabletopSyndicate:build:production"
+              "browserTarget": "BuzzyQuiz:build:production"
             },
             "development": {
-              "browserTarget": "TabletopSyndicate:build:development"
+              "browserTarget": "BuzzyQuiz:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -86,7 +86,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "TabletopSyndicate:build"
+            "browserTarget": "BuzzyQuiz:build"
           }
         },
         "test": {
@@ -112,13 +112,16 @@
           "options": {
             "prerender": false,
             "ssr": false,
-            "browserTarget": "TabletopSyndicate:build:production",
-            "firebaseProject": "tabletop-syndicate",
-            "firebaseHostingSite": "tabletop-syndicate"
+            "browserTarget": "BuzzyQuiz:build:production",
+            "firebaseProject": "buzzy-quiz",
+            "firebaseHostingSite": "buzzy-quiz"
           }
         }
       }
     }
   },
-  "defaultProject": "TabletopSyndicate"
+  "defaultProject": "BuzzyQuiz",
+  "cli": {
+    "analytics": false
+  }
 }

@@ -1,6 +1,6 @@
 {
-  "name": "tabletop-syndicate",
-  "version": "0.0.0",
+  "name": "buzzy-quiz",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "react-scripts start",
@@ -25,6 +25,9 @@
     "@ngneat/hot-toast": "^4.0.0",
     "@ngneat/overview": "^3.0.0",
     "@ngneat/until-destroy": "^9.0.0",
+    "@types/d3": "^7.4.0",
+    "cors": "^2.8.5",
+    "d3": "^7.4.0",
     "fast-xml-parser": "^4.0.9",
     "firebaseui": "^6.0.1",
     "polyfills": "^2.1.1",
@@ -36,7 +39,7 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.2.5",
+    "@angular-devkit/build-angular": "^13.2.5",
     "@angular/cli": "~13.2.5",
     "@angular/compiler-cli": "~13.2.0",
     "@types/xml2js": "^0.4.11",

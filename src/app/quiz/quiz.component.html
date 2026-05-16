@@ -1,0 +1,102 @@
+ <div class="page"*ngIf="!quizStarted">
+    <div  *ngIf="gameId === undefined || gameId.length < 5">
+        <div class="header">
+            <div class="header-text">
+                Buzzy Quiz
+            </div>
+        </div>
+        <div class="create-game-section">
+            <div class="create-game">
+                <div class="create-game-button" (click)="createGame()">
+                    <div class="create-game-button-text">
+                        Create Lobby
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lobby-section" *ngIf="!gameId !== undefined && gameId.length === 5">
+        <div class="lobby">
+            <div class="lobby-container">
+                <div class="lobby-title-right">
+                    Lobby id
+                </div>
+                <div class="lobby-left">
+                    <div class="lobby-justify">
+                        <span class="game-id">{{gameId}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lobby-container">
+                <div class="lobby-title-right">
+                    Players in Lobby
+                </div>
+                <div class="lobby-right">
+                    <div class="player-name" *ngIf="quizControllers === undefined || quizControllers.length < 1">
+                        Waiting for Players
+                    </div>
+                    <div class="player-name" *ngFor="let buzzer of quizControllers; let i = index">
+                        Player {{i+1}}: {{buzzer.playerName}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="create-game" *ngIf="quizControllers !== undefined && quizControllers.length > 0">
+            <div class="create-game-button" (click)="startGame()">
+                <div class="create-game-button-text">
+                    Start Game
+                </div>
+            </div>
+        </div>
+
+        <div class="create-game" *ngIf="quizControllers === undefined || quizControllers.length<1">
+            <div class="create-game-button-disabled">
+                <div class="create-game-button-text disabled">
+                    Start Game
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="quizpage"*ngIf="quizStarted">
+    <div class="question-area">
+        <div class="question-display">
+            <div class="question-category">
+                <div class="category-words">
+                    {{questions.categoryCode}}
+                </div>
+            </div>
+            <div class="description-row">
+                <div class="cateogry-description">
+                    {{questions.description}}
+                </div>
+                <div class="points">
+                    Points: {{(questionNumber + 1) * 100}}
+                </div>
+            </div>
+            
+            <div class="question-area">
+                <div class="the-question">
+                    <div class="question-words">
+                        {{activeQuestion?.question?.question}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="player-display">
+        <div *ngFor="let controller of quizControllers" class="player" 
+             [ngClass]="{'buzzed': (buzzedIn !== undefined && buzzedIn.player === controller.playerName), 
+                         'notbuzzed': (buzzedIn !== undefined && buzzedIn.player !== controller.playerName)}">
+            <div class="player-points">
+                {{controller.playerName}}
+            </div>
+            <div class="player-points">
+                {{controller.points}}
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,47 @@
+{
+    "category": "Chemistry",
+    "description": "Questions will provide element number, buzz in with the element name.",
+    "questions": [
+        {
+            "answer": "Hydrogen",
+            "question": "1"
+        },
+        {
+            "answer": "Helium",
+            "question": "2"
+        },
+        {
+            "answer": "Lithium",
+            "question": "3"
+        },
+        {
+            "answer": "Beryllium",
+            "question": "4"
+        },
+        {
+            "answer": "Boron",
+            "question": "5"
+        },
+
+        {
+            "answer": "Carbon",
+            "question": "6"
+        },
+        {
+            "answer": "Nitrogen",
+            "question": "7"
+        },
+        {
+            "answer": "Oxygen",
+            "question": "8"
+        },
+        {
+            "answer": "Fluorine",
+            "question": "9"
+        },
+        {
+            "answer": "Neon",
+            "question": "10"
+        }
+    ]
+}

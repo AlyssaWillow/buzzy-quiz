@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/tabletop-syndicate'),
+      dir: require('path').join(__dirname, './coverage/buzzy-quiz'),
       subdir: '.',
       reporters: [
         { type: 'html' },

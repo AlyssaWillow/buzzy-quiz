@@ -9,7 +9,6 @@ import { HomeModule } from './home/home.module';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { NavigationModule } from './navigation/navigation.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,20 +22,13 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from './services/authentication.service';
 import { HttpClientModule } from '@angular/common/http';
-import { CollectionModule } from './collection/collection.module';
 import { CommonModule } from '@angular/common';
-import { LemanCollectionModule } from './collection/leman-collection/leman-collection.module';
-import { BoardGameGeekService } from './services/board-game-geek.service';
-import { ConventionShirtsComponent } from './convention-shirts/convention-shirts.component';
-import { ConventionShirtsModule } from './convention-shirts/convention-shirts.module';
-import { GameStatsModule } from './game-stats/game-stats.module';
 import { UtilsService } from './services/utils.service';
-import { AddPlayModule } from './add/add-play/add-play.module';
 import { MatNativeDateModule } from '@angular/material/core';
-import { AddFactionModule } from './add/add-faction/add-faction.module';
-import { AddScenarioModule } from './add/add-scenario/add-scenario.module';
-import { AddCycleModule } from './add/add-cycle/add-cycle.module';
-import { AddAllModule } from './add/add-all/add-all.module';
+import { QuizControllerModule } from './quiz-controller/quiz-controller.module';
+import { SlimHeaderModule } from './slim-header/slim-header.module';
+import { QuizModule } from './quiz/quiz.module';
+import { SignupModule } from './signup/signup.module';
 
 @NgModule({
   declarations: [
@@ -50,11 +42,6 @@ import { AddAllModule } from './add/add-all/add-all.module';
     HeaderModule,
     FormsModule,
     HomeModule,
-    CollectionModule,
-    ConventionShirtsModule,
-    GameStatsModule,
-    LemanCollectionModule,
-    NavigationModule,
     MatSidenavModule,
     MatIconModule,
     MatButtonModule,
@@ -62,22 +49,19 @@ import { AddAllModule } from './add/add-all/add-all.module';
     MatInputModule,
     MatMenuModule,
     LoginModule,
-    LemanCollectionModule,
-    AddPlayModule,
-    AddFactionModule,
-    AddScenarioModule,
-    AddCycleModule,
-    AddAllModule,
+    SignupModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     HotToastModule.forRoot(),
     BrowserAnimationsModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    QuizControllerModule,
+    QuizModule,
+    SlimHeaderModule
   ],
   providers: [
     AuthenticationService,
-    BoardGameGeekService,
     UtilsService,
     AngularFireAuthModule
   ],

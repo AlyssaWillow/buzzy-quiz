@@ -12,26 +12,26 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$TabletopSyndicate-primary: mat.define-palette(mat.$indigo-palette);
-$TabletopSyndicate-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$BuzzyQuiz-primary: mat.define-palette(mat.$indigo-palette);
+$BuzzyQuiz-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$TabletopSyndicate-warn: mat.define-palette(mat.$red-palette);
+$BuzzyQuiz-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$TabletopSyndicate-theme: mat.define-light-theme((
+$BuzzyQuiz-theme: mat.define-light-theme((
   color: (
-    primary: $TabletopSyndicate-primary,
-    accent: $TabletopSyndicate-accent,
-    warn: $TabletopSyndicate-warn,
+    primary: $BuzzyQuiz-primary,
+    accent: $BuzzyQuiz-accent,
+    warn: $BuzzyQuiz-warn,
   )
 ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($TabletopSyndicate-theme);
+@include mat.all-component-themes($BuzzyQuiz-theme);
 
 /* You can add global styles to this file, and also import other style files */
 html {

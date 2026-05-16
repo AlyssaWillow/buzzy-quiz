@@ -1,0 +1,186 @@
+.slim-overall-header {
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    transition: 2s;
+    height: 2.7rem;
+    position: fixed;
+    top: 0;
+}
+
+.slim-header-image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.slim-hamburger{
+    align-self: flex-start;
+    z-index:6;
+    position: fixed;
+}
+
+.slim-button {
+    height: 2rem;
+}
+
+.slim-player-name {
+    padding-right: 2rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.log-in-buttons {
+  display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 100%;
+}
+
+a:link {
+    color: white;
+  }
+  
+  /* visited link */
+  a:visited {
+    color: white;
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: white;
+  }
+  
+  /* selected link */
+  a:active {
+    color: white;
+  }
+
+.slim-login{
+    display: inline-flex;
+    z-index:6;
+    padding-right: 3rem;
+    color: #fff;
+}
+
+.slim-header-top {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.slim-top-right {
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.slim-hamburger-icon{
+  height: 2rem;
+  width: 2rem;
+  z-index:6;
+}
+
+@media (max-width: 400px) {
+    .slim-header-wording {
+        display: flex;
+        height: 3rem;
+        font-size: 2.5rem;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 1.25rem;
+        color:white;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 800px) {
+    .slim-header-wording {
+        display: flex;
+        height: 3rem;
+        font-size: 2.5rem;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 1.25rem;
+        color:white;
+    }
+}
+
+@media (min-width: 801px) and (max-width: 1000px) {
+    .slim-header-wording {
+        display: flex;
+        height: 3rem;
+        font-size: 2.5rem;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 1.25rem;
+        color:white;
+    }
+}
+@media (min-width: 1001px) {
+    .slim-header-wording {
+        display: flex;
+        height: 3rem;
+        font-size: 2.5rem;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 1.25rem;
+        color:white;
+    }
+}
+
+.slim-header-underline {
+    background: red;
+    height: 1rem;
+    width: 100;
+}
+
+.slim-header-content {
+    height: 3rem;
+    width: 62%;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+}
+
+.RD {
+    background-color: #ff0000;
+  }
+  .BR {
+    background-color: #663300;
+  }
+  .BL {
+    background-color: #0000ff;
+  }
+  .CY {
+    background-color: #00ccff;
+  }
+  .GY {
+    background-color: #737373
+  }
+  .OG {
+    background-color: #ff6600
+  }
+  .GR {
+    background-color: #33cc33
+  }
+  .PI {
+    background-color: #ff3399
+  }
+  
+  .VI {
+    background-color: #6600cc
+  }
+  .YW {
+    background-color: #ffff00
+  }
+  .BK {
+    background-color: #000000
+  }

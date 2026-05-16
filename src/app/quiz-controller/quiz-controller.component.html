@@ -1,0 +1,52 @@
+<div *ngIf="gameId === undefined || gameId === ''" class="page">
+
+    <div class="select-game-">
+        <mat-form-field class="input-full input-line" appearance="fill">
+            <mat-label>Enter Game Code</mat-label>
+            <input matInput placeholder="Ex: Pax Unplugged" [(ngModel)]="inputGameCode"
+                    (ngModelChange)="inputGameCode = $event.toUpperCase()">
+        </mat-form-field>
+    </div>
+
+    <div class="select-game-">
+        <mat-form-field class="input-full input-line" appearance="fill">
+            <mat-label>Enter Name</mat-label>
+            <input matInput placeholder="Ex: Pax Unplugged" [(ngModel)]="inputName">
+        </mat-form-field>
+    </div>
+
+    <div class="add-play-header">
+        <button (click)="enterGame()">Enter Game</button>
+    </div>
+</div>
+<div *ngIf="gameId !== undefined && gameId !== ''" class="page">
+    {{inputName}}
+    {{inputGameCode}}
+    <div class="buzz-in-banner" *ngIf="buzzedIn === undefined || buzzedIn.player !== inputName">
+        <div class="buzz-in-button" (click)="buzzIn()" *ngIf="activeQuestion !== undefined && activeQuestion.number > 0">
+            <div class="buzz-in-text">
+                Buzz In!
+            </div>
+        </div>
+
+        <div class="buzz-in-button-disabled" *ngIf="activeQuestion === undefined || activeQuestion.number === 0">
+            <div class="buzz-in-text">
+                Buzz In!
+            </div>
+        </div>
+    </div>
+
+    <div class="buzz-in-banner" *ngIf="buzzedIn !== undefined && buzzedIn.player === inputName">
+        <div class="select-game-">
+            <mat-form-field class="input-full input-line" appearance="fill">
+                <mat-label>Enter answer</mat-label>
+                <input matInput placeholder="Ex: Pax Unplugged" [(ngModel)]="inputAnswer"
+                        (ngModelChange)="inputAnswer = $event.toUpperCase()">
+            </mat-form-field>
+        </div>
+
+        <div class="add-play-header">
+            <button (click)="submitAnswer()">Submit Answer</button>
+        </div>
+    </div>
+</div>

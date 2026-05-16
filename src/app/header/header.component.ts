@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   constructor(public authenticationService: AuthenticationService,
               public router: Router) {}
 
-  pageName: string = 'Tabletop Syndicate';
+  pageName: string = 'Buzzy Quiz';
 
   login = () => {
     this.router.navigate(['/login']);
