@@ -4,8 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { HeaderModule } from './header/header.module';
-import { HomeModule } from './home/home.module';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -16,8 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { HotToastModule } from '@ngneat/hot-toast';
-import { LoginModule } from './login/login.module';
+// import { HotToastModule } from '@ngneat/hot-toast';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from './services/authentication.service';
@@ -25,10 +22,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { UtilsService } from './services/utils.service';
 import { MatNativeDateModule } from '@angular/material/core';
-import { QuizControllerModule } from './quiz-controller/quiz-controller.module';
-import { SlimHeaderModule } from './slim-header/slim-header.module';
-import { QuizModule } from './quiz/quiz.module';
-import { SignupModule } from './signup/signup.module';
+import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { QuizControllerComponent } from './quiz-controller/quiz-controller.component';
+import { QuizComponent } from './quiz/quiz.component';
+import { SignupComponent } from './signup/signup.component';
+import { SlimHeaderComponent } from './slim-header/slim-header.component';
 
 @NgModule({
   declarations: [
@@ -39,26 +39,26 @@ import { SignupModule } from './signup/signup.module';
     CommonModule,
     HttpClientModule,
     AppRoutingModule,
-    HeaderModule,
+    HeaderComponent,
     FormsModule,
-    HomeModule,
+    HomeComponent,
     MatSidenavModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatMenuModule,
-    LoginModule,
-    SignupModule,
+    LoginComponent,
+    SignupComponent,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
-    HotToastModule.forRoot(),
+    // HotToastModule.forRoot(),
     BrowserAnimationsModule,
     MatNativeDateModule,
-    QuizControllerModule,
-    QuizModule,
-    SlimHeaderModule
+    QuizControllerComponent,
+    QuizComponent,
+    SlimHeaderComponent
   ],
   providers: [
     AuthenticationService,

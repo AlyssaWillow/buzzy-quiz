@@ -1,12 +1,21 @@
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'bzz-slim-header',
   templateUrl: './slim-header.component.html',
-  styleUrls: ['./slim-header.component.scss']
+  styleUrls: ['./slim-header.component.scss'],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatMenuModule,
+    RouterModule 
+  ]
 })
 export class SlimHeaderComponent implements OnInit {
   @Input() inputSideNav!: MatDrawer;

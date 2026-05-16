@@ -1,11 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
+  providers: [
+    AuthenticationService,
+    AngularFireAuthModule
+  ]
 })
 export class LoginComponent {
  
