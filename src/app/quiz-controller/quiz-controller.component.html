@@ -23,13 +23,16 @@
     {{inputName}}
     {{inputGameCode}}
     <div class="buzz-in-banner" *ngIf="buzzedIn === undefined || buzzedIn.player !== inputName">
-        <div class="buzz-in-button" (click)="buzzIn()" *ngIf="activeQuestion !== undefined && activeQuestion.number > 0">
+        <div class="buzz-in-button" 
+             (click)="buzzIn()" 
+             *ngIf="activeQuestion !== undefined && activeQuestion.number > 0 && (buzzedIn === undefined || buzzedIn.player === inputName)">
             <div class="buzz-in-text">
                 Buzz In!
             </div>
         </div>
 
-        <div class="buzz-in-button-disabled" *ngIf="activeQuestion === undefined || activeQuestion.number === 0">
+        <div class="buzz-in-button-disabled" 
+             *ngIf="(activeQuestion === undefined || activeQuestion.number === 0) || (buzzedIn !== undefined && buzzedIn.player !== inputName)">
             <div class="buzz-in-text">
                 Buzz In!
             </div>

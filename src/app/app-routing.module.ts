@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { QuizComponent } from './quiz/quiz.component';
 import { QuizControllerComponent } from './quiz-controller/quiz-controller.component';
 import { SignupComponent } from './signup/signup.component';
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
   { 
@@ -44,6 +45,14 @@ const routes: Routes = [
     component: SignupComponent,
     data: {
       title: 'Login'
+    }
+  },
+  {
+    path: 'admin',
+    pathMatch: 'full',
+    component: AdminComponent,
+    data: {
+      title: 'Admin Cleanup'
     }
   },
   { 

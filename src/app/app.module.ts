@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
+
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,12 +30,14 @@ import { QuizControllerComponent } from './quiz-controller/quiz-controller.compo
 import { QuizComponent } from './quiz/quiz.component';
 import { SignupComponent } from './signup/signup.component';
 import { SlimHeaderComponent } from './slim-header/slim-header.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
+    AdminComponent,
     BrowserModule,
     CommonModule,
     HttpClientModule,
@@ -58,12 +61,12 @@ import { SlimHeaderComponent } from './slim-header/slim-header.component';
     MatNativeDateModule,
     QuizControllerComponent,
     QuizComponent,
+    AdminComponent,
     SlimHeaderComponent
   ],
   providers: [
     AuthenticationService,
-    UtilsService,
-    AngularFireAuthModule
+    UtilsService
   ],
   bootstrap: [AppComponent]
 })
