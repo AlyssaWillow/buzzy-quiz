@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { QuizController, QuizMaster, buzzIn } from '../models/quiz';
-import { activeQuestion, category } from '../models/question';
+import { ActiveQuestion, category } from '../models/question';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { BuzzerService } from '../services/buzzer.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-quiz',
@@ -24,12 +25,13 @@ import { MatSelectModule } from '@angular/material/select';
 export class QuizComponent implements OnInit {
 
   gameId: string = '';
+  baseUrl: string = window.location.origin;
   buzzers: buzzIn[] = [];
   questionNumber: number = 0;
   ibuzzedIn: boolean = false;
   quizStarted: boolean = false;
   gameStartTime: Date | undefined = undefined;
-  activeQuestion: activeQuestion | undefined;
+  activeQuestion: ActiveQuestion | undefined;
   buzzedIn: buzzIn = {
     gameCode: '',
     player: '',
@@ -109,61 +111,18 @@ export class QuizComponent implements OnInit {
     ]
 }
 
-  constructor(private afs: AngularFirestore) {
-  }
+  constructor(private buzzerService: BuzzerService) {  }
 
   ngOnInit(): void {
-    this.afs.collection<QuizController>('quiz-controllers')
-            .valueChanges()
-            .subscribe(controllers => {
-      this.quizControllers = controllers.filter(ref => ref.gameCode === this.gameId);
-    })
-
-    //,ref => ref.where('gameCode', '==', this.gameId)
-    this.afs.collection<buzzIn>('quiz-buzz')
-            .valueChanges()
-            .subscribe(buzz => {
-              console.log('buzz', buzz, this.gameId)
-              let orderedBuzz = buzz.filter(ref=>ref.gameCode === this.gameId)
-                                    .sort(({timestamp:a}, {timestamp:b}) => b.nanoseconds - a.nanoseconds);
-              console.log('orderedBuzz',orderedBuzz)
-      this.buzzedIn = orderedBuzz[0]
-      console.log('buzzedIn', this.buzzedIn)
-    })
   }
 
   ngOnDestroy(): void {
     this.deleteGame();
   }
 
-  deleteGame = () => {
+  deleteGame = async () => {
     if (this.gameId !== undefined && this.gameId !== '') {
-      let id: string = '';
-      this.afs.collection<QuizMaster>('quiz', ref => ref.where('gameCode', '==', this.gameId))
-              .snapshotChanges().subscribe(eventz=>{
-                eventz.forEach(event => {
-                  id = event.payload.doc.id;
-                })
-        const pickRef = this.afs.collection<QuizMaster>('quiz')
-        pickRef.doc(id).delete().then(() => {
-          console.info("Document successfully deleted!",);
-        }).catch((error) => {
-            console.error("Error removing document: ", error);
-        });
-
-        const pickRef2 = this.afs.collection<QuizController>('quiz-controller');
-        this.afs.collection<QuizController>('quiz-controller', ref => ref.where('gameCode', '==', id))
-                                 .snapshotChanges()
-                                 .subscribe(controllers => {
-                                  controllers.forEach(event => {
-                                    pickRef2.doc(event.payload.doc.id).delete().then(() => {
-                                      console.info("Controller successfully deleted!",);
-                                    }).catch((error) => {
-                                        console.error("Error removing document: ", error);
-                                    });
-                                  })
-                                 })
-      })
+      await this.buzzerService.deleteQuizByGameCode(this.gameId);
     }
   }
 
@@ -174,10 +133,25 @@ export class QuizComponent implements OnInit {
       gameCode: this.gameId,
       players: []
     }
-    const pickRef = this.afs.collection('quiz');
-    await pickRef.add(quiz)
-                 .then(() => {console.log('success')})
-                 .catch((t) => {console.log('fail', t)})
+    this.buzzerService.createQuiz(quiz)
+
+    this.buzzerService.getQuizControllers(this.gameId).pipe(
+      map(changes => {
+        return changes.map(c => ({ key: c.payload.key, ...(c.payload.val() as QuizController) }))}
+      )
+    ).subscribe(sub => {
+      this.quizControllers = sub;
+    });
+
+    this.buzzerService.getBuzzes(this.gameId).pipe(
+      map(changes => {
+        return changes.map(c => ({ key: c.payload.key, ...(c.payload.val() as buzzIn) }))}
+      )
+    ).subscribe(buzz => {
+      if (buzz !== undefined && buzz.length > 0) {
+        this.buzzedIn = buzz.sort(({timestamp:a}, {timestamp:b}) => b.nanoseconds - a.nanoseconds)[0];
+      }
+    });
   };
 
   getQuestions = () => {
@@ -194,38 +168,30 @@ export class QuizComponent implements OnInit {
       question: this.questions.questions[this.questionNumber],
       gameId: this.gameId
     }
-    const pickRef = this.afs.collection('active-questions');
-    await pickRef.add(this.activeQuestion)
-                 .then(() => {console.log('success')})
-                 .catch((t) => {console.log('fail', t)})
+    await this.buzzerService.addActiveQuestion(this.gameId, this.activeQuestion);
   };
 
   incrementQuestions = async () => {
-    let id = '';
-    this.afs.collection<activeQuestion>('active-questions', ref => ref.where('gameCode', '==', this.gameId))
-              .snapshotChanges().subscribe(eventz=>{
-                eventz.forEach(event => {
-                  id = event.payload.doc.id;
-                })
-        const pickRef = this.afs.collection<activeQuestion>('active-questions')
-        pickRef.doc(id).delete().then(() => {
-          console.info("Document successfully deleted!",);
-        }).catch((error) => {
-            console.error("Error removing document: ", error);
-        });
-      })
+    await this.buzzerService.deleteActiveQuestionsByGameId(this.gameId);
 
     this.questionNumber = this.questionNumber + 1;
-    let activeQuestion: activeQuestion = {
+    let activeQuestion: ActiveQuestion = {
       number: this.questionNumber,
       question: this.questions.questions[this.questionNumber],
       gameId: this.gameId
     }
-    const pickRef = this.afs.collection('active-questions');
-    await pickRef.add(activeQuestion)
-                 .then(() => {console.log('success')})
-                 .catch((t) => {console.log('fail', t)})
+    await this.buzzerService.addActiveQuestion(this.gameId, activeQuestion);
   };
+
+  isBuzzed(controller: QuizController): boolean {
+    console.log('controller', controller, 'buzzedIn', this.buzzedIn)
+    if (!this.buzzedIn?.player || !controller?.playerName) {
+      return false;
+    }
+
+    console.log('asdfasdfa', controller, this.buzzedIn)
+    return controller.playerName.trim().toLowerCase() === this.buzzedIn.player.trim().toLowerCase();
+  }
 
   makeRandom = () => {
     const lengthOfCode = 5;
@@ -234,7 +200,7 @@ export class QuizComponent implements OnInit {
     for (let i = 0; i < lengthOfCode; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
-      return text;
+    return text;
   }
 
 }

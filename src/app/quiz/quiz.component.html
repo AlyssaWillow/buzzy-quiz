@@ -23,8 +23,15 @@
                     Lobby id
                 </div>
                 <div class="lobby-left">
-                    <div class="lobby-justify">
-                        <span class="game-id">{{gameId}}</span>
+                    <div class="join-instructions">
+                        <div class="instructions-text">
+                            Join quiz lobby by going to <strong>{{baseUrl}}/controller</strong> and enter lobby id
+                        </div>
+                    </div>
+                    <div class="lobby-id-section">
+                        <div class="lobby-justify">
+                            <span class="game-id">{{gameId}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,9 +94,9 @@
     </div>
    
     <div class="player-display">
-        <div *ngFor="let controller of quizControllers" class="player" 
-             [ngClass]="{'buzzed': (buzzedIn !== undefined && buzzedIn.player === controller.playerName), 
-                         'notbuzzed': (buzzedIn !== undefined && buzzedIn.player !== controller.playerName)}">
+        <div *ngFor="let controller of quizControllers" class="player"
+             [ngClass]="{'buzzed': isBuzzed(controller), 'notbuzzed': (buzzedIn !== undefined ? buzzedIn.player : false) && !isBuzzed(controller)}">
+            
             <div class="player-points">
                 {{controller.playerName}}
             </div>

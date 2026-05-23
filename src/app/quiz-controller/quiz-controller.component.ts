@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { QuizController, buzzIn } from '../models/quiz';
-import { activeQuestion, question } from '../models/question';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { map, Subscription } from 'rxjs';
+import { QuizController, QuizMaster, buzzIn } from '../models/quiz';
+import { ActiveQuestion, question } from '../models/question';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { BuzzerService } from '../services/buzzer.service';
 
 @Component({
   selector: 'app-quiz-controller',
@@ -21,13 +22,14 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule,
   ]
 })
-export class QuizControllerComponent implements OnInit {
+export class QuizControllerComponent implements OnInit, OnDestroy {
 
   gameId: string = '';
+  private quizControllerSub: Subscription | undefined;
   inputGameCode: string = '';
   inputName: string = '';
   inputAnswer: string = '';
-  activeQuestion: activeQuestion = {
+  activeQuestion: ActiveQuestion = {
     number: 0,
     question: {
       number: 0,
@@ -49,57 +51,47 @@ export class QuizControllerComponent implements OnInit {
     questionNumber: 0
   }
 
-  constructor(private afs: AngularFirestore) {
-  }
+  constructor(private buzzerService: BuzzerService) { }
 
   ngOnInit(): void {
-   
-    console.log('gameId', this.inputGameCode)
-    this.afs.collection<QuizController>('quiz-controllers',ref => ref.where('gameCode', '==', this.inputGameCode))
-    .valueChanges().subscribe(controllers => {
-      this.quizControllers = controllers;
-    })
+    // if (this.inputGameCode) {
+    //   this.subscribeToQuizControllers(this.inputGameCode);
+    // }
 
-    this.afs.collection<buzzIn>('quiz-buzz')
-    .valueChanges()
-    .subscribe(buzz => {
-      console.log('buzz', buzz, this.gameId)
-      let orderedBuzz = buzz.filter(ref=>ref.gameCode === this.gameId)
-                            .sort(({timestamp:a}, {timestamp:b}) => b.nanoseconds - a.nanoseconds);
-      this.buzzedIn = orderedBuzz[0]
-    })
+    this.buzzerService.getBuzzes(this.gameId).pipe(
+      map(changes => {
+        return changes.map(c => ({ key: c.payload.key, ...(c.payload.val() as buzzIn) }))}
+      )).subscribe(buzz => {
+        let orderedBuzz = buzz.sort(({timestamp:a}, {timestamp:b}) => b.nanoseconds - a.nanoseconds);
+        this.buzzedIn = orderedBuzz[0]
+      })
     this.getActiveQuestion();
   }
 
   getActiveQuestion = () => {
-    this.afs.collection<activeQuestion>('active-questions', ref => ref.where('gameId', '==', this.inputGameCode))
-            .valueChanges()
+    this.buzzerService.getActiveQuestionByGameId(this.inputGameCode)
             .subscribe(data => {
-              this.activeQuestion = data[0];
+              console.log('data', data)
+              this.activeQuestion = data[0] as ActiveQuestion;
             })
   }
 
   ngOnDestroy(): void {
-    // this.deleteGame();
+    this.quizControllerSub?.unsubscribe();
   }
 
-  // deleteGame = () => {
-  //   if (this.gameId !== undefined && this.gameId !== '') {
-  //     let id: string = '';
-  //     this.afs.collection<QuizMaster>('quiz', ref => ref.where('gameCode', '==', this.gameId))
-  //             .snapshotChanges().subscribe(eventz=>{
-  //               eventz.forEach(event => {
-  //                 id = event.payload.doc.id;
-  //               })
-  //       const pickRef = this.afs.collection<QuizMaster>('quiz')
-  //       pickRef.doc(id).delete().then(() => {
-  //         console.info("Document successfully deleted!",);
-  //       }).catch((error) => {
-  //           console.error("Error removing document: ", error);
-  //       });
-  //     })
-  //   }
-  // }
+  private subscribeToQuizControllers(gameCode: string) {
+    this.quizControllerSub?.unsubscribe();
+    this.buzzerService.getQuizControllers(gameCode).pipe(
+      map(changes => {
+
+        return changes.map(c => ({
+          key: c.payload.key, // This is the Firebase-generated key
+          ...(c.payload.val() as QuizController) // The actual data
+        }))}
+      )
+    ).subscribe();
+  }
 
   enterGame = async () => {
     this.error = 'submitted'
@@ -111,10 +103,11 @@ export class QuizControllerComponent implements OnInit {
     }
 
     if (this.quizControllers.length < 6) {
-      const pickRef = this.afs.collection<QuizController>('quiz-controllers');
-      await pickRef.add(controller)
+      await this.buzzerService.addQuizController(controller)
       .then(() => {
          this.gameId = this.inputGameCode
+         this.subscribeToQuizControllers(this.gameId);
+         this.quizControllers = [...this.quizControllers, controller];
          console.log('success')
        })
       .catch((t) => {
@@ -142,57 +135,9 @@ export class QuizControllerComponent implements OnInit {
       }
     }
 
-    const pickRef = this.afs.collection<buzzIn>('quiz-buzz');
-    await pickRef.add(buzz)
-                 .then(() => {console.log('success')})
-                 .catch((t) => {console.log('fail', t)})
+    this.buzzedIn = buzz;
+    this.buzzerService.buzzIn(buzz);
   };
-
-  isAnswerCorrect = (inputGameCode: string, inputAnswer: string): boolean => {
-    this.afs.collection<question>('active-questions', ref => {
-      let ref2 = ref.where('gameId', '==', inputGameCode)
-      return ref2.where('question.answer', '==', inputAnswer.toLowerCase())
-    })
-    .valueChanges()
-    .subscribe(potentialAnswer => {
-      if (potentialAnswer?.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return false;
-  }
-
-  getControllerId = (inputGameCode: string, inputName: string): string => {
-    let id: string = '';
-    this.afs.collection<QuizController>('quiz-controllers',ref => {
-      let ref2 = ref.where('gameCode', '==', inputGameCode)
-      return ref2.where('playerName', '==', inputName)
-    })
-    .snapshotChanges()
-    .subscribe(eventz=>{
-      eventz.forEach(event => {
-        id = event.payload.doc.id;
-      })
-    })
-    return id;
-  }
-
-  getController = (id: string): QuizController => {
-    let controller: QuizController = {
-      question: '',
-      playerName: '',
-      gameCode: '',
-      points: 0
-    }
-    this.afs.collection<QuizController>('quiz-controllers').doc(id).valueChanges().subscribe(sub => {
-      if (sub) {
-        controller = sub;
-      }
-    })
-    return controller;
-  }
 
   updateScore = (controller: QuizController, correct: boolean, questionNumber: number): QuizController => {
     if (correct) {
@@ -204,18 +149,20 @@ export class QuizControllerComponent implements OnInit {
   }
 
   submitAnswer = async () => {
-    let correct: boolean = this.isAnswerCorrect(this.inputGameCode, this.inputAnswer);
-    let id: string = this.getControllerId(this.inputGameCode, this.inputAnswer);
-    let controller: QuizController = this.getController(id);
-    controller = this.updateScore(controller, correct, this.activeQuestion.number);
-    
-    const pickRef = this.afs.collection<QuizController>('quiz-controllers')
-    pickRef.doc(id).set(controller).then(() => {
-      console.info("Document successfully deleted!",);
-    }).catch((error) => {
-        console.error("Error removing document: ", error);
-    });
-      
+    const normalizedAnswer = this.inputAnswer?.trim().toLowerCase();
+    const correct = this.activeQuestion?.question?.answer?.toLowerCase() === normalizedAnswer;
+
+    const localController = this.quizControllers.find(c => c.playerName === this.inputName && c.gameCode === this.inputGameCode);
+    if (localController) {
+      this.updateScore(localController, correct, this.activeQuestion.number);
+    }
+
+    await this.buzzerService.submitAnswerByPlayer(
+      this.inputGameCode,
+      this.inputName,
+      this.inputAnswer,
+      this.activeQuestion.number
+    );
   };
 
 }

@@ -1,0 +1,33 @@
+<div class="admin-page">
+  <h2>Admin Cleanup</h2>
+  <p>Choose a game ID below to delete all quiz, controller, buzzer, and active question data for that game.</p>
+
+  <div *ngIf="controllers.length > 0; else noControllers">
+    <div class="game-list">
+      <div class="game-item" *ngFor="let c of controllers" [class.selected]="selectedGameCode === c.gameCode">
+        <div><strong>{{ c.playerName }}</strong></div>
+        <div>Game: {{ c.gameCode }}</div>
+        <div>Points: {{ c.points }}</div>
+      </div>
+    </div>
+
+    <div class="admin-actions">
+      <div *ngIf="selectedGameCode" class="selected-info">
+        Selected game ID: <strong>{{ selectedGameCode }}</strong>
+      </div>
+
+      <!-- <button mat-raised-button color="warn" (click)="deleteGame(selectedGameCode)" [disabled]="deleting || !selectedGameCode">
+        {{ deleting ? 'Deleting…' : 'Delete Selected Game' }}
+      </button> -->
+    </div>
+
+    <div class="message success" *ngIf="message">{{ message }}</div>
+    <div class="message error" *ngIf="error">{{ error }}</div>
+  </div>
+
+  <ng-template #noControllers>
+    <div class="empty-state">
+      No controllers were found in the database.
+    </div>
+  </ng-template>
+</div>

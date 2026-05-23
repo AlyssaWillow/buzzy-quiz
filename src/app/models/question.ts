@@ -12,7 +12,7 @@ export interface question {
     answer: string;
 }
 
-export interface activeQuestion {
+export interface ActiveQuestion {
     number: number;
     question: question;
     gameId: string;

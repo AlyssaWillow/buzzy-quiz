@@ -46,6 +46,7 @@
     background-color: yellowgreen;
     border: 3px solid black;
     border-radius: 25px;
+    cursor: pointer;
 }
 
 .create-game-button-disabled {
@@ -122,6 +123,13 @@ justify-content: space-around;
     justify-content: space-around;
 }
 
+.join-instructions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top:2rem;
+}
+
 .lobby-container {
     display:flex;
     width: 50%;
@@ -157,13 +165,20 @@ justify-content: space-around;
 .lobby-left {
     display:flex;
     flex-direction: column;
-    justify-content: space-around;
     width: 90%;
     background-color: darkgrey;
     margin-left: 5%;
     border-radius: 25px;
     border: 5px solid black;
     height: 19rem;
+}
+
+.lobby-id-section {
+
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%
 }
 
 
@@ -207,8 +222,14 @@ justify-content: space-around;
 }
 
 .buzzed {
+    color: lime;
     font-size: 3rem;
-    text-shadow: 3px 3px 8px lime, -3px -3px 8px lime;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background-color: rgba(50, 205, 50, 0.15);
+    border: 2px solid lime;
+    text-shadow: 0 0 12px lime;
 }
 
 .notbuzzed {
